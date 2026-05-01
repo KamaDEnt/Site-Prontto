@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "rdWICFmD6oIBfvSitkWnR"
+uri = "file://artifacts/prontto/public/hero-illustration.png"
+type = "image"
+title = "home service workers modern illustration"
