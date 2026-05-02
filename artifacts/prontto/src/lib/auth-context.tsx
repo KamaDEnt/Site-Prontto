@@ -8,6 +8,7 @@ export interface PublicUser {
   email: string;
   phone: string | null;
   accountType: "cliente" | "prestador";
+  role: "user" | "admin";
   specialty: string | null;
   city: string | null;
   createdAt: string;
@@ -45,23 +46,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
   const [loading, setLoading] = useState(true);
 
-  const authFetch = useCallback(async (path: string, opts?: RequestInit) => {
-    const t = localStorage.getItem(TOKEN_KEY);
-    return fetch(`${API}${path}`, {
-      ...opts,
-      headers: {
-        "Content-Type": "application/json",
-        ...(t ? { Authorization: `Bearer ${t}` } : {}),
-        ...(opts?.headers ?? {}),
-      },
-    });
-  }, []);
-
   const refresh = useCallback(async () => {
     const t = localStorage.getItem(TOKEN_KEY);
     if (!t) { setLoading(false); return; }
     try {
-      const res = await authFetch("/auth/me");
+      const res = await fetch(`${API}/auth/me`, {
+        headers: { Authorization: `Bearer ${t}` },
+      });
       if (res.ok) {
         const data = await res.json() as { user: PublicUser };
         setUser(data.user);
@@ -75,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [authFetch]);
+  }, []);
 
   useEffect(() => { void refresh(); }, [refresh]);
 

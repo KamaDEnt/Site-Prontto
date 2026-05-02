@@ -40,6 +40,7 @@ router.post("/register", async (req, res) => {
       phone: phone?.trim() ?? null,
       passwordHash,
       accountType,
+      role: "user",
       specialty: specialty?.trim() ?? null,
       city: city?.trim() ?? null,
     }).returning({
@@ -47,6 +48,7 @@ router.post("/register", async (req, res) => {
       name: usersTable.name,
       email: usersTable.email,
       accountType: usersTable.accountType,
+      role: usersTable.role,
       phone: usersTable.phone,
       specialty: usersTable.specialty,
       city: usersTable.city,
@@ -55,7 +57,7 @@ router.post("/register", async (req, res) => {
 
     if (!user) throw new Error("Failed to create user");
 
-    const token = signToken({ userId: user.id, email: user.email, accountType: user.accountType });
+    const token = signToken({ userId: user.id, email: user.email, accountType: user.accountType, role: user.role });
     res.status(201).json({ token, user });
   } catch (err) {
     req.log.error({ err }, "register error");
@@ -84,7 +86,7 @@ router.post("/login", async (req, res) => {
       return;
     }
 
-    const token = signToken({ userId: user.id, email: user.email, accountType: user.accountType });
+    const token = signToken({ userId: user.id, email: user.email, accountType: user.accountType, role: user.role });
     const { passwordHash: _, ...publicUser } = user;
     res.json({ token, user: publicUser });
   } catch (err) {
@@ -103,6 +105,7 @@ router.get("/me", requireAuth, async (req, res) => {
       email: usersTable.email,
       phone: usersTable.phone,
       accountType: usersTable.accountType,
+      role: usersTable.role,
       specialty: usersTable.specialty,
       city: usersTable.city,
       createdAt: usersTable.createdAt,
@@ -119,7 +122,7 @@ router.get("/me", requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/auth/banking  — get professional banking info
+// GET /api/auth/banking
 router.get("/banking", requireAuth, async (req, res) => {
   try {
     const auth = res.locals["user"] as AuthPayload;
@@ -132,11 +135,11 @@ router.get("/banking", requireAuth, async (req, res) => {
   }
 });
 
-// POST /api/auth/banking  — upsert professional banking info
+// POST /api/auth/banking
 router.post("/banking", requireAuth, async (req, res) => {
   try {
     const auth = res.locals["user"] as AuthPayload;
-    if (auth.accountType !== "prestador") {
+    if (auth.accountType !== "prestador" && auth.role !== "admin") {
       res.status(403).json({ error: "Apenas prestadores podem cadastrar dados bancários" });
       return;
     }

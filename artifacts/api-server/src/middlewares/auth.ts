@@ -7,6 +7,7 @@ export interface AuthPayload {
   userId: string;
   email: string;
   accountType: "cliente" | "prestador";
+  role: "user" | "admin";
 }
 
 export function signToken(payload: AuthPayload): string {

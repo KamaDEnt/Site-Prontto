@@ -486,6 +486,7 @@ export function MinhaArea() {
 
   useEffect(() => {
     if (!loading && !user) navigate("/entrar");
+    if (!loading && user?.role === "admin") navigate("/admin");
   }, [user, loading, navigate]);
 
   if (loading) {

@@ -24,7 +24,13 @@ export function Entrar() {
     if (result.error) {
       setError(result.error);
     } else {
-      navigate("/minha-area");
+      const token = localStorage.getItem("prontto_token");
+      try {
+        const payload = JSON.parse(atob(token!.split(".")[1]!)) as { role?: string };
+        navigate(payload.role === "admin" ? "/admin" : "/minha-area");
+      } catch {
+        navigate("/minha-area");
+      }
     }
   };
 

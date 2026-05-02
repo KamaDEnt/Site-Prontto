@@ -10,6 +10,7 @@ import { ParaPrestadores } from "@/pages/para-prestadores";
 import { Entrar } from "@/pages/entrar";
 import { Cadastrar } from "@/pages/cadastrar";
 import { MinhaArea } from "@/pages/minha-area";
+import { AdminPage } from "@/pages/admin";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/entrar" component={Entrar} />
       <Route path="/cadastrar" component={Cadastrar} />
       <Route path="/minha-area" component={MinhaArea} />
+      <Route path="/admin" component={AdminPage} />
       <Route component={NotFound} />
     </Switch>
   );
