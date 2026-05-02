@@ -365,8 +365,8 @@ function SceneText({ scene, progress }: { scene: (typeof SCENES)[0]; progress: n
 
   return (
     <div
-      style={{ opacity, transform: `translateY(${y}px)`, position: "absolute", inset: 0 }}
-      className="flex flex-col justify-center gap-5"
+      style={{ opacity, transform: `translateY(${y}px)` }}
+      className="absolute inset-0 flex flex-col justify-center gap-5"
     >
       <span className={`text-xs font-bold uppercase tracking-[0.2em] ${scene.color}`}>{scene.label}</span>
       <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">{scene.headline}</h2>
@@ -445,16 +445,16 @@ function ScrollMovie() {
 
             {/* Right – illustrations */}
             <div className="flex items-center justify-center h-64 lg:h-80 relative">
-              <div style={{ opacity: s1O, position: "absolute", inset: 0 }} className="flex items-center justify-center">
+              <div style={{ opacity: s1O }} className="absolute inset-0 flex items-center justify-center">
                 <IllustrationProblem p={p} />
               </div>
-              <div style={{ opacity: s2O, position: "absolute", inset: 0 }} className="flex items-center justify-center">
+              <div style={{ opacity: s2O }} className="absolute inset-0 flex items-center justify-center">
                 <IllustrationSearch p={p} />
               </div>
-              <div style={{ opacity: s3O, position: "absolute", inset: 0 }} className="flex items-center justify-center">
+              <div style={{ opacity: s3O }} className="absolute inset-0 flex items-center justify-center">
                 <IllustrationArrival p={p} />
               </div>
-              <div style={{ opacity: s4O, position: "absolute", inset: 0 }} className="flex items-center justify-center">
+              <div style={{ opacity: s4O }} className="absolute inset-0 flex items-center justify-center">
                 <IllustrationResult p={p} />
               </div>
             </div>
@@ -653,7 +653,7 @@ export function Home() {
         {/* ── SERVICES ── */}
         <section id="servicos" className="py-28 bg-background">
           <div className="container mx-auto px-4 md:px-6">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7 }}
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0 }} transition={{ duration: 0.7 }}
               className="text-center max-w-2xl mx-auto mb-16">
               <span className="text-primary text-sm font-semibold uppercase tracking-widest">Categorias</span>
               <h2 className="text-3xl md:text-4xl font-bold mt-3 mb-4 text-secondary">Serviços para todas as suas necessidades</h2>
@@ -668,7 +668,7 @@ export function Home() {
                   <motion.div key={service.name}
                     initial={{ opacity: 0, y: 40 + row * 10, x: (col - 1.5) * 10 }}
                     whileInView={{ opacity: 1, y: 0, x: 0 }}
-                    viewport={{ once: true, margin: "-60px" }}
+                    viewport={{ once: true, amount: 0 }}
                     transition={{ duration: 0.55, delay: index * 0.07, ease: "easeOut" }}
                     whileHover={{ y: -6, transition: { duration: 0.2 } }}>
                     <Card className={`group cursor-pointer border-border/40 bg-white hover:shadow-xl transition-all duration-300 ${service.border}`}>
@@ -697,7 +697,7 @@ export function Home() {
         <section id="como-funciona" className="py-28 bg-secondary relative overflow-hidden">
           <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
           <div className="container mx-auto px-4 md:px-6 relative z-10">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7 }}
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0 }} transition={{ duration: 0.7 }}
               className="text-center max-w-2xl mx-auto mb-20">
               <span className="text-primary text-sm font-semibold uppercase tracking-widest">Como Funciona</span>
               <h2 className="text-3xl md:text-4xl font-bold mt-3 mb-4 text-white">Simples, rápido e seguro.</h2>
@@ -706,12 +706,12 @@ export function Home() {
 
             <div className="grid md:grid-cols-3 gap-8 relative">
               <div className="hidden md:block absolute top-[52px] left-[calc(16.66%+40px)] right-[calc(16.66%+40px)] h-[2px] overflow-hidden">
-                <motion.div initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 1.2, delay: 0.5, ease: "easeInOut" }}
+                <motion.div initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true, amount: 0 }} transition={{ duration: 1.2, delay: 0.5, ease: "easeInOut" }}
                   className="h-full bg-gradient-to-r from-primary/40 via-primary to-primary/40 origin-left" />
               </div>
               {steps.map((step, index) => (
                 <motion.div key={step.title}
-                  initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }}
+                  initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0 }}
                   transition={{ duration: 0.65, delay: index * 0.2, ease: "easeOut" }}
                   className="relative z-10 flex flex-col items-center text-center gap-5">
                   <motion.div className="w-24 h-24 rounded-full bg-white/5 border-2 border-white/10 flex items-center justify-center text-primary relative"
@@ -736,7 +736,7 @@ export function Home() {
             </svg>
           </div>
           <div className="container mx-auto px-4 md:px-6 pt-10">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7 }}
+            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0 }} transition={{ duration: 0.7 }}
               className="text-center max-w-2xl mx-auto mb-16">
               <span className="text-primary text-sm font-semibold uppercase tracking-widest">Depoimentos</span>
               <h2 className="text-3xl md:text-4xl font-bold mt-3 mb-4 text-secondary">Quem usa, recomenda.</h2>
@@ -746,7 +746,7 @@ export function Home() {
               {reviews.map((review, index) => (
                 <motion.div key={index}
                   initial={{ opacity: 0, x: index === 0 ? -40 : index === 2 ? 40 : 0, y: index === 1 ? 40 : 0 }}
-                  whileInView={{ opacity: 1, x: 0, y: 0 }} viewport={{ once: true, margin: "-60px" }}
+                  whileInView={{ opacity: 1, x: 0, y: 0 }} viewport={{ once: true, amount: 0 }}
                   transition={{ duration: 0.65, delay: index * 0.15, ease: "easeOut" }}
                   whileHover={{ y: -6, transition: { duration: 0.2 } }}>
                   <Card className="h-full bg-white border-border/40 hover:shadow-xl hover:border-primary/20 transition-all duration-300">
@@ -782,7 +782,7 @@ export function Home() {
           <motion.div animate={{ rotate: -360 }} transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
             className="absolute -bottom-24 -left-24 w-[400px] h-[400px] rounded-full border border-white/10 opacity-30" />
           <div className="container mx-auto px-4 md:px-6 relative z-10">
-            <motion.div initial={{ opacity: 0, scale: 0.9, y: 30 }} whileInView={{ opacity: 1, scale: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.8, ease: "easeOut" }}
+            <motion.div initial={{ opacity: 0, scale: 0.9, y: 30 }} whileInView={{ opacity: 1, scale: 1, y: 0 }} viewport={{ once: true, amount: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}
               className="max-w-4xl mx-auto text-center flex flex-col items-center gap-8">
               <span className="inline-block px-4 py-1.5 rounded-full bg-white/20 text-white text-sm font-semibold">Para Prestadores</span>
               <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">É profissional?<br />Aumente sua renda!</h2>
