@@ -343,9 +343,14 @@ function SceneText({
   progress: MotionValue<number>;
 }) {
   const [lo, hi] = scene.range;
-  const mid = (lo + hi) / 2;
-  const opacity = useTransform(progress, [lo, lo + 0.06, hi - 0.06, hi], [0, 1, 1, 0]);
-  const y = useTransform(progress, [lo, lo + 0.1, hi - 0.1, hi], [24, 0, 0, -24]);
+  // First scene starts fully visible; all others fade in from the transition point
+  const isFirst = lo === 0;
+  const opacityPts = isFirst ? [0, hi - 0.07, hi] : [lo, lo + 0.06, hi - 0.07, hi];
+  const opacityVals = isFirst ? [1, 1, 0] : [0, 1, 1, 0];
+  const yPts = isFirst ? [0, hi] : [lo, lo + 0.1, hi - 0.1, hi];
+  const yVals = isFirst ? [0, -28] : [28, 0, 0, -28];
+  const opacity = useTransform(progress, opacityPts, opacityVals);
+  const y = useTransform(progress, yPts, yVals);
 
   return (
     <motion.div style={{ opacity, y }} className="absolute inset-0 flex flex-col justify-center gap-5">
@@ -369,11 +374,11 @@ function ScrollMovie() {
   });
   const smooth = useSpring(scrollYProgress, { stiffness: 55, damping: 20, restDelta: 0.001 });
 
-  // Scene illustration opacities
-  const s1O = useTransform(smooth, [0, 0.04, 0.22, 0.28], [0, 1, 1, 0]);
+  // Scene illustration opacities — scene 1 starts at full opacity immediately
+  const s1O = useTransform(smooth, [0, 0.22, 0.28], [1, 1, 0]);
   const s2O = useTransform(smooth, [0.22, 0.28, 0.47, 0.53], [0, 1, 1, 0]);
   const s3O = useTransform(smooth, [0.47, 0.53, 0.72, 0.78], [0, 1, 1, 0]);
-  const s4O = useTransform(smooth, [0.72, 0.78, 1, 1], [0, 1, 1, 1]);
+  const s4O = useTransform(smooth, [0.72, 0.78, 1], [0, 1, 1]);
 
   // Progress bar
   const barScaleX = useTransform(smooth, [0, 1], [0, 1]);
