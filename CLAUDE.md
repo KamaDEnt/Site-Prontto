@@ -155,6 +155,21 @@ Os modelos em `core/models/usuario.model.ts` usam nomes em português espelhando
 - `adminGuard` — protege `/admin` (requer `papel === 'admin'`)
 - `authInterceptor` — injeta `Authorization: Bearer <token>` em todas as requisições
 
+### Responsividade (obrigatório)
+- Todo componente deve ser responsivo para mobile, tablet e desktop
+- Abordagem **mobile-first**: estilos base para mobile, breakpoints para telas maiores
+- Breakpoints padrão do projeto:
+  - Mobile: `< 640px` (base — sem media query)
+  - Tablet: `@media (min-width: 640px)`
+  - Desktop: `@media (min-width: 1024px)`
+- Grids usam `repeat(auto-fill/auto-fit, minmax(...))` ou colapsam para 1 coluna no mobile
+- Layouts de 2 colunas (hero, benefícios) colapsam para coluna única no mobile
+- Navbar tem menu hamburguer no mobile (`< 768px`)
+- Fontes reduzidas no mobile (ex: títulos hero de `3.5rem` → `2rem`)
+- Padding/margin proporcionais: seções com `padding: 3rem 1rem` no mobile, `5rem 2rem` no desktop
+- Tabelas do admin usam `overflow-x: auto` para scroll horizontal no mobile
+- Nunca usar larguras fixas em px para containers — usar `max-width` + `width: 100%`
+
 ### Testes
 - Cada componente tem arquivo `.spec.ts` obrigatório
 - Usar `HttpClientTestingModule` nos testes de serviços HTTP
@@ -222,3 +237,4 @@ cd backend && dotnet ef database update \
 5. **Mapeamento de colunas explícito** em `ContextoBancoDados` — não depender de convenção automática
 6. **Projetos e pastas em inglês**, **código (classes, variáveis, interfaces) em português**
 7. **Estrutura de componentes Angular obrigatória** — cada tela/feature deve ter pasta isolada com arquivos separados: `.component.ts`, `.component.html`, `.component.scss`, `.component.spec.ts`. Nunca usar `template` ou `styles` inline. Guards em arquivos separados (`auth.guard.ts`, `admin.guard.ts` — nunca co-exportados).
+8. **Responsividade obrigatória** — todo componente deve funcionar em mobile, tablet e desktop. Mobile-first: estilos base sem media query, breakpoints `min-width: 640px` (tablet) e `min-width: 1024px` (desktop). Nunca entregar um componente sem verificar responsividade.

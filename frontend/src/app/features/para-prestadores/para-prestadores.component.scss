@@ -1,5 +1,5 @@
 /* ============================================================
-   Para Prestadores Component — Prontto
+   Para Prestadores Component — Prontto (mobile-first)
    ============================================================ */
 
 .para-prestadores {
@@ -10,13 +10,22 @@
 /* Hero laranja */
 .hero-prestador {
   background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  padding: 5rem 1.5rem;
+  padding: 3rem 1rem;
   text-align: center;
   color: #ffffff;
+
+  @media (min-width: 640px) {
+    padding: 4rem 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 5rem 1.5rem;
+  }
 }
 
 .hero-prestador__inner {
   max-width: 700px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -31,18 +40,27 @@
 }
 
 .hero-prestador__titulo {
-  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-size: 1.875rem;
   font-weight: 800;
   color: #ffffff;
   margin-bottom: 1.25rem;
   line-height: 1.15;
+
+  @media (min-width: 640px) {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+  }
 }
 
 .hero-prestador__subtitulo {
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.7;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
+
+  @media (min-width: 640px) {
+    font-size: 1.125rem;
+    margin-bottom: 2.5rem;
+  }
 }
 
 .btn-hero-prestador {
@@ -65,11 +83,20 @@
 /* Benefícios */
 .beneficios {
   background: #ffffff;
-  padding: 5rem 1.5rem;
+  padding: 3rem 1rem;
+
+  @media (min-width: 640px) {
+    padding: 4rem 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 5rem 1.5rem;
+  }
 }
 
 .beneficios__inner {
   max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
 }
@@ -85,7 +112,7 @@
 }
 
 .beneficios__titulo {
-  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-size: clamp(1.375rem, 2.5vw, 2rem);
   font-weight: 800;
   color: #111827;
   margin-bottom: 0.75rem;
@@ -93,22 +120,40 @@
 
 .beneficios__subtitulo {
   color: #6b7280;
-  font-size: 1.0625rem;
-  margin-bottom: 3rem;
+  font-size: 1rem;
+  margin-bottom: 2.5rem;
+
+  @media (min-width: 640px) {
+    font-size: 1.0625rem;
+    margin-bottom: 3rem;
+  }
 }
 
 .beneficios__grade {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }
 
 .card-beneficio {
   border: 1px solid #e5e7eb;
   border-radius: 0.75rem;
-  padding: 2rem 1.5rem;
+  padding: 1.5rem 1.25rem;
   text-align: center;
   transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+
+  @media (min-width: 640px) {
+    padding: 2rem 1.5rem;
+  }
 
   &:hover {
     box-shadow: 0 8px 24px rgba(249, 115, 22, 0.12);
@@ -138,17 +183,22 @@
 /* CTA final */
 .cta-prestador {
   background: #0d1117;
-  padding: 4rem 1.5rem;
+  padding: 3rem 1rem;
   text-align: center;
+
+  @media (min-width: 640px) {
+    padding: 4rem 1.5rem;
+  }
 }
 
 .cta-prestador__inner {
   max-width: 600px;
+  width: 100%;
   margin: 0 auto;
 }
 
 .cta-prestador__titulo {
-  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-size: clamp(1.375rem, 2.5vw, 2rem);
   font-weight: 800;
   color: #ffffff;
   margin-bottom: 0.75rem;
@@ -156,8 +206,12 @@
 
 .cta-prestador__subtitulo {
   color: #9ca3af;
-  font-size: 1.0625rem;
+  font-size: 1rem;
   margin-bottom: 2rem;
+
+  @media (min-width: 640px) {
+    font-size: 1.0625rem;
+  }
 }
 
 .btn-cta-prestador {

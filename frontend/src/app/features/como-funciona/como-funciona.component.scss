@@ -1,12 +1,21 @@
 /* ============================================================
-   Como Funciona Component — Prontto
+   Como Funciona Component — Prontto (mobile-first)
    ============================================================ */
 
 .como-funciona {
   max-width: 900px;
+  width: 100%;
   margin: 0 auto;
-  padding: 4rem 1.5rem;
+  padding: 2.5rem 1rem;
   text-align: center;
+
+  @media (min-width: 640px) {
+    padding: 3rem 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 4rem 1.5rem;
+  }
 }
 
 /* Header */
@@ -21,7 +30,7 @@
 }
 
 .como-funciona__titulo {
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
   font-weight: 800;
   color: #111827;
   margin-bottom: 0.75rem;
@@ -29,17 +38,34 @@
 
 .como-funciona__subtitulo {
   color: #6b7280;
-  font-size: 1.0625rem;
-  margin-bottom: 3.5rem;
+  font-size: 1rem;
+  margin-bottom: 2.5rem;
+
+  @media (min-width: 640px) {
+    font-size: 1.0625rem;
+    margin-bottom: 3.5rem;
+  }
 }
 
 /* Passos */
 .passos {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 2.5rem;
-  margin-bottom: 3.5rem;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
   position: relative;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+    margin-bottom: 3.5rem;
+  }
 }
 
 .passo {
@@ -49,32 +75,47 @@
 }
 
 .passo__numero {
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 3rem;
+  height: 3rem;
   background: #f97316;
   color: #ffffff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 800;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);
   flex-shrink: 0;
+
+  @media (min-width: 640px) {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
 }
 
 .passo__titulo {
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: #111827;
   margin-bottom: 0.5rem;
+
+  @media (min-width: 640px) {
+    font-size: 1rem;
+  }
 }
 
 .passo__descricao {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: #6b7280;
   line-height: 1.6;
+
+  @media (min-width: 640px) {
+    font-size: 0.875rem;
+  }
 }
 
 /* CTA */
@@ -97,12 +138,5 @@
   &:hover {
     background: #ea580c;
     transform: translateY(-2px);
-  }
-}
-
-@media (max-width: 640px) {
-  .passos {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
   }
 }

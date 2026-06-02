@@ -1,5 +1,5 @@
 /* ============================================================
-   Not Found Component — Prontto
+   Not Found Component — Prontto (mobile-first)
    ============================================================ */
 
 .nao-encontrado {
@@ -8,38 +8,55 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
   text-align: center;
+
+  @media (min-width: 640px) {
+    padding: 2rem 1.5rem;
+  }
 }
 
 .nao-encontrado__inner {
   max-width: 480px;
+  width: 100%;
 }
 
 .nao-encontrado__codigo {
-  font-size: clamp(6rem, 15vw, 9rem);
+  font-size: clamp(4rem, 15vw, 9rem);
   font-weight: 800;
   color: #f97316;
   line-height: 1;
-  margin-bottom: 1rem;
+  margin-bottom: 0.875rem;
   letter-spacing: -0.04em;
-  /* Efeito outline */
   -webkit-text-stroke: 2px #f97316;
   text-shadow: 0 8px 32px rgba(249, 115, 22, 0.25);
+
+  @media (min-width: 640px) {
+    margin-bottom: 1rem;
+  }
 }
 
 .nao-encontrado__titulo {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: #111827;
   margin-bottom: 0.75rem;
+
+  @media (min-width: 640px) {
+    font-size: 1.5rem;
+  }
 }
 
 .nao-encontrado__descricao {
-  font-size: 1rem;
+  font-size: 0.9375rem;
   color: #6b7280;
   line-height: 1.7;
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
+
+  @media (min-width: 640px) {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
 }
 
 .btn-voltar {

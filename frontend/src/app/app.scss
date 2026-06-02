@@ -1,5 +1,5 @@
 /* ============================================================
-   Navbar — Prontto
+   Navbar — Prontto (mobile-first)
    ============================================================ */
 
 .navbar {
@@ -12,24 +12,34 @@
 
 .navbar__inner {
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1rem;
+
+  @media (min-width: 640px) {
+    padding: 0 1.5rem;
+    gap: 2rem;
+  }
 }
 
 /* Logo */
 .navbar__logo {
   display: flex;
   align-items: center;
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   text-decoration: none;
   flex-shrink: 0;
+
+  @media (min-width: 640px) {
+    font-size: 1.5rem;
+  }
 }
 
 .logo-pront {
@@ -40,13 +50,17 @@
   color: #f97316;
 }
 
-/* Links de navegação (centro) */
+/* Links de navegação (centro) — ocultos no mobile, visíveis no desktop */
 .navbar__links {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  flex: 1;
-  justify-content: center;
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex: 1;
+    justify-content: center;
+  }
 }
 
 .navbar__link {
@@ -62,12 +76,16 @@
   }
 }
 
-/* Ações (lado direito) */
+/* Ações (lado direito) — ocultas no mobile, visíveis no desktop */
 .navbar__acoes {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  flex-shrink: 0;
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-shrink: 0;
+  }
 }
 
 .navbar__btn-cadastrar {
@@ -103,9 +121,9 @@
   }
 }
 
-/* Hamburger */
+/* Hamburger — visível no mobile, oculto no desktop */
 .navbar__hamburger {
-  display: none;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 5px;
@@ -142,6 +160,10 @@
   &.ativo span:nth-child(3) {
     transform: translateY(-7px) rotate(-45deg);
   }
+
+  @media (min-width: 1024px) {
+    display: none;
+  }
 }
 
 /* Menu mobile */
@@ -177,16 +199,4 @@
 /* Conteúdo principal */
 .conteudo-principal {
   min-height: calc(100vh - 64px);
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-  .navbar__links,
-  .navbar__acoes {
-    display: none;
-  }
-
-  .navbar__hamburger {
-    display: flex;
-  }
 }

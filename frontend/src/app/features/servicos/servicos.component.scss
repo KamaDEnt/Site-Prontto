@@ -1,17 +1,30 @@
 /* ============================================================
-   Serviços Component — Prontto
+   Serviços Component — Prontto (mobile-first)
    ============================================================ */
 
 .servicos {
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
-  padding: 4rem 1.5rem;
+  padding: 2.5rem 1rem;
+
+  @media (min-width: 640px) {
+    padding: 3rem 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 4rem 1.5rem;
+  }
 }
 
 /* Header */
 .servicos__header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
+
+  @media (min-width: 640px) {
+    margin-bottom: 3rem;
+  }
 }
 
 .secao-label {
@@ -25,7 +38,7 @@
 }
 
 .servicos__titulo {
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
   font-weight: 800;
   color: #111827;
   margin-bottom: 0.75rem;
@@ -33,26 +46,45 @@
 
 .servicos__subtitulo {
   color: #6b7280;
-  font-size: 1.0625rem;
+  font-size: 1rem;
+
+  @media (min-width: 640px) {
+    font-size: 1.0625rem;
+  }
 }
 
 /* Grade */
 .servicos__grade {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
 }
 
 .card-servico {
   border: 1px solid #e5e7eb;
   border-radius: 0.75rem;
-  padding: 1.75rem 1.25rem;
+  padding: 1.25rem 1rem;
   text-align: center;
   transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (min-width: 640px) {
+    padding: 1.75rem 1.25rem;
+  }
 
   &:hover {
     box-shadow: 0 8px 24px rgba(249, 115, 22, 0.12);
@@ -62,23 +94,37 @@
 }
 
 .card-servico__icone {
-  font-size: 2.5rem;
-  margin-bottom: 0.875rem;
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+
+  @media (min-width: 640px) {
+    font-size: 2.5rem;
+    margin-bottom: 0.875rem;
+  }
 }
 
 .card-servico__titulo {
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   color: #111827;
   margin-bottom: 0.5rem;
+
+  @media (min-width: 640px) {
+    font-size: 1rem;
+  }
 }
 
 .card-servico__descricao {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: #6b7280;
   line-height: 1.5;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   flex: 1;
+
+  @media (min-width: 640px) {
+    font-size: 0.875rem;
+    margin-bottom: 1.25rem;
+  }
 }
 
 .card-servico__btn {
@@ -126,11 +172,5 @@
   &:hover {
     background: #f97316;
     color: #ffffff;
-  }
-}
-
-@media (max-width: 480px) {
-  .servicos__grade {
-    grid-template-columns: repeat(2, 1fr);
   }
 }
