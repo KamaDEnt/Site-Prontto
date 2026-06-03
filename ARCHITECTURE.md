@@ -1,4 +1,4 @@
-# Prontto — Arquitetura Mestre
+﻿# Prontto — Arquitetura Mestre
 
 > Versão 1.1 — Documento normativo. Toda implementação futura deve estar alinhada com as decisões aqui registradas.
 > Última alteração: 2026-06-03 — Ajustes de arquitetura: auth com Refresh Token, AuditLog, Disputa, Categoria/Cidade como entidades, Notificacao, soft delete, slug imutável, retenção financeira documentada.
@@ -126,7 +126,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Representa qualquer pessoa cadastrada na plataforma. Pode ser Cliente ou Prestador. Um usuário Admin tem `Papel = Admin` independentemente de `TipoConta`.
 
-**Tabela**: `users`
+**Tabela**: `usuarios`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -166,7 +166,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Representa a ordem de serviço do início ao fim. É o agregado central da plataforma.
 
-**Tabela**: `services`
+**Tabela**: `servicos`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -202,7 +202,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Representa o ciclo financeiro de um serviço. Criada automaticamente quando o serviço avança para `AguardandoPagamento`. Contém referências ao objeto de pagamento externo (Pagar.me).
 
-**Tabela**: `charges`
+**Tabela**: `cobrancas`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -232,7 +232,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Representa cada mensagem do chat vinculado a um serviço. Suporta texto e imagens com moderação.
 
-**Tabela**: `service_messages`
+**Tabela**: `mensagens_servico`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -258,7 +258,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Dados PIX e bancários do Prestador para recebimento de repasses.
 
-**Tabela**: `professional_banking`
+**Tabela**: `dados_bancarios`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -284,7 +284,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Avaliação bilateral após conclusão do serviço. Cada parte avalia a outra separadamente.
 
-**Tabela**: `reviews`
+**Tabela**: `avaliacoes`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -309,7 +309,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Relação muitos-para-muitos entre Prestador e suas categorias de serviço.
 
-**Tabela**: `user_categories`
+**Tabela**: `usuarios_categorias`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -324,7 +324,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Relação muitos-para-muitos entre Prestador e cidades onde atua.
 
-**Tabela**: `user_cities`
+**Tabela**: `usuarios_cidades`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -339,7 +339,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Imagens de trabalhos anteriores do Prestador hospedadas no Cloudinary.
 
-**Tabela**: `portfolio_images`
+**Tabela**: `imagens_portfolio`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -359,7 +359,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Catálogo canônico de categorias de serviço. Todas as referências a categoria usam FK para esta tabela — nunca string livre.
 
-**Tabela**: `categories`
+**Tabela**: `categorias`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -377,7 +377,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Catálogo de cidades cobertas pela plataforma. Todas as referências a cidade usam FK para esta tabela.
 
-**Tabela**: `cities`
+**Tabela**: `cidades`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -395,7 +395,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Armazena tokens de renovação de sessão. Cada login emite um par (Access Token 15 min + Refresh Token 30 dias). A rotação obrigatória invalida o token anterior a cada renovação.
 
-**Tabela**: `refresh_tokens`
+**Tabela**: `tokens_renovacao`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -423,7 +423,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Trilha de auditoria imutável. Registra ações críticas com identificação do ator, entidade afetada e contexto de rede. Registros **nunca são deletados**.
 
-**Tabela**: `audit_logs`
+**Tabela**: `logs_auditoria`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -449,7 +449,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Contestação aberta pelo Cliente quando discorda da conclusão marcada pelo Prestador. Enquanto disputa está ativa, o pagamento permanece retido e o Admin decide o resultado.
 
-**Tabela**: `disputes`
+**Tabela**: `disputas`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -477,7 +477,7 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 
 **Responsabilidade**: Notificações in-app enviadas ao usuário sobre eventos relevantes. Lidas via polling ou SignalR (V2).
 
-**Tabela**: `notifications`
+**Tabela**: `notificacoes`
 
 | Propriedade | Tipo C# | Coluna DB | Observações |
 |------------|---------|-----------|------------|
@@ -1059,31 +1059,31 @@ A arquitetura deve suportar crescimento orgânico sem reescritas. As escolhas fo
 
 | Tabela | Colunas | Tipo | Motivo |
 |--------|---------|------|--------|
-| `users` | `email` | UNIQUE | Login |
-| `users` | `slug` | UNIQUE | URL pública |
-| `users` | `account_type`, `city_slug`, `category_slug` | Composto | Busca de prestadores |
-| `services` | `client_id` | B-tree | Serviços do cliente |
-| `services` | `provider_id` | B-tree | Serviços do prestador |
-| `services` | `status` | B-tree | Filtros por status |
-| `services` | `awaiting_confirmation_since` | B-tree | Job de auto-conclusão |
-| `charges` | `service_id` | UNIQUE | 1:1 com serviço |
-| `charges` | `status`, `pix_expires_at` | Composto | Job de expiração PIX |
-| `charges` | `pagarme_order_id` | UNIQUE | Idempotência webhook |
-| `service_messages` | `service_id`, `created_at` | Composto | Paginação do chat |
-| `reviews` | `reviewed_id` | B-tree | Avaliações recebidas |
-| `reviews` | `service_id`, `reviewer_id` | UNIQUE | Constraint de duplicidade |
-| `user_categories` | `category_id` | B-tree | Busca por categoria (FK) |
-| `user_cities` | `city_id` | B-tree | Busca por cidade (FK) |
-| `categories` | `slug` | UNIQUE | URL pública e busca |
-| `cities` | `slug` | UNIQUE | URL pública e busca |
-| `refresh_tokens` | `token` | UNIQUE | Lookup de renovação |
-| `refresh_tokens` | `user_id`, `revoked_at` | Composto | Sessões ativas por usuário |
-| `audit_logs` | `user_id`, `created_at` | Composto | Auditoria por usuário |
-| `audit_logs` | `entity`, `entity_id` | Composto | Auditoria por entidade |
-| `audit_logs` | `created_at` | B-tree | Purge e listagem cronológica |
-| `disputes` | `service_id` | UNIQUE | 1:1 com serviço |
-| `disputes` | `status` | B-tree | Filtro de disputas abertas |
-| `notifications` | `user_id`, `read`, `created_at` | Composto | Notificações não lidas por usuário |
+| `usuarios` | `email` | UNIQUE | Login |
+| `usuarios` | `slug` | UNIQUE | URL pública |
+| `usuarios` | `account_type`, `city_slug`, `category_slug` | Composto | Busca de prestadores |
+| `servicos` | `client_id` | B-tree | Serviços do cliente |
+| `servicos` | `provider_id` | B-tree | Serviços do prestador |
+| `servicos` | `status` | B-tree | Filtros por status |
+| `servicos` | `awaiting_confirmation_since` | B-tree | Job de auto-conclusão |
+| `cobrancas` | `service_id` | UNIQUE | 1:1 com serviço |
+| `cobrancas` | `status`, `pix_expires_at` | Composto | Job de expiração PIX |
+| `cobrancas` | `pagarme_order_id` | UNIQUE | Idempotência webhook |
+| `mensagens_servico` | `service_id`, `created_at` | Composto | Paginação do chat |
+| `avaliacoes` | `reviewed_id` | B-tree | Avaliações recebidas |
+| `avaliacoes` | `service_id`, `reviewer_id` | UNIQUE | Constraint de duplicidade |
+| `usuarios_categorias` | `category_id` | B-tree | Busca por categoria (FK) |
+| `usuarios_cidades` | `city_id` | B-tree | Busca por cidade (FK) |
+| `categorias` | `slug` | UNIQUE | URL pública e busca |
+| `cidades` | `slug` | UNIQUE | URL pública e busca |
+| `tokens_renovacao` | `token` | UNIQUE | Lookup de renovação |
+| `tokens_renovacao` | `user_id`, `revoked_at` | Composto | Sessões ativas por usuário |
+| `logs_auditoria` | `user_id`, `created_at` | Composto | Auditoria por usuário |
+| `logs_auditoria` | `entity`, `entity_id` | Composto | Auditoria por entidade |
+| `logs_auditoria` | `created_at` | B-tree | Purge e listagem cronológica |
+| `disputas` | `service_id` | UNIQUE | 1:1 com serviço |
+| `disputas` | `status` | B-tree | Filtro de disputas abertas |
+| `notificacoes` | `user_id`, `read`, `created_at` | Composto | Notificações não lidas por usuário |
 
 **Paginação**: todos os endpoints de listagem aceitam `page` e `pageSize` (máximo 50). Usar cursor-based pagination para o chat (`afterId`).
 

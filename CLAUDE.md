@@ -64,11 +64,19 @@ Prontto/                          ← renomear pasta de Visual-DNA para Prontto
 
 | Classe C# | Tabela no banco | Descrição |
 |-----------|----------------|-----------|
-| `Usuario` | `users` | Clientes e prestadores |
-| `Servico` | `services` | Ordem de serviço |
-| `Cobranca` | `charges` | Cobrança gerada ao concluir serviço |
-| `DadosBancarios` | `professional_banking` | Dados Pix do prestador |
-| `MensagemServico` | `service_messages` | Chat por serviço |
+| `Usuario` | `usuarios` | Clientes e prestadores |
+| `Servico` | `servicos` | Ordem de serviço |
+| `Cobranca` | `cobrancas` | Cobrança gerada ao concluir serviço |
+| `DadosBancarios` | `dados_bancarios` | Dados Pix do prestador |
+| `MensagemServico` | `mensagens_servico` | Chat por serviço |
+| `Avaliacao` | `avaliacoes` | Avaliação bilateral pós-conclusão |
+| `Categoria` | `categorias` | Catálogo canônico de categorias |
+| `Cidade` | `cidades` | Catálogo de cidades cobertas |
+| `RefreshToken` | `tokens_renovacao` | Tokens de renovação de sessão |
+| `ImagemPortfolio` | `imagens_portfolio` | Portfólio do prestador |
+| `Disputa` | `disputas` | Contestação de conclusão |
+| `Notificacao` | `notificacoes` | Notificações in-app |
+| `AuditLog` | `logs_auditoria` | Trilha de auditoria imutável |
 
 ### Propriedades principais de `Usuario`
 `Id`, `Nome`, `Email`, `Telefone`, `HashSenha`, `TipoConta` (Cliente|Prestador), `Papel` (Usuario|Admin), `Especialidade`, `Cidade`
