@@ -1,4 +1,4 @@
-import { Component, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { Component, signal, computed, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 interface Categoria {
@@ -21,7 +21,9 @@ interface Passo {
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('videoFundo') videoFundo!: ElementRef<HTMLVideoElement>;
+
   readonly passoAtivo = signal(0);
   private intervalo: ReturnType<typeof setInterval> | null = null;
 
@@ -69,6 +71,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.iniciarAvanco();
+  }
+
+  ngAfterViewInit(): void {
+    const video = this.videoFundo?.nativeElement;
+    if (video) {
+      video.muted = true;
+      video.play().catch(() => {});
+    }
   }
 
   ngOnDestroy(): void {

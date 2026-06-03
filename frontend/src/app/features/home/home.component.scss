@@ -4,7 +4,8 @@
 
 /* ---- Hero ---- */
 .hero {
-  background: #0d1117;
+  position: relative;
+  overflow: hidden;
   color: #ffffff;
   padding: 3rem 1rem 2.5rem;
 
@@ -17,7 +18,30 @@
   }
 }
 
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(13, 17, 23, 0.88) 0%,
+    rgba(17, 24, 39, 0.75) 100%
+  );
+  z-index: 1;
+}
+
 .hero__inner {
+  position: relative;
+  z-index: 2;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;

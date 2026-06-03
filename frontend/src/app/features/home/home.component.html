@@ -2,8 +2,23 @@
      HERO SECTION
      ====================================================== -->
 <section class="hero">
+  <!-- Vídeo de fundo -->
+  <video
+    #videoFundo
+    class="hero__video"
+    src="video_fundo.mp4"
+    autoplay
+    muted
+    loop
+    playsinline
+    aria-hidden="true"
+  ></video>
+
+  <!-- Overlay escuro -->
+  <div class="hero__overlay" aria-hidden="true"></div>
+
+  <!-- Conteúdo -->
   <div class="hero__inner">
-    <!-- Texto -->
     <div class="hero__texto">
       <span class="hero__label">SERVIÇO SOB MEDIDA</span>
       <h1 class="hero__titulo">
@@ -31,24 +46,6 @@
         <div class="hero__stat">
           <strong>4.8★</strong>
           <span>Avaliação</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ilustração -->
-    <div class="hero__ilustracao" aria-hidden="true">
-      <div class="ilus-casa">
-        <div class="ilus-telhado"></div>
-        <div class="ilus-corpo">
-          <div class="ilus-porta"></div>
-          <div class="ilus-janela ilus-janela--esq"></div>
-          <div class="ilus-janela ilus-janela--dir"></div>
-        </div>
-        <div class="ilus-icones">
-          <span class="ilus-badge ilus-badge--1">🔧</span>
-          <span class="ilus-badge ilus-badge--2">⚡</span>
-          <span class="ilus-badge ilus-badge--3">🧹</span>
-          <span class="ilus-badge ilus-badge--4">🌱</span>
         </div>
       </div>
     </div>
