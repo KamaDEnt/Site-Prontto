@@ -76,6 +76,131 @@
   }
 }
 
+/* Link do perfil público */
+.slug-link {
+  margin-top: 0.375rem;
+  font-size: 0.875rem;
+  color: var(--cor-texto-suave, #6b7280);
+}
+
+.link-perfil {
+  color: #f97316;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Completar perfil */
+.completar-perfil {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  background: #fff9f5;
+  border-color: rgba(249, 115, 22, 0.25);
+
+  @media (min-width: 640px) {
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.completar-perfil h3 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+
+  @media (min-width: 640px) {
+    font-size: 1.125rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+.aviso-perfil {
+  font-size: 0.875rem;
+  color: #92400e;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Textarea */
+textarea {
+  width: 100%;
+  padding: 0.6875rem 0.875rem;
+  border: 1.5px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  color: #111827;
+  resize: vertical;
+  min-height: 6rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #ffffff;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: #f97316;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+  }
+}
+
+.campo-dica {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Checkboxes grid */
+.checkboxes-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  margin-top: 0.375rem;
+
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #374151;
+  padding: 0.375rem 0.5rem;
+  border-radius: 0.375rem;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #f3f4f6;
+  }
+
+  input[type='checkbox'] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: #f97316;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+}
+
 /* Dados bancários */
 .dados-bancarios {
   border: 1px solid #e5e7eb;

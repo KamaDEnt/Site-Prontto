@@ -12,6 +12,11 @@ public class ContextoBancoDados(DbContextOptions<ContextoBancoDados> opcoes) : D
     public DbSet<Servico> Servicos => Set<Servico>();
     public DbSet<MensagemServico> MensagensServico => Set<MensagemServico>();
     public DbSet<Cobranca> Cobrancas => Set<Cobranca>();
+    public DbSet<Categoria> Categorias => Set<Categoria>();
+    public DbSet<Cidade> Cidades => Set<Cidade>();
+    public DbSet<CategoriaUsuario> CategoriasUsuario => Set<CategoriaUsuario>();
+    public DbSet<CidadeUsuario> CidadesUsuario => Set<CidadeUsuario>();
+    public DbSet<ImagemPortfolio> ImagensPortfolio => Set<ImagemPortfolio>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -193,6 +198,99 @@ public class ContextoBancoDados(DbContextOptions<ContextoBancoDados> opcoes) : D
             e.HasOne(c => c.Servico)
                 .WithOne(s => s.Cobranca)
                 .HasForeignKey<Cobranca>(c => c.ServicoId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ── Categoria ──────────────────────────────────────────────────────────
+        modelBuilder.Entity<Categoria>(e =>
+        {
+            e.ToTable("categorias");
+            e.HasIndex(c => c.Slug).IsUnique();
+
+            e.Property(c => c.Id).HasColumnName("id");
+            e.Property(c => c.Nome).HasColumnName("nome");
+            e.Property(c => c.Slug).HasColumnName("slug");
+            e.Property(c => c.Ativa).HasColumnName("ativo");
+            e.Property(c => c.Ordem).HasColumnName("ordem_exibicao");
+        });
+
+        // ── Cidade ─────────────────────────────────────────────────────────────
+        modelBuilder.Entity<Cidade>(e =>
+        {
+            e.ToTable("cidades");
+            e.HasIndex(c => c.Slug).IsUnique();
+
+            e.Property(c => c.Id).HasColumnName("id");
+            e.Property(c => c.Nome).HasColumnName("nome");
+            e.Property(c => c.Estado).HasColumnName("estado");
+            e.Property(c => c.Slug).HasColumnName("slug");
+            e.Property(c => c.Ativa).HasColumnName("ativo");
+        });
+
+        // ── CategoriaUsuario ───────────────────────────────────────────────────
+        modelBuilder.Entity<CategoriaUsuario>(e =>
+        {
+            e.ToTable("usuarios_categorias");
+            e.HasKey(cu => new { cu.UsuarioId, cu.CategoriaId });
+
+            e.Property(cu => cu.UsuarioId).HasColumnName("usuario_id");
+            e.Property(cu => cu.CategoriaId).HasColumnName("categoria_id");
+
+            e.HasOne(cu => cu.Usuario)
+                .WithMany(u => u.Categorias)
+                .HasForeignKey(cu => cu.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            e.HasOne(cu => cu.Categoria)
+                .WithMany(c => c.Usuarios)
+                .HasForeignKey(cu => cu.CategoriaId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ── CidadeUsuario ──────────────────────────────────────────────────────
+        modelBuilder.Entity<CidadeUsuario>(e =>
+        {
+            e.ToTable("usuarios_cidades");
+            e.HasKey(cu => new { cu.UsuarioId, cu.CidadeId });
+
+            e.Property(cu => cu.UsuarioId).HasColumnName("usuario_id");
+            e.Property(cu => cu.CidadeId).HasColumnName("cidade_id");
+
+            e.HasOne(cu => cu.Usuario)
+                .WithMany(u => u.Cidades)
+                .HasForeignKey(cu => cu.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            e.HasOne(cu => cu.Cidade)
+                .WithMany(c => c.Usuarios)
+                .HasForeignKey(cu => cu.CidadeId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ── ImagemPortfolio ────────────────────────────────────────────────────
+        modelBuilder.Entity<ImagemPortfolio>(e =>
+        {
+            e.ToTable("imagens_portfolio");
+
+            e.HasIndex(i => new { i.UsuarioId, i.Ordem })
+                .HasFilter("deletado_em IS NULL AND aprovado = TRUE");
+
+            e.Property(i => i.Id).HasColumnName("id");
+            e.Property(i => i.UsuarioId).HasColumnName("usuario_id");
+            e.Property(i => i.Url).HasColumnName("url");
+            e.Property(i => i.CloudinaryPublicId).HasColumnName("cloudinary_public_id");
+            e.Property(i => i.Moderada).HasColumnName("moderado");
+            e.Property(i => i.Aprovada).HasColumnName("aprovado");
+            e.Property(i => i.Ordem).HasColumnName("ordem_exibicao");
+            e.Property(i => i.CriadoEm).HasColumnName("criado_em");
+            e.Property(i => i.DeletadoEm).HasColumnName("deletado_em");
+
+            // Soft delete: imagens deletadas são invisíveis por padrão
+            e.HasQueryFilter(i => i.DeletadoEm == null);
+
+            e.HasOne(i => i.Usuario)
+                .WithMany(u => u.ImagensPortfolio)
+                .HasForeignKey(i => i.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
     }

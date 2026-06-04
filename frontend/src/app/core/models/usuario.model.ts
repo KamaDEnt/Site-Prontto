@@ -12,6 +12,7 @@ export interface Usuario {
   cidadeId?: string | null;
   fotoPerfilUrl?: string | null;
   slug?: string | null;
+  descricao?: string | null;
   mediaAvaliacoes: number;
   totalAvaliacoes: number;
   criadoEm: string;
@@ -113,4 +114,48 @@ export interface EstatisticasAdmin {
   usuarios: { total: number; clientes: number; prestadores: number };
   servicos: { total: number; pendentes: number; emAndamento: number; concluidos: number };
   receita: { ganha: number; pendente: number; gmv: number };
+}
+
+// ── Perfil Público do Prestador (RF-02) ──────────────────────────────────────
+
+export interface Categoria {
+  id: string;
+  nome: string;
+  slug: string;
+}
+
+export interface Cidade {
+  id: string;
+  nome: string;
+  estado: string;
+  slug: string;
+}
+
+export interface ImagemPortfolio {
+  id: string;
+  url: string;
+  ordem: number;
+}
+
+export interface PerfilPublico {
+  id: string;
+  nome: string;
+  fotoPerfilUrl?: string | null;
+  slug?: string | null;
+  descricao?: string | null;
+  especialidade?: string | null;
+  mediaAvaliacoes: number;
+  totalAvaliacoes: number;
+  categorias: Categoria[];
+  cidades: Cidade[];
+  imagensPortfolio: ImagemPortfolio[];
+}
+
+export interface ComandoAtualizarPerfil {
+  nome?: string | null;
+  descricao?: string | null;
+  especialidade?: string | null;
+  fotoPerfilUrl?: string | null;
+  categoriaIds?: string[] | null;
+  cidadeIds?: string[] | null;
 }

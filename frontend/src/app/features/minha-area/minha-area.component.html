@@ -7,8 +7,115 @@
   <section class="perfil">
     <h2>Bem-vindo, {{ usuario()?.nome }}</h2>
     <p>{{ usuario()?.email }} · {{ usuario()?.tipoConta }}</p>
+    @if (usuario()?.slug) {
+      <p class="slug-link">
+        Perfil público:
+        <a [routerLink]="['/prestador', usuario()!.slug]" class="link-perfil">
+          /prestador/{{ usuario()!.slug }}
+        </a>
+      </p>
+    }
   </section>
 
+  <!-- Seção: Completar / Editar Perfil (prestadores) -->
+  @if (usuario()?.tipoConta === 'prestador') {
+    <section class="completar-perfil">
+      <h3>
+        @if (precisaCompletarPerfil) {
+          Completar Perfil Público
+        } @else {
+          Editar Perfil Público
+        }
+      </h3>
+
+      @if (precisaCompletarPerfil) {
+        <p class="aviso-perfil">
+          Complete seu perfil para que clientes possam encontrar você na plataforma.
+        </p>
+      }
+
+      @if (mensagemPerfil()) {
+        <p class="mensagem">{{ mensagemPerfil() }}</p>
+      }
+
+      <form [formGroup]="formularioPerfil" (ngSubmit)="salvarPerfil()">
+        <div class="campo">
+          <label for="descricao">Sobre você</label>
+          <textarea
+            id="descricao"
+            formControlName="descricao"
+            rows="4"
+            placeholder="Descreva sua experiência, diferenciais e o tipo de serviço que oferece..."
+          ></textarea>
+        </div>
+
+        <div class="campo">
+          <label for="especialidade">Especialidade principal</label>
+          <input
+            id="especialidade"
+            type="text"
+            formControlName="especialidade"
+            placeholder="Ex: Eletricista residencial"
+          />
+        </div>
+
+        <div class="campo">
+          <label for="fotoPerfilUrl">URL da foto de perfil</label>
+          <input
+            id="fotoPerfilUrl"
+            type="url"
+            formControlName="fotoPerfilUrl"
+            placeholder="https://..."
+          />
+          <span class="campo-dica">Faça upload no Cloudinary e cole o URL aqui.</span>
+        </div>
+
+        <!-- Categorias -->
+        @if (categorias().length > 0) {
+          <div class="campo">
+            <label>Categorias de atuação</label>
+            <div class="checkboxes-grid" role="group" aria-label="Selecionar categorias">
+              @for (cat of categorias(); track cat.id) {
+                <label class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    [checked]="categoriaEscolhida(cat.id)"
+                    (change)="toggleCategoria(cat.id)"
+                  />
+                  <span>{{ cat.nome }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Cidades -->
+        @if (cidades().length > 0) {
+          <div class="campo">
+            <label>Cidades onde atende</label>
+            <div class="checkboxes-grid" role="group" aria-label="Selecionar cidades">
+              @for (cid of cidades(); track cid.id) {
+                <label class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    [checked]="cidadeEscolhida(cid.id)"
+                    (change)="toggleCidade(cid.id)"
+                  />
+                  <span>{{ cid.nome }}/{{ cid.estado }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        }
+
+        <button type="submit" [disabled]="salvandoPerfil()">
+          {{ salvandoPerfil() ? 'Salvando...' : (precisaCompletarPerfil ? 'Publicar perfil' : 'Salvar alterações') }}
+        </button>
+      </form>
+    </section>
+  }
+
+  <!-- Seção: Dados Bancários (prestadores) -->
   @if (usuario()?.tipoConta === 'prestador') {
     <section class="dados-bancarios">
       <h3>Dados Bancários (Pix)</h3>

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Prontto.Application.Auth;
 using Prontto.Application.Common;
+using Prontto.Application.Perfil;
+using Prontto.Domain.Entities;
 using Prontto.Domain.Enums;
 using Prontto.Domain.Interfaces;
 
@@ -11,7 +13,11 @@ namespace Prontto.Api.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public class ControladorAuth(IServicoAutenticacao servicoAuth, IRepositorioBanking banking) : ControllerBase
+public class ControladorAuth(
+    IServicoAutenticacao servicoAuth,
+    IRepositorioBanking banking,
+    IServicoPerfilPrestador servicoPerfil,
+    IRepositorioPerfilPrestador repositorioPerfil) : ControllerBase
 {
     private const string NomeCookieRefreshToken = "prontto_refresh_token";
 
@@ -132,6 +138,97 @@ public class ControladorAuth(IServicoAutenticacao servicoAuth, IRepositorioBanki
         return Ok(new { banking = resultado });
     }
 
+    // ── Perfil do Prestador ────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Atualiza o perfil público do prestador autenticado.
+    /// O Slug é gerado na primeira chamada e nunca sobrescrito (ADR-09).
+    /// Apenas prestadores podem chamar este endpoint.
+    /// </summary>
+    [HttpPut("perfil")]
+    [Authorize]
+    public async Task<IActionResult> AtualizarPerfil([FromBody] RequisicaoAtualizarPerfil req)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var tipoConta = User.FindFirstValue("accountType");
+        if (tipoConta != "prestador")
+            return StatusCode(403, new { error = "Apenas prestadores podem editar o perfil público" });
+
+        var idUsuario = Guid.Parse(User.FindFirstValue("userId")!);
+
+        var perfil = await servicoPerfil.AtualizarPerfilAsync(idUsuario, new ComandoAtualizarPerfil(
+            req.Nome,
+            req.Descricao,
+            req.Especialidade,
+            req.FotoPerfilUrl,
+            req.CategoriaIds,
+            req.CidadeIds));
+
+        return Ok(new { perfil });
+    }
+
+    // ── Portfólio (stub — Cloudinary não integrado ainda) ─────────────────────
+
+    /// <summary>
+    /// Registra uma imagem de portfólio pelo URL (após upload direto ao Cloudinary pelo frontend).
+    /// Stub: moderação automática não está integrada nesta versão.
+    /// </summary>
+    [HttpPost("portfolio")]
+    [Authorize]
+    public async Task<IActionResult> AdicionarImagem([FromBody] RequisicaoAdicionarImagem req)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var tipoConta = User.FindFirstValue("accountType");
+        if (tipoConta != "prestador")
+            return StatusCode(403, new { error = "Apenas prestadores podem adicionar imagens ao portfólio" });
+
+        var idUsuario = Guid.Parse(User.FindFirstValue("userId")!);
+
+        var imagem = new ImagemPortfolio
+        {
+            UsuarioId = idUsuario,
+            Url = req.Url.Trim(),
+            CloudinaryPublicId = req.CloudinaryPublicId.Trim(),
+            Moderada = false,
+            Aprovada = null, // Pendente de moderação
+            Ordem = req.Ordem,
+        };
+
+        await repositorioPerfil.AdicionarImagemAsync(imagem);
+
+        return StatusCode(201, new
+        {
+            imagem = new { imagem.Id, imagem.Url, imagem.Ordem, status = "pendente_moderacao" }
+        });
+    }
+
+    /// <summary>
+    /// Remove uma imagem do portfólio (soft delete).
+    /// Apenas o proprietário da imagem pode removê-la.
+    /// </summary>
+    [HttpDelete("portfolio/{id:guid}")]
+    [Authorize]
+    public async Task<IActionResult> RemoverImagem([FromRoute] Guid id)
+    {
+        var tipoConta = User.FindFirstValue("accountType");
+        if (tipoConta != "prestador")
+            return StatusCode(403, new { error = "Apenas prestadores podem remover imagens do portfólio" });
+
+        var idUsuario = Guid.Parse(User.FindFirstValue("userId")!);
+
+        var imagem = await repositorioPerfil.ObterImagemPorIdAsync(id);
+        if (imagem is null)
+            return NotFound(new { error = "Imagem não encontrada" });
+
+        if (imagem.UsuarioId != idUsuario)
+            return StatusCode(403, new { error = "Acesso negado" });
+
+        await repositorioPerfil.RemoverImagemAsync(imagem);
+        return NoContent();
+    }
+
     // ── Helpers de cookie ──────────────────────────────────────────────────────
 
     private void DefinirCookieRefreshToken(string tokenBruto)
@@ -169,3 +266,16 @@ public record RequisicaoBanking(
     string TipoChavePix, string ChavePix, string NomeCompleto, string CpfCnpj,
     string? NomeBanco = null, string? Agencia = null,
     string? NumeroConta = null, string? TipoConta = null);
+
+public record RequisicaoAtualizarPerfil(
+    string? Nome = null,
+    string? Descricao = null,
+    string? Especialidade = null,
+    string? FotoPerfilUrl = null,
+    List<Guid>? CategoriaIds = null,
+    List<Guid>? CidadeIds = null);
+
+public record RequisicaoAdicionarImagem(
+    string Url,
+    string CloudinaryPublicId,
+    int Ordem = 0);

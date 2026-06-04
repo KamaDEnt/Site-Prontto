@@ -14,6 +14,9 @@ public class RepositorioUsuario(ContextoBancoDados db) : IRepositorioUsuario
     public Task<Usuario?> ObterPorEmailAsync(string email)
         => db.Usuarios.FirstOrDefaultAsync(usuario => usuario.Email == email);
 
+    public Task<Usuario?> ObterPorSlugAsync(string slug)
+        => db.Usuarios.FirstOrDefaultAsync(usuario => usuario.Slug == slug);
+
     public async Task<IReadOnlyList<Usuario>> ListarNaoAdminsAsync()
         => await db.Usuarios
             .Where(usuario => usuario.Papel != Papel.Admin)

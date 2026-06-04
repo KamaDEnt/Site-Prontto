@@ -46,6 +46,13 @@ export const routes: Routes = [
       import('./features/admin/admin.component').then(m => m.AdminComponent),
   },
   {
+    path: 'prestador/:slug',
+    loadComponent: () =>
+      import('./features/perfil-prestador/perfil-prestador.component').then(
+        m => m.PerfilPrestadorComponent,
+      ),
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./features/not-found/not-found.component').then(m => m.NotFoundComponent),

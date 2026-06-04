@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Prontto.Application.Admin;
 using Prontto.Application.Auth;
 using Prontto.Application.Common;
+using Prontto.Application.Perfil;
 using Prontto.Domain.Interfaces;
 using Prontto.Infrastructure.Persistence.Context;
 using Prontto.Infrastructure.Persistence.Repositories;
@@ -26,10 +27,15 @@ public static class InjecaoDependencias
         servicos.AddScoped<IRepositorioMensagem, RepositorioMensagem>();
         servicos.AddScoped<IRepositorioRefreshToken, RepositorioRefreshToken>();
 
+        servicos.AddScoped<IRepositorioCategoria, RepositorioCategoria>();
+        servicos.AddScoped<IRepositorioCidade, RepositorioCidade>();
+        servicos.AddScoped<IRepositorioPerfilPrestador, RepositorioPerfilPrestador>();
+
         servicos.AddScoped<IHashSenha, HashSenhaBcrypt>();
         servicos.AddScoped<IServicoJwt, ServicoJwt>();
         servicos.AddScoped<IServicoAutenticacao, ServicoAutenticacao>();
         servicos.AddScoped<IServicoAdmin, ServicoAdmin>();
+        servicos.AddScoped<IServicoPerfilPrestador, ServicoPerfilPrestador>();
 
         return servicos;
     }

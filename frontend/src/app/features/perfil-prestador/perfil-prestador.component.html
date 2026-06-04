@@ -1,0 +1,112 @@
+<!-- Estado: carregando -->
+@if (carregando()) {
+  <div class="estado-carregando">
+    <div class="spinner"></div>
+    <p>Carregando perfil...</p>
+  </div>
+}
+
+<!-- Estado: erro -->
+@if (!carregando() && erro()) {
+  <div class="estado-erro">
+    <p class="erro-mensagem">{{ erro() }}</p>
+    <a routerLink="/" class="btn-voltar">Voltar ao início</a>
+  </div>
+}
+
+<!-- Perfil carregado -->
+@if (!carregando() && !erro() && perfil()) {
+  <main class="perfil-container">
+
+    <!-- Cabeçalho do perfil -->
+    <section class="perfil-cabecalho">
+      <div class="foto-wrapper">
+        @if (perfil()!.fotoPerfilUrl) {
+          <img
+            [src]="perfil()!.fotoPerfilUrl!"
+            [alt]="'Foto de ' + perfil()!.nome"
+            class="foto-perfil"
+          />
+        } @else {
+          <div class="foto-placeholder" aria-hidden="true">
+            {{ perfil()!.nome.charAt(0).toUpperCase() }}
+          </div>
+        }
+      </div>
+
+      <div class="perfil-info">
+        <h1 class="prestador-nome">{{ perfil()!.nome }}</h1>
+
+        @if (perfil()!.especialidade) {
+          <p class="prestador-especialidade">{{ perfil()!.especialidade }}</p>
+        }
+
+        <!-- Avaliações -->
+        <div class="avaliacoes" [attr.aria-label]="'Avaliação: ' + perfil()!.mediaAvaliacoes + ' de 5'">
+          @for (i of estrelas; track i) {
+            <span class="estrela" [class.ativa]="estralaAtiva(i)" aria-hidden="true">&#9733;</span>
+          }
+          <span class="avaliacao-texto">
+            {{ perfil()!.mediaAvaliacoes | number:'1.1-1' }}
+            ({{ perfil()!.totalAvaliacoes }} {{ perfil()!.totalAvaliacoes === 1 ? 'avaliação' : 'avaliações' }})
+          </span>
+        </div>
+
+        <!-- Categorias -->
+        @if (perfil()!.categorias.length > 0) {
+          <div class="tags-lista" role="list" aria-label="Categorias de atuação">
+            @for (cat of perfil()!.categorias; track cat.id) {
+              <span class="tag tag-categoria" role="listitem">{{ cat.nome }}</span>
+            }
+          </div>
+        }
+
+        <!-- Cidades -->
+        @if (perfil()!.cidades.length > 0) {
+          <div class="tags-lista cidades-lista" role="list" aria-label="Cidades de atuação">
+            <span class="label-cidades">Atende em:</span>
+            @for (cid of perfil()!.cidades; track cid.id) {
+              <span class="tag tag-cidade" role="listitem">{{ cid.nome }}/{{ cid.estado }}</span>
+            }
+          </div>
+        }
+
+        <!-- Botão contratar -->
+        <button class="btn-contratar" (click)="contratar()">
+          Contratar
+        </button>
+      </div>
+    </section>
+
+    <!-- Descrição / Bio -->
+    @if (perfil()!.descricao) {
+      <section class="secao-bio">
+        <h2 class="secao-titulo">Sobre o prestador</h2>
+        <p class="bio-texto">{{ perfil()!.descricao }}</p>
+      </section>
+    }
+
+    <!-- Portfólio -->
+    <section class="secao-portfolio">
+      <h2 class="secao-titulo">Portfólio</h2>
+
+      @if (perfil()!.imagensPortfolio.length === 0) {
+        <p class="portfolio-vazio">Nenhuma imagem no portfólio ainda.</p>
+      } @else {
+        <div class="portfolio-galeria" role="list" aria-label="Galeria de trabalhos">
+          @for (img of perfil()!.imagensPortfolio; track img.id) {
+            <div class="portfolio-item" role="listitem">
+              <img
+                [src]="img.url"
+                [alt]="'Trabalho ' + img.ordem + ' de ' + perfil()!.nome"
+                class="portfolio-imagem"
+                loading="lazy"
+              />
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+  </main>
+}

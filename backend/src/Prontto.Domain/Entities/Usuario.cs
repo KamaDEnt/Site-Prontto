@@ -38,4 +38,9 @@ public class Usuario
     public ICollection<Servico> ServicosComoPrestador { get; set; } = [];
     public ICollection<MensagemServico> Mensagens { get; set; } = [];
     public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
+
+    // Perfil do Prestador
+    public ICollection<CategoriaUsuario> Categorias { get; set; } = [];
+    public ICollection<CidadeUsuario> Cidades { get; set; } = [];
+    public ICollection<ImagemPortfolio> ImagensPortfolio { get; set; } = [];
 }
