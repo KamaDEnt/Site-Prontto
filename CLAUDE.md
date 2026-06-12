@@ -225,7 +225,7 @@ cd frontend && ng serve
 cd frontend && ng test
 
 # Banco (docker)
-docker-compose up -d postgres
+docker-compose up -d mysql
 
 # Migrations EF Core
 cd backend && dotnet ef migrations add <NomeDaMigration> \

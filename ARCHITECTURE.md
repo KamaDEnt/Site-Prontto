@@ -1,7 +1,7 @@
 ﻿# Prontto — Arquitetura Mestre
 
-> Versão 1.1 — Documento normativo. Toda implementação futura deve estar alinhada com as decisões aqui registradas.
-> Última alteração: 2026-06-03 — Ajustes de arquitetura: auth com Refresh Token, AuditLog, Disputa, Categoria/Cidade como entidades, Notificacao, soft delete, slug imutável, retenção financeira documentada.
+> Versão 1.2 — Documento normativo. Toda implementação futura deve estar alinhada com as decisões aqui registradas.
+> Última alteração: 2026-06-12 — Migração de banco de dados de PostgreSQL 17 para MySQL 8.0 (Hostinger). ADR-07 atualizado. Provider EF Core alterado para Pomelo.
 
 ---
 
@@ -36,13 +36,13 @@ Prontto é um marketplace brasileiro de serviços domésticos que conecta Client
 |--------|-----------|
 | Backend | ASP.NET Core (C#), Clean Architecture |
 | ORM | Entity Framework Core 9 |
-| Banco de Dados | PostgreSQL 17 |
+| Banco de Dados | MySQL 8.0 (Hostinger: srv2103.hstgr.io) |
 | Frontend | Angular 21, Standalone Components, Signals |
 | Autenticação | JWT HS256 — Access Token 15 min + Refresh Token 30 dias (rotação obrigatória, revogável) |
 | Pagamentos | Pagar.me (via abstração `IProcessadorPagamento`) |
 | Uploads | Cloudinary (via abstração `IArmazenamentoArquivo`) |
 | Contrato de API | OpenAPI 3.1 (`api-spec/openapi.yaml` — fonte da verdade) |
-| Infraestrutura local | Docker Compose (PostgreSQL 17, backend, frontend) |
+| Infraestrutura local | Docker Compose (MySQL 8.0, backend, frontend) |
 
 ### Princípios Arquiteturais
 
@@ -1195,15 +1195,19 @@ Para V2+ (múltiplas instâncias): migrar para Redis.
 
 ---
 
-### ADR-07 — PostgreSQL 17 com EF Core (sem Dapper)
+### ADR-07 — MySQL 8.0 com EF Core via Pomelo (sem Dapper)
 
-**Contexto**: Necessidade de ORM para o backend C#.
+**Contexto**: Necessidade de ORM para o backend C# em ambiente Hostinger (MySQL 8.0).
 
-**Decisão**: EF Core 9 com mapeamento explícito de colunas via `HasColumnName()`. Dapper apenas para queries analíticas complexas se necessário.
+**Decisão**: EF Core 9 + `Pomelo.EntityFrameworkCore.MySql` com mapeamento explícito de colunas via `HasColumnName()`. Dapper apenas para queries analíticas complexas se necessário.
 
-**Justificativa**: EF Core é adequado para o domínio transacional. Mapeamento explícito evita surpresas com convenções automáticas. O projeto já está configurado assim.
+**Justificativa**: O ambiente de produção é Hostinger, que oferece MySQL 8.0. A migração de PostgreSQL para MySQL foi feita na sprint de infraestrutura. Pomelo é o provider mais maduro e ativamente mantido para MySQL + EF Core. Mapeamento explícito evita surpresas com convenções automáticas.
 
-**Consequência**: Todas as entidades devem ter seus campos mapeados explicitamente em `ContextoBancoDados`.
+**Consequência**:
+- Todas as entidades devem ter seus campos mapeados explicitamente em `ContextoBancoDados`
+- Tipos específicos de PostgreSQL (`TIMESTAMPTZ`, `JSONB`, índices parciais) não existem no MySQL — usar `DATETIME`, `JSON` e indexes sem cláusula WHERE
+- Connection string: `Server=srv2103.hstgr.io;Database=u6383509_PronttoAdm;User=u6383509_PronttoAdm;...`
+- `SslMode=Required` obrigatório para conexões remotas ao Hostinger
 
 ---
 
@@ -1405,8 +1409,8 @@ Sequência recomendada de implementação, do mais fundamental ao mais avançado
 - [ ] Migrations automáticas na inicialização (ou separadas, a definir)
 - [ ] Observabilidade: structured logging (Serilog), health checks, métricas básicas
 - [ ] HTTPS via NGINX
-- [ ] Backups automáticos PostgreSQL
+- [ ] Backups automáticos MySQL (Hostinger painel ou mysqldump via cron)
 
 ---
 
-*Documento gerado em 2026-06-03. Manter atualizado a cada decisão arquitetural significativa.*
+*Documento gerado em 2026-06-03. Última revisão: 2026-06-12. Manter atualizado a cada decisão arquitetural significativa.*

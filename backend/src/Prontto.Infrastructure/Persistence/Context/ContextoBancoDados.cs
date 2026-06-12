@@ -30,7 +30,7 @@ public class ContextoBancoDados(DbContextOptions<ContextoBancoDados> opcoes) : D
         {
             e.ToTable("usuarios");
             e.HasIndex(u => u.Email).IsUnique();
-            e.HasIndex(u => u.Slug).IsUnique().HasFilter("slug IS NOT NULL");
+            e.HasIndex(u => u.Slug).IsUnique();
 
             e.Property(u => u.Id).HasColumnName("id");
             e.Property(u => u.Nome).HasColumnName("nome");
@@ -190,7 +190,7 @@ public class ContextoBancoDados(DbContextOptions<ContextoBancoDados> opcoes) : D
 
             e.HasIndex(c => c.ServicoId).IsUnique();
             e.HasIndex(c => new { c.Status, c.PixExpiracaoEm });
-            e.HasIndex(c => c.PagarmeOrderId).IsUnique().HasFilter("pagarme_order_id IS NOT NULL");
+            e.HasIndex(c => c.PagarmeOrderId).IsUnique();
 
             e.Property(c => c.Id).HasColumnName("id");
             e.Property(c => c.ServicoId).HasColumnName("servico_id");
@@ -286,8 +286,7 @@ public class ContextoBancoDados(DbContextOptions<ContextoBancoDados> opcoes) : D
         {
             e.ToTable("imagens_portfolio");
 
-            e.HasIndex(i => new { i.UsuarioId, i.Ordem })
-                .HasFilter("deletado_em IS NULL AND aprovado = TRUE");
+            e.HasIndex(i => new { i.UsuarioId, i.Ordem });
 
             e.Property(i => i.Id).HasColumnName("id");
             e.Property(i => i.UsuarioId).HasColumnName("usuario_id");

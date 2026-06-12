@@ -1,112 +1,220 @@
 <div class="pagina-auth">
-  <div class="card-auth">
-    <!-- Logo -->
-    <a routerLink="/" class="auth-logo">
-      <span class="logo-pront">PRONT</span><span class="logo-to">TO</span>
-    </a>
+  <!-- Painel decorativo esquerdo (desktop) -->
+  <aside class="auth-painel" aria-hidden="true">
+    <div class="auth-painel__inner">
+      <a routerLink="/" class="auth-painel__logo">
+        <span class="logo-pront">PRONT</span><span class="logo-to">TO</span>
+      </a>
+      <h2 class="auth-painel__titulo">Junte-se ao Prontto hoje mesmo</h2>
+      <p class="auth-painel__subtitulo">Crie sua conta grátis e acesse serviços profissionais de qualidade.</p>
 
-    <h1 class="auth-titulo">Criar conta</h1>
-    <p class="auth-subtitulo">Junte-se a milhares de usuários no Prontto</p>
+      <ul class="auth-painel__lista" role="list">
+        <li class="auth-painel__item">
+          <span class="auth-painel__check" aria-hidden="true">✓</span>
+          Cadastro 100% gratuito
+        </li>
+        <li class="auth-painel__item">
+          <span class="auth-painel__check" aria-hidden="true">✓</span>
+          Profissionais verificados
+        </li>
+        <li class="auth-painel__item">
+          <span class="auth-painel__check" aria-hidden="true">✓</span>
+          Pagamento seguro após conclusão
+        </li>
+        <li class="auth-painel__item">
+          <span class="auth-painel__check" aria-hidden="true">✓</span>
+          Suporte humanizado
+        </li>
+      </ul>
 
-    @if (erro()) {
-      <div class="auth-erro" role="alert">
-        <span>&#9888;</span> {{ erro() }}
-      </div>
-    }
+      <div class="auth-painel__orb" aria-hidden="true"></div>
+    </div>
+  </aside>
 
-    <form [formGroup]="formulario" (ngSubmit)="cadastrar()" novalidate>
-      <div class="campo">
-        <label for="nome">Nome completo</label>
-        <input
-          id="nome"
-          type="text"
-          formControlName="nome"
-          placeholder="Seu nome"
-          autocomplete="name"
-        />
-      </div>
+  <!-- Formulário (direita) -->
+  <div class="auth-form-wrapper">
+    <div class="auth-form-inner">
+      <!-- Logo mobile -->
+      <a routerLink="/" class="auth-logo-mobile">
+        <span class="logo-pront">PRONT</span><span class="logo-to">TO</span>
+      </a>
 
-      <div class="campo">
-        <label for="email">E-mail</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="seu@email.com"
-          autocomplete="email"
-        />
-      </div>
+      <h1 class="auth-titulo">Criar conta grátis</h1>
+      <p class="auth-subtitulo">Leva menos de 2 minutos. Sem cartão de crédito.</p>
 
-      <div class="campo">
-        <label for="senha">Senha</label>
-        <div class="campo-senha">
-          <input
-            id="senha"
-            [type]="senhaVisivel() ? 'text' : 'password'"
-            formControlName="senha"
-            placeholder="Mínimo 8 caracteres"
-            autocomplete="new-password"
-          />
-          <button
-            type="button"
-            class="btn-toggle-senha"
-            (click)="senhaVisivel.set(!senhaVisivel())"
-            [attr.aria-label]="senhaVisivel() ? 'Ocultar senha' : 'Mostrar senha'"
-          >
-            @if (senhaVisivel()) {
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                <line x1="1" y1="1" x2="23" y2="23"/>
-              </svg>
-            } @else {
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-            }
-          </button>
-        </div>
-      </div>
-
-      <div class="campo">
-        <label for="tipoConta">Tipo de conta</label>
-        <select id="tipoConta" formControlName="tipoConta" (change)="onTipoContaMudou($event)">
-          <option value="cliente">Cliente</option>
-          <option value="prestador">Prestador de serviço</option>
-        </select>
-      </div>
-
-      <div class="campo">
-        <label for="telefone">Telefone <span class="opcional">(opcional)</span></label>
-        <input
-          id="telefone"
-          type="tel"
-          formControlName="telefone"
-          placeholder="(11) 99999-9999"
-          autocomplete="tel"
-        />
-      </div>
-
-      @if (ehPrestador()) {
-        <div class="campo">
-          <label for="especialidade">Especialidade</label>
-          <input
-            id="especialidade"
-            type="text"
-            formControlName="especialidade"
-            placeholder="Ex: Encanador, Eletricista..."
-          />
+      @if (erro()) {
+        <div class="auth-erro" role="alert" aria-live="assertive">
+          <span class="auth-erro__icone" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </span>
+          {{ erro() }}
         </div>
       }
 
-      <button type="submit" class="btn-submit" [disabled]="formulario.invalid || carregando()">
-        {{ carregando() ? 'Criando conta...' : 'Criar conta' }}
-      </button>
-    </form>
+      <form [formGroup]="formulario" (ngSubmit)="cadastrar()" novalidate class="auth-form">
 
-    <p class="auth-link">
-      Já tem conta? <a routerLink="/entrar">Entrar</a>
-    </p>
+        <!-- Seleção de tipo de conta (cards) -->
+        <div class="tipo-conta-grupo" role="group" aria-label="Tipo de conta">
+          <p class="tipo-conta-label">Sou um:</p>
+          <div class="tipo-conta-cards">
+            <button
+              type="button"
+              class="card-tipo"
+              [class.selecionado]="formulario.get('tipoConta')?.value === 'cliente'"
+              (click)="selecionarTipoConta('cliente')"
+              aria-pressed="{{ formulario.get('tipoConta')?.value === 'cliente' }}"
+            >
+              <span class="card-tipo__icone" aria-hidden="true">🏠</span>
+              <strong class="card-tipo__titulo">Cliente</strong>
+              <span class="card-tipo__desc">Quero contratar serviços</span>
+            </button>
+
+            <button
+              type="button"
+              class="card-tipo"
+              [class.selecionado]="formulario.get('tipoConta')?.value === 'prestador'"
+              (click)="selecionarTipoConta('prestador')"
+              aria-pressed="{{ formulario.get('tipoConta')?.value === 'prestador' }}"
+            >
+              <span class="card-tipo__icone" aria-hidden="true">🔧</span>
+              <strong class="card-tipo__titulo">Prestador</strong>
+              <span class="card-tipo__desc">Quero oferecer serviços</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Nome -->
+        <div class="campo" [class.campo--erro]="formulario.get('nome')?.invalid && formulario.get('nome')?.touched">
+          <label class="campo__label" for="nome">Nome completo</label>
+          <div class="campo__wrapper">
+            <input
+              id="nome"
+              type="text"
+              formControlName="nome"
+              placeholder="Seu nome"
+              autocomplete="name"
+              class="campo__input"
+            />
+          </div>
+          @if (formulario.get('nome')?.hasError('required') && formulario.get('nome')?.touched) {
+            <span class="campo__erro-msg" role="alert">Nome é obrigatório</span>
+          } @else if (formulario.get('nome')?.hasError('minlength') && formulario.get('nome')?.touched) {
+            <span class="campo__erro-msg" role="alert">Mínimo 2 caracteres</span>
+          }
+        </div>
+
+        <!-- E-mail -->
+        <div class="campo" [class.campo--erro]="formulario.get('email')?.invalid && formulario.get('email')?.touched">
+          <label class="campo__label" for="email">E-mail</label>
+          <div class="campo__wrapper">
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="seu@email.com"
+              autocomplete="email"
+              class="campo__input"
+            />
+          </div>
+          @if (formulario.get('email')?.hasError('required') && formulario.get('email')?.touched) {
+            <span class="campo__erro-msg" role="alert">E-mail é obrigatório</span>
+          } @else if (formulario.get('email')?.hasError('email') && formulario.get('email')?.touched) {
+            <span class="campo__erro-msg" role="alert">Informe um e-mail válido</span>
+          }
+        </div>
+
+        <!-- Senha -->
+        <div class="campo" [class.campo--erro]="formulario.get('senha')?.invalid && formulario.get('senha')?.touched">
+          <label class="campo__label" for="senha">Senha</label>
+          <div class="campo-senha">
+            <input
+              id="senha"
+              [type]="senhaVisivel() ? 'text' : 'password'"
+              formControlName="senha"
+              placeholder="Mínimo 8 caracteres"
+              autocomplete="new-password"
+              class="campo__input"
+            />
+            <button
+              type="button"
+              class="btn-toggle-senha"
+              (click)="senhaVisivel.set(!senhaVisivel())"
+              [attr.aria-label]="senhaVisivel() ? 'Ocultar senha' : 'Mostrar senha'"
+            >
+              @if (senhaVisivel()) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              }
+            </button>
+          </div>
+          @if (formulario.get('senha')?.hasError('minlength') && formulario.get('senha')?.touched) {
+            <span class="campo__erro-msg" role="alert">Mínimo 8 caracteres</span>
+          }
+        </div>
+
+        <!-- Telefone -->
+        <div class="campo">
+          <label class="campo__label" for="telefone">
+            Telefone <span class="campo__opcional">(opcional)</span>
+          </label>
+          <div class="campo__wrapper">
+            <input
+              id="telefone"
+              type="tel"
+              formControlName="telefone"
+              placeholder="(11) 99999-9999"
+              autocomplete="tel"
+              class="campo__input"
+            />
+          </div>
+        </div>
+
+        <!-- Especialidade (prestador) -->
+        @if (ehPrestador()) {
+          <div class="campo" [class.campo--erro]="formulario.get('especialidade')?.invalid && formulario.get('especialidade')?.touched">
+            <label class="campo__label" for="especialidade">Especialidade</label>
+            <div class="campo__wrapper">
+              <input
+                id="especialidade"
+                type="text"
+                formControlName="especialidade"
+                placeholder="Ex: Eletricista, Encanador..."
+                class="campo__input"
+              />
+            </div>
+          </div>
+        }
+
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="formulario.invalid || carregando()"
+          [class.carregando]="carregando()"
+        >
+          @if (carregando()) {
+            <span class="spinner" aria-hidden="true"></span>
+            Criando conta...
+          } @else {
+            Criar conta grátis
+          }
+        </button>
+      </form>
+
+      <div class="auth-separator" aria-hidden="true">
+        <span>ou</span>
+      </div>
+
+      <p class="auth-link">
+        Já tem conta? <a routerLink="/entrar">Entrar</a>
+      </p>
+    </div>
   </div>
 </div>

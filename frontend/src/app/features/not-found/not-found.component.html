@@ -1,11 +1,17 @@
 <div class="nao-encontrado">
+  <!-- Número gigante de background -->
+  <div class="nao-encontrado__bg-numero" aria-hidden="true">404</div>
+
   <div class="nao-encontrado__inner">
-    <div class="nao-encontrado__codigo" aria-hidden="true">404</div>
+    <div class="nao-encontrado__icone" aria-hidden="true">🔧</div>
     <h1 class="nao-encontrado__titulo">Página não encontrada</h1>
     <p class="nao-encontrado__descricao">
-      Parece que esta página não existe ou foi movida.<br>
-      Vamos te levar de volta ao início.
+      Parece que esse profissional foi embora...<br>
+      Mas temos muitos outros esperando por você.
     </p>
-    <a routerLink="/" class="btn-voltar">Voltar ao início</a>
+    <div class="nao-encontrado__ctas">
+      <a routerLink="/" class="btn-voltar">Voltar ao início</a>
+      <a routerLink="/servicos" class="btn-servicos">Ver serviços</a>
+    </div>
   </div>
 </div>

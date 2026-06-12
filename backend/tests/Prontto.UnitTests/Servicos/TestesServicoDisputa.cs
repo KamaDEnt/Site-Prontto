@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using Prontto.Application.Common;
+using Prontto.Application.Financeiro;
 using Prontto.Application.Servicos;
 using Prontto.Domain.Entities;
 using Prontto.Domain.Enums;
@@ -14,6 +15,7 @@ public class TestesServicoDisputa
     private readonly Mock<IRepositorioDisputa> _repositorioDisputas = new();
     private readonly Mock<IRepositorioNotificacao> _repositorioNotificacoes = new();
     private readonly Mock<IRepositorioAuditLog> _repositorioAuditLog = new();
+    private readonly Mock<IServicoFinanceiro> _servicoFinanceiro = new();
     private readonly ServicoDisputa _sut;
 
     public TestesServicoDisputa()
@@ -22,7 +24,8 @@ public class TestesServicoDisputa
             _repositorioServicos.Object,
             _repositorioDisputas.Object,
             _repositorioNotificacoes.Object,
-            _repositorioAuditLog.Object);
+            _repositorioAuditLog.Object,
+            _servicoFinanceiro.Object);
     }
 
     // ── AbrirDisputaAsync ──────────────────────────────────────────────────────

@@ -29,9 +29,9 @@ export class CadastrarComponent {
   readonly ehPrestador = signal(false);
   readonly senhaVisivel = signal(false);
 
-  onTipoContaMudou(evento: Event): void {
-    const valor = (evento.target as HTMLSelectElement).value;
-    this.ehPrestador.set(valor === 'prestador');
+  selecionarTipoConta(tipo: 'cliente' | 'prestador'): void {
+    this.formulario.patchValue({ tipoConta: tipo });
+    this.ehPrestador.set(tipo === 'prestador');
   }
 
   cadastrar(): void {

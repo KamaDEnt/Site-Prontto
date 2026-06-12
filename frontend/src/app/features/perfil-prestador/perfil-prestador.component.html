@@ -1,7 +1,7 @@
 <!-- Estado: carregando -->
 @if (carregando()) {
-  <div class="estado-carregando">
-    <div class="spinner"></div>
+  <div class="estado-carregando" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
     <p>Carregando perfil...</p>
   </div>
 }
@@ -9,6 +9,7 @@
 <!-- Estado: erro -->
 @if (!carregando() && erro()) {
   <div class="estado-erro">
+    <div class="estado-erro__icone" aria-hidden="true">😕</div>
     <p class="erro-mensagem">{{ erro() }}</p>
     <a routerLink="/" class="btn-voltar">Voltar ao início</a>
   </div>
@@ -18,9 +19,14 @@
 @if (!carregando() && !erro() && perfil()) {
   <main class="perfil-container">
 
+    <!-- Banner de capa -->
+    <div class="perfil-banner" aria-hidden="true">
+      <div class="perfil-banner__gradiente"></div>
+    </div>
+
     <!-- Cabeçalho do perfil -->
-    <section class="perfil-cabecalho">
-      <div class="foto-wrapper">
+    <section class="perfil-cabecalho container">
+      <div class="perfil-cabecalho__avatar-wrap">
         @if (perfil()!.fotoPerfilUrl) {
           <img
             [src]="perfil()!.fotoPerfilUrl!"
@@ -44,11 +50,11 @@
         <!-- Avaliações -->
         <div class="avaliacoes" [attr.aria-label]="'Avaliação: ' + perfil()!.mediaAvaliacoes + ' de 5'">
           @for (i of estrelas; track i) {
-            <span class="estrela" [class.ativa]="estralaAtiva(i)" aria-hidden="true">&#9733;</span>
+            <span class="estrela" [class.ativa]="estralaAtiva(i)" aria-hidden="true">★</span>
           }
           <span class="avaliacao-texto">
             {{ perfil()!.mediaAvaliacoes | number:'1.1-1' }}
-            ({{ perfil()!.totalAvaliacoes }} {{ perfil()!.totalAvaliacoes === 1 ? 'avaliação' : 'avaliações' }})
+            <span class="avaliacao-total">({{ perfil()!.totalAvaliacoes }} {{ perfil()!.totalAvaliacoes === 1 ? 'avaliação' : 'avaliações' }})</span>
           </span>
         </div>
 
@@ -63,50 +69,67 @@
 
         <!-- Cidades -->
         @if (perfil()!.cidades.length > 0) {
-          <div class="tags-lista cidades-lista" role="list" aria-label="Cidades de atuação">
-            <span class="label-cidades">Atende em:</span>
+          <div class="tags-lista" role="list" aria-label="Cidades de atuação">
+            <span class="label-cidades" aria-hidden="true">📍 Atende em:</span>
             @for (cid of perfil()!.cidades; track cid.id) {
               <span class="tag tag-cidade" role="listitem">{{ cid.nome }}/{{ cid.estado }}</span>
             }
           </div>
         }
 
-        <!-- Botão contratar -->
-        <button class="btn-contratar" (click)="contratar()">
-          Contratar
-        </button>
+        <!-- Botão contratar (desktop) -->
+        <div class="perfil-acoes">
+          <button class="btn-contratar" (click)="contratar()">
+            Contratar serviço
+          </button>
+        </div>
       </div>
     </section>
 
-    <!-- Descrição / Bio -->
-    @if (perfil()!.descricao) {
-      <section class="secao-bio">
-        <h2 class="secao-titulo">Sobre o prestador</h2>
-        <p class="bio-texto">{{ perfil()!.descricao }}</p>
-      </section>
-    }
+    <!-- Conteúdo do perfil -->
+    <div class="perfil-conteudo container">
 
-    <!-- Portfólio -->
-    <section class="secao-portfolio">
-      <h2 class="secao-titulo">Portfólio</h2>
-
-      @if (perfil()!.imagensPortfolio.length === 0) {
-        <p class="portfolio-vazio">Nenhuma imagem no portfólio ainda.</p>
-      } @else {
-        <div class="portfolio-galeria" role="list" aria-label="Galeria de trabalhos">
-          @for (img of perfil()!.imagensPortfolio; track img.id) {
-            <div class="portfolio-item" role="listitem">
-              <img
-                [src]="img.url"
-                [alt]="'Trabalho ' + img.ordem + ' de ' + perfil()!.nome"
-                class="portfolio-imagem"
-                loading="lazy"
-              />
-            </div>
-          }
-        </div>
+      <!-- Sobre -->
+      @if (perfil()!.descricao) {
+        <section class="secao-card" aria-labelledby="titulo-sobre">
+          <h2 class="secao-titulo" id="titulo-sobre">Sobre o prestador</h2>
+          <p class="bio-texto">{{ perfil()!.descricao }}</p>
+        </section>
       }
-    </section>
+
+      <!-- Portfólio -->
+      <section class="secao-card" aria-labelledby="titulo-portfolio">
+        <h2 class="secao-titulo" id="titulo-portfolio">Portfólio</h2>
+
+        @if (perfil()!.imagensPortfolio.length === 0) {
+          <div class="portfolio-vazio">
+            <span aria-hidden="true">🖼️</span>
+            <p>Nenhuma imagem no portfólio ainda.</p>
+          </div>
+        } @else {
+          <div class="portfolio-galeria" role="list" aria-label="Galeria de trabalhos">
+            @for (img of perfil()!.imagensPortfolio; track img.id) {
+              <div class="portfolio-item" role="listitem">
+                <img
+                  [src]="img.url"
+                  [alt]="'Trabalho ' + img.ordem + ' de ' + perfil()!.nome"
+                  class="portfolio-imagem"
+                  loading="lazy"
+                />
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+    </div>
+
+    <!-- Botão flutuante "Contratar" (mobile) -->
+    <div class="contratar-sticky" aria-hidden="false">
+      <button class="btn-contratar-sticky" (click)="contratar()">
+        Contratar {{ perfil()!.nome.split(' ')[0] }}
+      </button>
+    </div>
 
   </main>
 }

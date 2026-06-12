@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using Prontto.Application.Common;
+using Prontto.Application.Financeiro;
 using Prontto.Application.Servicos;
 using Prontto.Domain.Entities;
 using Prontto.Domain.Enums;
@@ -15,6 +16,7 @@ public class TestesServicoNegociacao
     private readonly Mock<IRepositorioCobranca> _repositorioCobrancas = new();
     private readonly Mock<IRepositorioNotificacao> _repositorioNotificacoes = new();
     private readonly Mock<IRepositorioAuditLog> _repositorioAuditLog = new();
+    private readonly Mock<IServicoFinanceiro> _servicoFinanceiro = new();
     private readonly ServicoNegociacao _sut;
 
     public TestesServicoNegociacao()
@@ -24,7 +26,8 @@ public class TestesServicoNegociacao
             _repositorioMensagens.Object,
             _repositorioCobrancas.Object,
             _repositorioNotificacoes.Object,
-            _repositorioAuditLog.Object);
+            _repositorioAuditLog.Object,
+            _servicoFinanceiro.Object);
     }
 
     // ── EnviarPropostaAsync ────────────────────────────────────────────────────

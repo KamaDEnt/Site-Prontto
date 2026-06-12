@@ -1,19 +1,41 @@
 <div class="para-prestadores">
-  <!-- Hero laranja -->
+
+  <!-- ── Hero ───────────────────────────────────────────────── -->
   <section class="hero-prestador">
-    <div class="hero-prestador__inner">
+    <div class="hero-prestador__inner container">
       <span class="hero-prestador__label">PARA PROFISSIONAIS</span>
-      <h1 class="hero-prestador__titulo">Cresça seu negócio com o Prontto</h1>
+      <h1 class="hero-prestador__titulo">Transforme sua expertise em renda</h1>
       <p class="hero-prestador__subtitulo">
-        Conectamos você a quem precisa dos seus serviços. Sem intermediários, sem burocracia.
+        Conecte-se com clientes sérios próximos a você. Sem intermediários, sem burocracia. Você decide quando e como trabalhar.
       </p>
-      <a routerLink="/cadastrar" class="btn-hero-prestador">Cadastrar como prestador</a>
+      <div class="hero-prestador__ctas">
+        <a routerLink="/cadastrar" class="btn-hero-branco">Cadastrar como prestador</a>
+        <a routerLink="/como-funciona" class="btn-hero-outline">Ver como funciona</a>
+      </div>
+
+      <!-- Mini stats -->
+      <div class="hero-prestador__stats">
+        <div class="hero-prestador__stat">
+          <strong>R$ 5.000+</strong>
+          <span>Renda média/mês</span>
+        </div>
+        <div class="hero-prestador__stat-div" aria-hidden="true"></div>
+        <div class="hero-prestador__stat">
+          <strong>Zero</strong>
+          <span>Taxa de cadastro</span>
+        </div>
+        <div class="hero-prestador__stat-div" aria-hidden="true"></div>
+        <div class="hero-prestador__stat">
+          <strong>48h</strong>
+          <span>Primeiro cliente</span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Benefícios -->
+  <!-- ── Benefícios ─────────────────────────────────────────── -->
   <section class="beneficios">
-    <div class="beneficios__inner">
+    <div class="beneficios__inner container">
       <span class="secao-label">BENEFÍCIOS</span>
       <h2 class="beneficios__titulo">Por que usar o Prontto?</h2>
       <p class="beneficios__subtitulo">Tudo que você precisa para crescer profissionalmente</p>
@@ -21,7 +43,7 @@
       <div class="beneficios__grade">
         @for (beneficio of beneficios; track beneficio.titulo) {
           <div class="card-beneficio">
-            <div class="card-beneficio__icone">{{ beneficio.icone }}</div>
+            <div class="card-beneficio__icone" aria-hidden="true">{{ beneficio.icone }}</div>
             <h3 class="card-beneficio__titulo">{{ beneficio.titulo }}</h3>
             <p class="card-beneficio__descricao">{{ beneficio.descricao }}</p>
           </div>
@@ -30,12 +52,78 @@
     </div>
   </section>
 
-  <!-- CTA final -->
-  <section class="cta-prestador">
-    <div class="cta-prestador__inner">
-      <h2 class="cta-prestador__titulo">Pronto para começar?</h2>
-      <p class="cta-prestador__subtitulo">Crie sua conta gratuitamente e comece a receber clientes hoje.</p>
-      <a routerLink="/cadastrar" class="btn-cta-prestador">Criar conta grátis</a>
+  <!-- ── Quanto você pode ganhar? ───────────────────────────── -->
+  <section class="ganhos">
+    <div class="ganhos__inner container">
+      <span class="secao-label">POTENCIAL DE GANHOS</span>
+      <h2 class="ganhos__titulo">Quanto você pode ganhar?</h2>
+
+      <div class="ganhos__grade">
+        <div class="card-ganho">
+          <div class="card-ganho__categoria">🧹 Diarista</div>
+          <div class="card-ganho__faixa">R$ 150 – R$ 300</div>
+          <div class="card-ganho__freq">por diária</div>
+        </div>
+        <div class="card-ganho">
+          <div class="card-ganho__categoria">⚡ Eletricista</div>
+          <div class="card-ganho__faixa">R$ 200 – R$ 600</div>
+          <div class="card-ganho__freq">por serviço</div>
+        </div>
+        <div class="card-ganho">
+          <div class="card-ganho__categoria">🔧 Encanador</div>
+          <div class="card-ganho__faixa">R$ 180 – R$ 500</div>
+          <div class="card-ganho__freq">por serviço</div>
+        </div>
+        <div class="card-ganho">
+          <div class="card-ganho__categoria">🎨 Pintor</div>
+          <div class="card-ganho__faixa">R$ 400 – R$ 1.500</div>
+          <div class="card-ganho__freq">por projeto</div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- ── Como se cadastrar ──────────────────────────────────── -->
+  <section class="passos-cadastro">
+    <div class="passos-cadastro__inner container">
+      <span class="secao-label">É SIMPLES</span>
+      <h2 class="passos-cadastro__titulo">3 passos para começar</h2>
+
+      <div class="passos-cadastro__lista">
+        <div class="passo-cadastro">
+          <div class="passo-cadastro__numero" aria-hidden="true">1</div>
+          <div class="passo-cadastro__texto">
+            <h3>Crie sua conta</h3>
+            <p>Cadastro 100% gratuito, leva menos de 2 minutos.</p>
+          </div>
+        </div>
+        <div class="passo-cadastro__seta" aria-hidden="true">→</div>
+        <div class="passo-cadastro">
+          <div class="passo-cadastro__numero" aria-hidden="true">2</div>
+          <div class="passo-cadastro__texto">
+            <h3>Complete seu perfil</h3>
+            <p>Descreva suas habilidades e área de atuação.</p>
+          </div>
+        </div>
+        <div class="passo-cadastro__seta" aria-hidden="true">→</div>
+        <div class="passo-cadastro">
+          <div class="passo-cadastro__numero" aria-hidden="true">3</div>
+          <div class="passo-cadastro__texto">
+            <h3>Comece a receber</h3>
+            <p>Clientes encontram você e fazem solicitações.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA Final ──────────────────────────────────────────── -->
+  <section class="cta-prestador">
+    <div class="cta-prestador__inner container">
+      <h2 class="cta-prestador__titulo">Pronto para crescer?</h2>
+      <p class="cta-prestador__subtitulo">Junte-se a centenas de profissionais que já usam o Prontto para crescer.</p>
+      <a routerLink="/cadastrar" class="btn-cta-prestador">Quero me cadastrar grátis</a>
+    </div>
+  </section>
+
 </div>

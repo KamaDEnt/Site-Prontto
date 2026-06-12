@@ -1,156 +1,275 @@
 <div class="minha-area">
-  <header class="cabecalho">
-    <h1>Minha Área</h1>
-    <button (click)="sair()" class="btn-sair">Sair</button>
-  </header>
 
-  <section class="perfil">
-    <h2>Bem-vindo, {{ usuario()?.nome }}</h2>
-    <p>{{ usuario()?.email }} · {{ usuario()?.tipoConta }}</p>
+  <!-- ── Sidebar ───────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar__avatar" aria-hidden="true">
+      {{ (usuario()?.nome ?? 'U').charAt(0).toUpperCase() }}
+    </div>
+    <div class="sidebar__info">
+      <strong class="sidebar__nome">{{ usuario()?.nome }}</strong>
+      <span class="sidebar__email">{{ usuario()?.email }}</span>
+      <span class="sidebar__badge" [class.sidebar__badge--prestador]="usuario()?.tipoConta === 'prestador'">
+        {{ usuario()?.tipoConta === 'prestador' ? '👷 Prestador' : '👤 Cliente' }}
+      </span>
+    </div>
+
     @if (usuario()?.slug) {
-      <p class="slug-link">
-        Perfil público:
-        <a [routerLink]="['/prestador', usuario()!.slug]" class="link-perfil">
-          /prestador/{{ usuario()!.slug }}
-        </a>
-      </p>
+      <a [routerLink]="['/prestador', usuario()!.slug]" class="sidebar__link-perfil">
+        Ver perfil público →
+      </a>
     }
-  </section>
 
-  <!-- Seção: Completar / Editar Perfil (prestadores) -->
-  @if (usuario()?.tipoConta === 'prestador') {
-    <section class="completar-perfil">
-      <h3>
-        @if (precisaCompletarPerfil) {
-          Completar Perfil Público
-        } @else {
-          Editar Perfil Público
-        }
-      </h3>
-
-      @if (precisaCompletarPerfil) {
-        <p class="aviso-perfil">
-          Complete seu perfil para que clientes possam encontrar você na plataforma.
-        </p>
+    <nav class="sidebar__nav" aria-label="Navegação da minha área">
+      @if (usuario()?.tipoConta === 'prestador') {
+        <button
+          class="sidebar__nav-item"
+          [class.ativo]="abaAtiva() === 'perfil'"
+          (click)="abaAtiva.set('perfil')"
+        >
+          <span aria-hidden="true">👤</span> Perfil Público
+        </button>
+        <button
+          class="sidebar__nav-item"
+          [class.ativo]="abaAtiva() === 'banking'"
+          (click)="abaAtiva.set('banking')"
+        >
+          <span aria-hidden="true">💳</span> Dados Bancários
+        </button>
       }
+      <button
+        class="sidebar__nav-item"
+        [class.ativo]="abaAtiva() === 'servicos'"
+        (click)="abaAtiva.set('servicos')"
+      >
+        <span aria-hidden="true">📋</span>
+        {{ usuario()?.tipoConta === 'prestador' ? 'Meus Serviços' : 'Meus Pedidos' }}
+      </button>
+    </nav>
 
-      @if (mensagemPerfil()) {
-        <p class="mensagem">{{ mensagemPerfil() }}</p>
+    <button class="sidebar__btn-sair" (click)="sair()">
+      <span aria-hidden="true">↩</span> Sair da conta
+    </button>
+  </aside>
+
+  <!-- ── Conteúdo principal ─────────────────────────────────── -->
+  <main class="area-conteudo">
+
+    <!-- Banner de alerta: completar perfil -->
+    @if (precisaCompletarPerfil) {
+      <div class="alerta-perfil" role="status">
+        <span class="alerta-perfil__icone" aria-hidden="true">💡</span>
+        <div>
+          <strong>Complete seu perfil público</strong>
+          <p>Clientes não conseguem te encontrar sem um perfil completo.</p>
+        </div>
+      </div>
+    }
+
+    <!-- Abas (mobile) -->
+    <div class="abas-mobile" role="tablist" aria-label="Seções">
+      @if (usuario()?.tipoConta === 'prestador') {
+        <button
+          role="tab"
+          [attr.aria-selected]="abaAtiva() === 'perfil'"
+          class="aba-mobile"
+          [class.ativo]="abaAtiva() === 'perfil'"
+          (click)="abaAtiva.set('perfil')"
+        >Perfil</button>
+        <button
+          role="tab"
+          [attr.aria-selected]="abaAtiva() === 'banking'"
+          class="aba-mobile"
+          [class.ativo]="abaAtiva() === 'banking'"
+          (click)="abaAtiva.set('banking')"
+        >Bancário</button>
       }
+      <button
+        role="tab"
+        [attr.aria-selected]="abaAtiva() === 'servicos'"
+        class="aba-mobile"
+        [class.ativo]="abaAtiva() === 'servicos'"
+        (click)="abaAtiva.set('servicos')"
+      >{{ usuario()?.tipoConta === 'prestador' ? 'Serviços' : 'Pedidos' }}</button>
+    </div>
 
-      <form [formGroup]="formularioPerfil" (ngSubmit)="salvarPerfil()">
-        <div class="campo">
-          <label for="descricao">Sobre você</label>
-          <textarea
-            id="descricao"
-            formControlName="descricao"
-            rows="4"
-            placeholder="Descreva sua experiência, diferenciais e o tipo de serviço que oferece..."
-          ></textarea>
+    <!-- ABA: Perfil Público (prestadores) -->
+    @if (abaAtiva() === 'perfil' && usuario()?.tipoConta === 'prestador') {
+      <section class="secao-card" aria-labelledby="titulo-perfil">
+        <div class="secao-card__header">
+          <h2 class="secao-card__titulo" id="titulo-perfil">
+            {{ precisaCompletarPerfil ? 'Completar Perfil' : 'Editar Perfil Público' }}
+          </h2>
         </div>
 
-        <div class="campo">
-          <label for="especialidade">Especialidade principal</label>
-          <input
-            id="especialidade"
-            type="text"
-            formControlName="especialidade"
-            placeholder="Ex: Eletricista residencial"
-          />
-        </div>
-
-        <div class="campo">
-          <label for="fotoPerfilUrl">URL da foto de perfil</label>
-          <input
-            id="fotoPerfilUrl"
-            type="url"
-            formControlName="fotoPerfilUrl"
-            placeholder="https://..."
-          />
-          <span class="campo-dica">Faça upload no Cloudinary e cole o URL aqui.</span>
-        </div>
-
-        <!-- Categorias -->
-        @if (categorias().length > 0) {
-          <div class="campo">
-            <label>Categorias de atuação</label>
-            <div class="checkboxes-grid" role="group" aria-label="Selecionar categorias">
-              @for (cat of categorias(); track cat.id) {
-                <label class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    [checked]="categoriaEscolhida(cat.id)"
-                    (change)="toggleCategoria(cat.id)"
-                  />
-                  <span>{{ cat.nome }}</span>
-                </label>
-              }
-            </div>
+        @if (mensagemPerfil()) {
+          <div class="msg-sucesso" role="status" aria-live="polite">
+            <span aria-hidden="true">✓</span> {{ mensagemPerfil() }}
           </div>
         }
 
-        <!-- Cidades -->
-        @if (cidades().length > 0) {
+        <form [formGroup]="formularioPerfil" (ngSubmit)="salvarPerfil()">
           <div class="campo">
-            <label>Cidades onde atende</label>
-            <div class="checkboxes-grid" role="group" aria-label="Selecionar cidades">
-              @for (cid of cidades(); track cid.id) {
-                <label class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    [checked]="cidadeEscolhida(cid.id)"
-                    (change)="toggleCidade(cid.id)"
-                  />
-                  <span>{{ cid.nome }}/{{ cid.estado }}</span>
-                </label>
-              }
+            <label class="campo__label" for="descricao">Sobre você</label>
+            <textarea
+              id="descricao"
+              class="campo__textarea"
+              formControlName="descricao"
+              rows="4"
+              placeholder="Descreva sua experiência, diferenciais e o tipo de serviço que você oferece..."
+            ></textarea>
+          </div>
+
+          <div class="campo">
+            <label class="campo__label" for="especialidade">Especialidade principal</label>
+            <input
+              id="especialidade"
+              type="text"
+              class="campo__input"
+              formControlName="especialidade"
+              placeholder="Ex: Eletricista residencial"
+            />
+          </div>
+
+          <div class="campo">
+            <label class="campo__label" for="fotoPerfilUrl">URL da foto de perfil</label>
+            <input
+              id="fotoPerfilUrl"
+              type="url"
+              class="campo__input"
+              formControlName="fotoPerfilUrl"
+              placeholder="https://..."
+            />
+            <span class="campo__dica">Faça upload no Cloudinary e cole o URL aqui.</span>
+          </div>
+
+          @if (categorias().length > 0) {
+            <div class="campo">
+              <span class="campo__label" id="label-categorias">Categorias de atuação</span>
+              <div class="checkboxes-grid" role="group" aria-labelledby="label-categorias">
+                @for (cat of categorias(); track cat.id) {
+                  <label class="checkbox-item">
+                    <input
+                      type="checkbox"
+                      [checked]="categoriaEscolhida(cat.id)"
+                      (change)="toggleCategoria(cat.id)"
+                    />
+                    <span>{{ cat.nome }}</span>
+                  </label>
+                }
+              </div>
             </div>
+          }
+
+          @if (cidades().length > 0) {
+            <div class="campo">
+              <span class="campo__label" id="label-cidades">Cidades onde atende</span>
+              <div class="checkboxes-grid" role="group" aria-labelledby="label-cidades">
+                @for (cid of cidades(); track cid.id) {
+                  <label class="checkbox-item">
+                    <input
+                      type="checkbox"
+                      [checked]="cidadeEscolhida(cid.id)"
+                      (change)="toggleCidade(cid.id)"
+                    />
+                    <span>{{ cid.nome }}/{{ cid.estado }}</span>
+                  </label>
+                }
+              </div>
+            </div>
+          }
+
+          <div class="form-acoes">
+            <button type="submit" class="btn-salvar" [disabled]="salvandoPerfil()">
+              @if (salvandoPerfil()) {
+                <span class="spinner" aria-hidden="true"></span>
+                Salvando...
+              } @else {
+                {{ precisaCompletarPerfil ? 'Publicar perfil' : 'Salvar alterações' }}
+              }
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+
+    <!-- ABA: Dados Bancários (prestadores) -->
+    @if (abaAtiva() === 'banking' && usuario()?.tipoConta === 'prestador') {
+      <section class="secao-card" aria-labelledby="titulo-banking">
+        <div class="secao-card__header">
+          <h2 class="secao-card__titulo" id="titulo-banking">Dados Bancários (Pix)</h2>
+          <p class="secao-card__desc">Seus dados para receber pagamentos via Pix.</p>
+        </div>
+
+        @if (mensagem()) {
+          <div class="msg-sucesso" role="status" aria-live="polite">
+            <span aria-hidden="true">✓</span> {{ mensagem() }}
           </div>
         }
 
-        <button type="submit" [disabled]="salvandoPerfil()">
-          {{ salvandoPerfil() ? 'Salvando...' : (precisaCompletarPerfil ? 'Publicar perfil' : 'Salvar alterações') }}
-        </button>
-      </form>
-    </section>
-  }
+        <form [formGroup]="formularioBanking" (ngSubmit)="salvarBanking()">
+          <div class="campo">
+            <label class="campo__label" for="tipoChavePix">Tipo de chave Pix</label>
+            <div class="pix-tipos">
+              @for (tipo of tiposPix; track tipo.valor) {
+                <button
+                  type="button"
+                  class="pix-tipo-btn"
+                  [class.ativo]="formularioBanking.get('tipoChavePix')?.value === tipo.valor"
+                  (click)="formularioBanking.patchValue({ tipoChavePix: tipo.valor })"
+                >
+                  <span aria-hidden="true">{{ tipo.icone }}</span>
+                  {{ tipo.label }}
+                </button>
+              }
+            </div>
+          </div>
 
-  <!-- Seção: Dados Bancários (prestadores) -->
-  @if (usuario()?.tipoConta === 'prestador') {
-    <section class="dados-bancarios">
-      <h3>Dados Bancários (Pix)</h3>
+          <div class="campo">
+            <label class="campo__label" for="chavePix">Chave Pix</label>
+            <input id="chavePix" type="text" class="campo__input" formControlName="chavePix" />
+          </div>
 
-      @if (mensagem()) {
-        <p class="mensagem">{{ mensagem() }}</p>
-      }
+          <div class="campo-duplo">
+            <div class="campo">
+              <label class="campo__label" for="nomeCompleto">Nome completo</label>
+              <input id="nomeCompleto" type="text" class="campo__input" formControlName="nomeCompleto" />
+            </div>
+            <div class="campo">
+              <label class="campo__label" for="cpfCnpj">CPF / CNPJ</label>
+              <input id="cpfCnpj" type="text" class="campo__input" formControlName="cpfCnpj" />
+            </div>
+          </div>
 
-      <form [formGroup]="formularioBanking" (ngSubmit)="salvarBanking()">
-        <div class="campo">
-          <label>Tipo de chave Pix</label>
-          <select formControlName="tipoChavePix">
-            <option value="cpf">CPF</option>
-            <option value="cnpj">CNPJ</option>
-            <option value="email">E-mail</option>
-            <option value="telefone">Telefone</option>
-            <option value="aleatoria">Chave aleatória</option>
-          </select>
+          <div class="form-acoes">
+            <button type="submit" class="btn-salvar" [disabled]="salvando()">
+              @if (salvando()) {
+                <span class="spinner" aria-hidden="true"></span>
+                Salvando...
+              } @else {
+                Salvar dados bancários
+              }
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+
+    <!-- ABA: Serviços / Pedidos -->
+    @if (abaAtiva() === 'servicos') {
+      <section class="secao-card" aria-labelledby="titulo-servicos">
+        <div class="secao-card__header">
+          <h2 class="secao-card__titulo" id="titulo-servicos">
+            {{ usuario()?.tipoConta === 'prestador' ? 'Meus Serviços' : 'Meus Pedidos' }}
+          </h2>
         </div>
-        <div class="campo">
-          <label>Chave Pix</label>
-          <input type="text" formControlName="chavePix" />
+
+        <div class="estado-vazio">
+          <div class="estado-vazio__icone" aria-hidden="true">📋</div>
+          <p class="estado-vazio__texto">Nenhum serviço encontrado ainda.</p>
+          <a routerLink="/servicos" class="btn-explorar">Explorar serviços</a>
         </div>
-        <div class="campo">
-          <label>Nome completo</label>
-          <input type="text" formControlName="nomeCompleto" />
-        </div>
-        <div class="campo">
-          <label>CPF / CNPJ</label>
-          <input type="text" formControlName="cpfCnpj" />
-        </div>
-        <button type="submit" [disabled]="salvando()">
-          {{ salvando() ? 'Salvando...' : 'Salvar dados bancários' }}
-        </button>
-      </form>
-    </section>
-  }
+      </section>
+    }
+
+  </main>
 </div>

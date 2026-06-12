@@ -19,8 +19,11 @@ public static class InjecaoDependencias
     public static IServiceCollection AdicionarInfraestrutura(
         this IServiceCollection servicos, IConfiguration configuracao)
     {
+        var connectionString = configuracao.GetConnectionString("Default")
+            ?? throw new InvalidOperationException("Connection string 'Default' não configurada.");
+
         servicos.AddDbContext<ContextoBancoDados>(opt =>
-            opt.UseNpgsql(configuracao.GetConnectionString("Default")));
+            opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
         // ── Repositórios ──────────────────────────────────────────────────────
         servicos.AddScoped<IRepositorioUsuario, RepositorioUsuario>();

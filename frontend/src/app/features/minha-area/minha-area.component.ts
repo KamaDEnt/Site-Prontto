@@ -7,6 +7,12 @@ import { BankingService } from '../../core/api/banking.service';
 import { PerfilPrestadorService } from '../../core/api/perfil-prestador.service';
 import { DadosBancarios, Categoria, Cidade } from '../../core/models/usuario.model';
 
+interface TipoPix {
+  valor: string;
+  label: string;
+  icone: string;
+}
+
 @Component({
   selector: 'app-minha-area',
   standalone: true,
@@ -30,6 +36,17 @@ export class MinhaAreaComponent implements OnInit {
   readonly mensagemPerfil = signal<string | null>(null);
   readonly categorias = signal<Categoria[]>([]);
   readonly cidades = signal<Cidade[]>([]);
+
+  // Aba ativa
+  readonly abaAtiva = signal<'perfil' | 'banking' | 'servicos'>('perfil');
+
+  readonly tiposPix: TipoPix[] = [
+    { valor: 'cpf', label: 'CPF', icone: '🪪' },
+    { valor: 'cnpj', label: 'CNPJ', icone: '🏢' },
+    { valor: 'email', label: 'E-mail', icone: '✉️' },
+    { valor: 'telefone', label: 'Telefone', icone: '📱' },
+    { valor: 'aleatoria', label: 'Aleatória', icone: '🔑' },
+  ];
 
   readonly formularioBanking = this.fb.group({
     tipoChavePix: ['cpf'],
@@ -56,6 +73,8 @@ export class MinhaAreaComponent implements OnInit {
     const u = this.usuario();
 
     if (u?.tipoConta === 'prestador') {
+      this.abaAtiva.set('perfil');
+
       this.bankingService.obterDadosBancarios().subscribe({
         next: (res) => {
           this.dadosBancarios.set(res.banking);
@@ -74,7 +93,6 @@ export class MinhaAreaComponent implements OnInit {
         },
       });
 
-      // Carrega catálogos para os formulários de perfil
       this.perfilService.listarCategorias().subscribe({
         next: (cats) => this.categorias.set(cats),
       });
@@ -82,12 +100,13 @@ export class MinhaAreaComponent implements OnInit {
         next: (cids) => this.cidades.set(cids),
       });
 
-      // Pré-preenche o formulário de perfil se já tiver dados
       this.formularioPerfil.patchValue({
         descricao: u.descricao ?? '',
         especialidade: u.especialidade ?? '',
         fotoPerfilUrl: u.fotoPerfilUrl ?? '',
       });
+    } else {
+      this.abaAtiva.set('servicos');
     }
   }
 
@@ -119,15 +138,9 @@ export class MinhaAreaComponent implements OnInit {
         cidadeIds: Array.from(this.cidadesSelecionadas()),
       })
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.mensagemPerfil.set('Perfil atualizado com sucesso!');
           this.salvandoPerfil.set(false);
-          // Atualiza o slug exibido na minha área
-          const usuarioAtual = this.auth.usuario();
-          if (usuarioAtual && res.perfil.slug) {
-            // O AuthService precisaria de um método para atualizar o slug localmente.
-            // Por ora exibe mensagem de sucesso com o link.
-          }
         },
         error: () => {
           this.mensagemPerfil.set('Erro ao salvar perfil. Tente novamente.');

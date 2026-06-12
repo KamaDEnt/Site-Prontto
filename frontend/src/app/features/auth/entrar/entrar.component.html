@@ -1,72 +1,137 @@
 <div class="pagina-auth">
-  <div class="card-auth">
-    <!-- Logo -->
-    <a routerLink="/" class="auth-logo">
-      <span class="logo-pront">PRONT</span><span class="logo-to">TO</span>
-    </a>
+  <!-- Painel decorativo esquerdo (desktop) -->
+  <aside class="auth-painel" aria-hidden="true">
+    <div class="auth-painel__inner">
+      <a routerLink="/" class="auth-painel__logo">
+        <span class="logo-pront">PRONT</span><span class="logo-to">TO</span>
+      </a>
+      <h2 class="auth-painel__titulo">Bem-vindo de volta ao Prontto</h2>
+      <p class="auth-painel__subtitulo">O marketplace de serviços domésticos mais confiável do Brasil.</p>
 
-    <h1 class="auth-titulo">Bem-vindo de volta</h1>
-    <p class="auth-subtitulo">Entre na sua conta para continuar</p>
+      <ul class="auth-painel__lista" role="list">
+        <li class="auth-painel__item">
+          <span class="auth-painel__check" aria-hidden="true">✓</span>
+          Mais de 500 profissionais verificados
+        </li>
+        <li class="auth-painel__item">
+          <span class="auth-painel__check" aria-hidden="true">✓</span>
+          Pagamento seguro e protegido
+        </li>
+        <li class="auth-painel__item">
+          <span class="auth-painel__check" aria-hidden="true">✓</span>
+          Avaliações reais de clientes
+        </li>
+        <li class="auth-painel__item">
+          <span class="auth-painel__check" aria-hidden="true">✓</span>
+          Atendimento em todo o Brasil
+        </li>
+      </ul>
 
-    @if (erro()) {
-      <div class="auth-erro" role="alert">
-        <span>&#9888;</span> {{ erro() }}
-      </div>
-    }
+      <!-- Orb decorativo -->
+      <div class="auth-painel__orb" aria-hidden="true"></div>
+    </div>
+  </aside>
 
-    <form [formGroup]="formulario" (ngSubmit)="entrar()" novalidate>
-      <div class="campo">
-        <label for="email">E-mail</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="seu@email.com"
-          autocomplete="email"
-        />
-      </div>
+  <!-- Formulário (direita) -->
+  <div class="auth-form-wrapper">
+    <div class="auth-form-inner">
+      <!-- Logo mobile (oculto no desktop) -->
+      <a routerLink="/" class="auth-logo-mobile">
+        <span class="logo-pront">PRONT</span><span class="logo-to">TO</span>
+      </a>
 
-      <div class="campo">
-        <label for="senha">Senha</label>
-        <div class="campo-senha">
-          <input
-            id="senha"
-            [type]="senhaVisivel() ? 'text' : 'password'"
-            formControlName="senha"
-            placeholder="Mínimo 8 caracteres"
-            autocomplete="current-password"
-          />
-          <button
-            type="button"
-            class="btn-toggle-senha"
-            (click)="senhaVisivel.set(!senhaVisivel())"
-            [attr.aria-label]="senhaVisivel() ? 'Ocultar senha' : 'Mostrar senha'"
-          >
-            @if (senhaVisivel()) {
-              <!-- olho fechado -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-                <line x1="1" y1="1" x2="23" y2="23"/>
-              </svg>
-            } @else {
-              <!-- olho aberto -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-            }
-          </button>
+      <h1 class="auth-titulo">Entrar na sua conta</h1>
+      <p class="auth-subtitulo">Bem-vindo de volta. Continue de onde parou.</p>
+
+      @if (erro()) {
+        <div class="auth-erro" role="alert" aria-live="assertive">
+          <span class="auth-erro__icone" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </span>
+          {{ erro() }}
         </div>
+      }
+
+      <form [formGroup]="formulario" (ngSubmit)="entrar()" novalidate class="auth-form">
+        <div class="campo" [class.campo--erro]="formulario.get('email')?.invalid && formulario.get('email')?.touched">
+          <label class="campo__label" for="email">E-mail</label>
+          <div class="campo__wrapper">
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="seu@email.com"
+              autocomplete="email"
+              class="campo__input"
+            />
+          </div>
+          @if (formulario.get('email')?.hasError('required') && formulario.get('email')?.touched) {
+            <span class="campo__erro-msg" role="alert">E-mail é obrigatório</span>
+          } @else if (formulario.get('email')?.hasError('email') && formulario.get('email')?.touched) {
+            <span class="campo__erro-msg" role="alert">Informe um e-mail válido</span>
+          }
+        </div>
+
+        <div class="campo" [class.campo--erro]="formulario.get('senha')?.invalid && formulario.get('senha')?.touched">
+          <label class="campo__label" for="senha">Senha</label>
+          <div class="campo-senha">
+            <input
+              id="senha"
+              [type]="senhaVisivel() ? 'text' : 'password'"
+              formControlName="senha"
+              placeholder="Mínimo 8 caracteres"
+              autocomplete="current-password"
+              class="campo__input"
+            />
+            <button
+              type="button"
+              class="btn-toggle-senha"
+              (click)="senhaVisivel.set(!senhaVisivel())"
+              [attr.aria-label]="senhaVisivel() ? 'Ocultar senha' : 'Mostrar senha'"
+            >
+              @if (senhaVisivel()) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              }
+            </button>
+          </div>
+          @if (formulario.get('senha')?.hasError('required') && formulario.get('senha')?.touched) {
+            <span class="campo__erro-msg" role="alert">Senha é obrigatória</span>
+          } @else if (formulario.get('senha')?.hasError('minlength') && formulario.get('senha')?.touched) {
+            <span class="campo__erro-msg" role="alert">Mínimo 8 caracteres</span>
+          }
+        </div>
+
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="formulario.invalid || carregando()"
+          [class.carregando]="carregando()"
+        >
+          @if (carregando()) {
+            <span class="spinner" aria-hidden="true"></span>
+            Entrando...
+          } @else {
+            Entrar
+          }
+        </button>
+      </form>
+
+      <div class="auth-separator" aria-hidden="true">
+        <span>ou</span>
       </div>
 
-      <button type="submit" class="btn-submit" [disabled]="formulario.invalid || carregando()">
-        {{ carregando() ? 'Entrando...' : 'Entrar' }}
-      </button>
-    </form>
-
-    <p class="auth-link">
-      Não tem conta? <a routerLink="/cadastrar">Cadastre-se grátis</a>
-    </p>
+      <p class="auth-link">
+        Não tem conta? <a routerLink="/cadastrar">Cadastre-se grátis</a>
+      </p>
+    </div>
   </div>
 </div>
