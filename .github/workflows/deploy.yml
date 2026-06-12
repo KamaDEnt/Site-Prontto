@@ -62,8 +62,8 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: frontend/dist/prontto/browser/
-          server-dir: /public_html/
+          local-dir: ./frontend/dist/prontto/browser/
+          server-dir: ./
           exclude: |
             **/.git*
             **/.git*/**
