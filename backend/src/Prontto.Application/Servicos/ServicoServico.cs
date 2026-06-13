@@ -115,6 +115,14 @@ public class ServicoServico(
 
         await repositorioServicos.AtualizarAsync(servico);
 
+        await repositorioAuditLog.RegistrarAsync(new AuditLog
+        {
+            UsuarioId = prestadorId,
+            Acao = "servico.prestador_vinculado",
+            Entidade = "Servico",
+            EntidadeId = servicoId.ToString(),
+        });
+
         // Notifica o cliente
         if (servico.ClienteId.HasValue)
         {
@@ -148,6 +156,14 @@ public class ServicoServico(
         servico.AtualizadoEm = DateTime.UtcNow;
 
         await repositorioServicos.AtualizarAsync(servico);
+
+        await repositorioAuditLog.RegistrarAsync(new AuditLog
+        {
+            UsuarioId = prestadorId,
+            Acao = "servico.concluido",
+            Entidade = "Servico",
+            EntidadeId = servicoId.ToString(),
+        });
 
         // Notifica o cliente
         if (servico.ClienteId.HasValue)
@@ -183,6 +199,14 @@ public class ServicoServico(
 
         await repositorioServicos.AtualizarAsync(servico);
         await servicoFinanceiro.LiberarPagamentoAsync(servico.Id);
+
+        await repositorioAuditLog.RegistrarAsync(new AuditLog
+        {
+            UsuarioId = clienteId,
+            Acao = "servico.confirmado_cliente",
+            Entidade = "Servico",
+            EntidadeId = servicoId.ToString(),
+        });
 
         // Notifica o prestador
         if (servico.PrestadorId.HasValue)

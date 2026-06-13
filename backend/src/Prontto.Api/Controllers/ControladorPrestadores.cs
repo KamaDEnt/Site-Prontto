@@ -59,6 +59,7 @@ public class ControladorPrestadores(IServicoPerfilPrestador servicoPerfil) : Con
             return BadRequest(new { mensagem = "O parâmetro 'categoriaSlug' é obrigatório." });
 
         if (page < 1) page = 1;
+        if (pageSize > 50) pageSize = 50;
 
         var resultado = await servicoPerfil.BuscarPrestadoresAsync(categoriaSlug, cidadeSlug, page, pageSize);
         return Ok(resultado);

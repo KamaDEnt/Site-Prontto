@@ -7,6 +7,8 @@ namespace Prontto.Application.Auth;
 public class ServicoAutenticacao(
     IRepositorioUsuario repositorioUsuarios,
     IRepositorioRefreshToken repositorioRefreshTokens,
+    IRepositorioAuditLog repositorioAuditLog,
+    IRepositorioCidade repositorioCidades,
     IServicoJwt jwt,
     IHashSenha hashSenha) : IServicoAutenticacao
 {
@@ -16,6 +18,9 @@ public class ServicoAutenticacao(
     {
         if (await repositorioUsuarios.ObterPorEmailAsync(comando.Email.ToLowerInvariant()) is not null)
             throw new ExcecaoConflito("E-mail já cadastrado");
+
+        if (comando.CidadeId.HasValue && !await repositorioCidades.ExisteAsync(comando.CidadeId.Value))
+            throw new ExcecaoNaoEncontrado("Cidade não encontrada");
 
         var novoUsuario = new Usuario
         {
@@ -29,6 +34,14 @@ public class ServicoAutenticacao(
         };
 
         var usuarioCriado = await repositorioUsuarios.AdicionarAsync(novoUsuario);
+
+        await repositorioAuditLog.RegistrarAsync(new AuditLog
+        {
+            UsuarioId = usuarioCriado.Id,
+            Acao = "usuario.cadastro",
+            Entidade = "Usuario",
+            EntidadeId = usuarioCriado.Id.ToString(),
+        });
 
         var tokenBruto = jwt.GerarRefreshToken();
         var refreshToken = CriarRefreshToken(usuarioCriado.Id, tokenBruto, comando.Ip, comando.UserAgent);
@@ -52,6 +65,14 @@ public class ServicoAutenticacao(
         var refreshToken = CriarRefreshToken(usuario.Id, tokenBruto, comando.Ip, comando.UserAgent);
         await repositorioRefreshTokens.AdicionarAsync(refreshToken);
 
+        await repositorioAuditLog.RegistrarAsync(new AuditLog
+        {
+            UsuarioId = usuario.Id,
+            Acao = "usuario.login",
+            Entidade = "Usuario",
+            EntidadeId = usuario.Id.ToString(),
+        });
+
         return new ResultadoAutenticacao(jwt.GerarToken(usuario), tokenBruto, usuario);
     }
 
@@ -67,7 +88,14 @@ public class ServicoAutenticacao(
 
         if (tokenAtual.EstaRevogado)
         {
-            // Token já revogado — possível comprometimento de sessão; lançar sem mais detalhes
+            // Token já revogado — possível comprometimento de sessão (FA-03); registrar e lançar
+            await repositorioAuditLog.RegistrarAsync(new AuditLog
+            {
+                UsuarioId = tokenAtual.UsuarioId,
+                Acao = "usuario.token_reusado",
+                Entidade = "RefreshToken",
+                EntidadeId = tokenAtual.Id.ToString(),
+            });
             throw new ExcecaoNaoAutorizado("Refresh token revogado");
         }
 
@@ -104,6 +132,14 @@ public class ServicoAutenticacao(
 
         token.RevogadoEm = DateTime.UtcNow;
         await repositorioRefreshTokens.AtualizarAsync(token);
+
+        await repositorioAuditLog.RegistrarAsync(new AuditLog
+        {
+            UsuarioId = token.UsuarioId,
+            Acao = "usuario.logout",
+            Entidade = "Usuario",
+            EntidadeId = token.UsuarioId.ToString(),
+        });
     }
 
     private RefreshToken CriarRefreshToken(Guid usuarioId, string tokenBruto, string? ip, string? userAgent)

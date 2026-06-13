@@ -20,4 +20,7 @@ public class RepositorioCidade(ContextoBancoDados db) : IRepositorioCidade
         => db.Cidades
             .Where(c => ids.Contains(c.Id))
             .ToListAsync();
+
+    public Task<bool> ExisteAsync(Guid id)
+        => db.Cidades.AnyAsync(c => c.Id == id && c.Ativa);
 }

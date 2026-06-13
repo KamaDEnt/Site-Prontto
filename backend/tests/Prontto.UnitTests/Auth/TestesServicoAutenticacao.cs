@@ -12,6 +12,8 @@ public class TestesServicoAutenticacao
 {
     private readonly Mock<IRepositorioUsuario> _repositorioUsuarios = new();
     private readonly Mock<IRepositorioRefreshToken> _repositorioRefreshTokens = new();
+    private readonly Mock<IRepositorioAuditLog> _repositorioAuditLog = new();
+    private readonly Mock<IRepositorioCidade> _repositorioCidades = new();
     private readonly Mock<IServicoJwt> _jwt = new();
     private readonly Mock<IHashSenha> _hashSenha = new();
     private readonly ServicoAutenticacao _sut;
@@ -23,10 +25,13 @@ public class TestesServicoAutenticacao
         _repositorioRefreshTokens
             .Setup(r => r.AdicionarAsync(It.IsAny<RefreshToken>()))
             .Returns(Task.CompletedTask);
+        _repositorioAuditLog.Setup(r => r.RegistrarAsync(It.IsAny<AuditLog>())).Returns(Task.CompletedTask);
 
         _sut = new ServicoAutenticacao(
             _repositorioUsuarios.Object,
             _repositorioRefreshTokens.Object,
+            _repositorioAuditLog.Object,
+            _repositorioCidades.Object,
             _jwt.Object,
             _hashSenha.Object);
     }

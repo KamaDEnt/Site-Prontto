@@ -1,4 +1,5 @@
-﻿using Prontto.Domain.Entities;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Prontto.Domain.Entities;
 using Prontto.Domain.Enums;
 using Prontto.Domain.Interfaces;
 using Prontto.Application.Common;
@@ -9,9 +10,20 @@ public class ServicoAdmin(
     IRepositorioUsuario repositorioUsuarios,
     IRepositorioServico repositorioServicos,
     IRepositorioCobranca repositorioCobrancas,
-    IRepositorioMensagem repositorioMensagens) : IServicoAdmin
+    IRepositorioMensagem repositorioMensagens,
+    IRepositorioAuditLog repositorioAuditLog,
+    IMemoryCache cache) : IServicoAdmin
 {
-    public async Task<EstatisticasAdmin> ObterEstatisticasAsync()
+    private const string ChaveCacheEstatisticas = "admin:stats";
+
+    public Task<EstatisticasAdmin> ObterEstatisticasAsync()
+        => cache.GetOrCreateAsync(ChaveCacheEstatisticas, entry =>
+        {
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
+            return BuscarEstatisticasNoBancoAsync();
+        })!;
+
+    private async Task<EstatisticasAdmin> BuscarEstatisticasNoBancoAsync()
     {
         var todosUsuarios = await repositorioUsuarios.ListarNaoAdminsAsync();
         var totalServicos = await repositorioServicos.ContarTodosAsync();
@@ -71,7 +83,18 @@ public class ServicoAdmin(
             }
         }
 
-        return await repositorioServicos.AtualizarAsync(servico);
+        var servicoAtualizado = await repositorioServicos.AtualizarAsync(servico);
+
+        await repositorioAuditLog.RegistrarAsync(new AuditLog
+        {
+            UsuarioId = null,
+            Acao = "admin.servico.status_alterado",
+            Entidade = "Servico",
+            EntidadeId = idServico.ToString(),
+            Detalhes = $"Status alterado para {novoStatus}",
+        });
+
+        return servicoAtualizado;
     }
 
     public async Task<IReadOnlyList<MensagemServico>> ListarMensagensServicoAsync(Guid idServico)

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Prontto.Application.Admin;
 using Prontto.Application.Common;
@@ -14,15 +15,21 @@ public class TestesServicoAdmin
     private readonly Mock<IRepositorioServico> _repositorioServicos = new();
     private readonly Mock<IRepositorioCobranca> _repositorioCobrancas = new();
     private readonly Mock<IRepositorioMensagem> _repositorioMensagens = new();
+    private readonly Mock<IRepositorioAuditLog> _repositorioAuditLog = new();
+    private readonly IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
     private readonly ServicoAdmin _sut;
 
     public TestesServicoAdmin()
     {
+        _repositorioAuditLog.Setup(r => r.RegistrarAsync(It.IsAny<AuditLog>())).Returns(Task.CompletedTask);
+
         _sut = new ServicoAdmin(
             _repositorioUsuarios.Object,
             _repositorioServicos.Object,
             _repositorioCobrancas.Object,
-            _repositorioMensagens.Object);
+            _repositorioMensagens.Object,
+            _repositorioAuditLog.Object,
+            _cache);
     }
 
     [Fact]
