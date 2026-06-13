@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { PerfilPrestadorService } from '../../core/api/perfil-prestador.service';
 import { Categoria, Cidade, PrestadorBusca, ResultadoPaginado } from '../../core/models/usuario.model';
+import { SeoService } from '../../core/seo/seo.service';
 
 // Mapeamento de slug → emoji (ícones temporários para as categorias)
 const ICONES: Record<string, string> = {
@@ -33,6 +34,7 @@ export class ServicosComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly perfilService = inject(PerfilPrestadorService);
+  private readonly seoService = inject(SeoService);
   private readonly destroy$ = new Subject<void>();
 
   // Estado do catálogo
@@ -69,6 +71,11 @@ export class ServicosComponent implements OnInit, OnDestroy {
   readonly temProximaPagina = computed(() => this.paginaAtual() < this.totalPaginas());
 
   ngOnInit(): void {
+    this.seoService.atualizarSeo({
+      titulo: 'Serviços Disponíveis',
+      descricao: 'Explore prestadores de serviços domésticos na sua cidade. Filtre por categoria, avaliação e localização.',
+      url: 'https://prontto.org/servicos',
+    });
     this.carregarCatalogo();
 
     // Reage a mudanças de query params sem recarregar o componente

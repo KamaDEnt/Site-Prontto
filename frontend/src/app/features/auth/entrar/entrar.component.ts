@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { SeoService } from '../../../core/seo/seo.service';
 
 @Component({
   selector: 'app-entrar',
@@ -10,10 +11,19 @@ import { AuthService } from '../../../core/auth/auth.service';
   templateUrl: './entrar.component.html',
   styleUrl: './entrar.component.scss',
 })
-export class EntrarComponent {
+export class EntrarComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly roteador = inject(Router);
+  private readonly seoService = inject(SeoService);
+
+  ngOnInit(): void {
+    this.seoService.atualizarSeo({
+      titulo: 'Entrar',
+      descricao: 'Acesse sua conta Prontto.',
+      url: 'https://prontto.org/entrar',
+    });
+  }
 
   readonly formulario = this.fb.group({
     email: ['', [Validators.required, Validators.email]],

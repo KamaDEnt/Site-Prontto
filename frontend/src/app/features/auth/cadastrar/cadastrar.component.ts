@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { SeoService } from '../../../core/seo/seo.service';
 
 @Component({
   selector: 'app-cadastrar',
@@ -10,10 +11,19 @@ import { AuthService } from '../../../core/auth/auth.service';
   templateUrl: './cadastrar.component.html',
   styleUrl: './cadastrar.component.scss',
 })
-export class CadastrarComponent {
+export class CadastrarComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly roteador = inject(Router);
+  private readonly seoService = inject(SeoService);
+
+  ngOnInit(): void {
+    this.seoService.atualizarSeo({
+      titulo: 'Criar Conta',
+      descricao: 'Crie sua conta Prontto gratuitamente e comece a solicitar ou oferecer serviços hoje mesmo.',
+      url: 'https://prontto.org/cadastrar',
+    });
+  }
 
   readonly formulario = this.fb.group({
     nome: ['', [Validators.required, Validators.minLength(2)]],

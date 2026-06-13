@@ -5,6 +5,7 @@ import { PerfilPrestadorService } from '../../core/api/perfil-prestador.service'
 import { AvaliacoesService } from '../../core/api/avaliacoes.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { Avaliacao, PerfilPublico } from '../../core/models/usuario.model';
+import { SeoService } from '../../core/seo/seo.service';
 
 @Component({
   selector: 'app-perfil-prestador',
@@ -18,6 +19,7 @@ export class PerfilPrestadorComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly perfilService = inject(PerfilPrestadorService);
   private readonly avaliacoesService = inject(AvaliacoesService);
+  private readonly seoService = inject(SeoService);
   readonly auth = inject(AuthService);
 
   readonly perfil = signal<PerfilPublico | null>(null);
@@ -50,6 +52,12 @@ export class PerfilPrestadorComponent implements OnInit {
       next: (dados) => {
         this.perfil.set(dados);
         this.carregando.set(false);
+        const cidadeNome = dados.cidades?.[0]?.nome ?? 'sua cidade';
+        this.seoService.atualizarSeo({
+          titulo: `${dados.nome} — Prestador`,
+          descricao: `${dados.especialidade ?? 'Prestador de serviços'} em ${cidadeNome}. Confira avaliações e solicite um serviço.`,
+          url: `https://prontto.org/prestador/${slug}`,
+        });
         this.carregarAvaliacoes();
       },
       error: (err) => {

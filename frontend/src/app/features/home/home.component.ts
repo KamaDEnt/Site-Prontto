@@ -1,5 +1,6 @@
-import { Component, signal, computed, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, signal, computed, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { SeoService } from '../../core/seo/seo.service';
 
 interface Categoria {
   titulo: string;
@@ -23,6 +24,8 @@ interface Passo {
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('videoFundo') videoFundo!: ElementRef<HTMLVideoElement>;
+
+  private readonly seoService = inject(SeoService);
 
   readonly passoAtivo = signal(0);
   private intervalo: ReturnType<typeof setInterval> | null = null;
@@ -70,6 +73,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly passoAtualDados = computed(() => this.passos[this.passoAtivo()]);
 
   ngOnInit(): void {
+    this.seoService.atualizarSeo({
+      titulo: 'Encontre Prestadores de Serviços',
+      descricao: 'Prontto conecta você com prestadores de serviços domésticos de confiança. Limpeza, encanamento, elétrica e muito mais.',
+      url: 'https://prontto.org/',
+    });
     this.iniciarAvanco();
   }
 

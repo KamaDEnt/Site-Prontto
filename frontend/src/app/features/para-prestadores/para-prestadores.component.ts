@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { SeoService } from '../../core/seo/seo.service';
 
 interface Beneficio {
   titulo: string;
@@ -14,7 +15,17 @@ interface Beneficio {
   templateUrl: './para-prestadores.component.html',
   styleUrl: './para-prestadores.component.scss',
 })
-export class ParaPrestadoresComponent {
+export class ParaPrestadoresComponent implements OnInit {
+  private readonly seoService = inject(SeoService);
+
+  ngOnInit(): void {
+    this.seoService.atualizarSeo({
+      titulo: 'Para Prestadores',
+      descricao: 'Cadastre-se como prestador de serviços na Prontto e encontre clientes na sua região.',
+      url: 'https://prontto.org/para-prestadores',
+    });
+  }
+
   readonly beneficios: Beneficio[] = [
     {
       titulo: 'Clientes qualificados',
