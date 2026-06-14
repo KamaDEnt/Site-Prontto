@@ -73,6 +73,7 @@ export class PerfilPrestadorService {
 
   /**
    * Registra uma imagem no portfólio após upload direto ao Cloudinary (ADR-03).
+   * @deprecated Usar uploadImagem() que faz upload local ao servidor.
    */
   adicionarImagem(
     url: string,
@@ -86,7 +87,24 @@ export class PerfilPrestadorService {
   }
 
   /**
+   * Faz upload de uma imagem ao portfólio via multipart/form-data.
+   * Rota: POST /api/auth/portfolio/upload
+   * Tipos aceitos: jpg, jpeg, png, webp — máx 5 MB.
+   * NÃO definir Content-Type manualmente — o browser define o boundary.
+   */
+  uploadImagem(arquivo: File, ordem = 0): Observable<{ id: string; url: string }> {
+    const formData = new FormData();
+    formData.append('arquivo', arquivo);
+    formData.append('ordem', ordem.toString());
+    return this.http.post<{ id: string; url: string }>(
+      `${this.baseAuth}/portfolio/upload`,
+      formData,
+    );
+  }
+
+  /**
    * Remove uma imagem do portfólio (soft delete).
+   * Rota: DELETE /api/auth/portfolio/{id}
    */
   removerImagem(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseAuth}/portfolio/${id}`);

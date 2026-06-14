@@ -35,6 +35,13 @@
         >
           <span aria-hidden="true">💳</span> Dados Bancários
         </button>
+        <button
+          class="sidebar__nav-item"
+          [class.ativo]="abaAtiva() === 'portfolio'"
+          (click)="mudarAba('portfolio')"
+        >
+          <span aria-hidden="true">🖼️</span> Portfólio
+        </button>
       }
       <button
         class="sidebar__nav-item"
@@ -82,6 +89,13 @@
           [class.ativo]="abaAtiva() === 'banking'"
           (click)="mudarAba('banking')"
         >Bancário</button>
+        <button
+          role="tab"
+          [attr.aria-selected]="abaAtiva() === 'portfolio'"
+          class="aba-mobile"
+          [class.ativo]="abaAtiva() === 'portfolio'"
+          (click)="mudarAba('portfolio')"
+        >Portfólio</button>
       }
       <button
         role="tab"
@@ -251,6 +265,111 @@
             </button>
           </div>
         </form>
+      </section>
+    }
+
+    <!-- ABA: Portfólio (prestadores) -->
+    @if (abaAtiva() === 'portfolio' && usuario()?.tipoConta === 'prestador') {
+      <section class="secao-card" aria-labelledby="titulo-portfolio">
+        <div class="secao-card__header">
+          <h2 class="secao-card__titulo" id="titulo-portfolio">Portfólio de Fotos</h2>
+          <p class="secao-card__desc">Adicione fotos dos seus serviços para atrair mais clientes.</p>
+        </div>
+
+        <!-- Área de upload -->
+        <div
+          class="upload-area"
+          [class.ativo]="!!previewUrl()"
+          (click)="inputArquivo.click()"
+          role="button"
+          tabindex="0"
+          aria-label="Clique para selecionar uma imagem para o portfólio"
+          (keydown.enter)="inputArquivo.click()"
+          (keydown.space)="inputArquivo.click()"
+        >
+          <input
+            #inputArquivo
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            (change)="onArquivoSelecionado($event)"
+            hidden
+            aria-hidden="true"
+          />
+          @if (previewUrl()) {
+            <img [src]="previewUrl()" alt="Preview da imagem selecionada" class="preview-img" />
+            <div class="upload-acoes" role="group" aria-label="Ações do upload">
+              <button
+                class="btn-primario"
+                (click)="uploadImagem(); $event.stopPropagation()"
+                [disabled]="uploadEmAndamento()"
+                type="button"
+                aria-label="{{ uploadEmAndamento() ? 'Enviando imagem...' : 'Confirmar upload da imagem' }}"
+              >
+                @if (uploadEmAndamento()) {
+                  <span class="spinner spinner--sm" aria-hidden="true"></span>
+                  Enviando...
+                } @else {
+                  Confirmar upload
+                }
+              </button>
+              <button
+                class="btn-secundario"
+                type="button"
+                (click)="previewUrl.set(null); arquivoSelecionado.set(null); $event.stopPropagation()"
+                aria-label="Cancelar seleção"
+              >
+                Cancelar
+              </button>
+            </div>
+          } @else {
+            <div class="upload-placeholder" aria-hidden="true">
+              <span class="upload-icon">📷</span>
+              <p>Clique para adicionar foto ao portfólio</p>
+              <span class="upload-hint">JPG, PNG ou WebP · máx 5 MB</span>
+            </div>
+          }
+        </div>
+
+        @if (erroUpload()) {
+          <p class="erro-upload" role="alert" aria-live="assertive">{{ erroUpload() }}</p>
+        }
+
+        <!-- Estado: carregando imagens -->
+        @if (carregandoImagens()) {
+          <div class="portfolio-grid" aria-busy="true" aria-label="Carregando portfólio">
+            @for (i of [1, 2, 3, 4]; track i) {
+              <div class="portfolio-card portfolio-card--skeleton">
+                <div class="skeleton" style="width:100%;height:100%;"></div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Galeria -->
+        @if (!carregandoImagens()) {
+          <div class="portfolio-grid" role="list" aria-label="Fotos do portfólio">
+            @for (imagem of imagens(); track imagem.id) {
+              <div class="portfolio-card" role="listitem">
+                <img
+                  [src]="imagem.url"
+                  alt="Foto do portfólio"
+                  loading="lazy"
+                  width="180"
+                  height="180"
+                />
+                <button
+                  class="btn-remover"
+                  type="button"
+                  (click)="removerImagem(imagem.id)"
+                  aria-label="Remover foto do portfólio"
+                  title="Remover"
+                >✕</button>
+              </div>
+            } @empty {
+              <p class="sem-imagens">Nenhuma foto no portfólio ainda.</p>
+            }
+          </div>
+        }
       </section>
     }
 

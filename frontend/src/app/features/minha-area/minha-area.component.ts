@@ -7,7 +7,7 @@ import { BankingService } from '../../core/api/banking.service';
 import { PerfilPrestadorService } from '../../core/api/perfil-prestador.service';
 import { ServicosService } from '../../core/api/servicos.service';
 import { AvaliacoesService } from '../../core/api/avaliacoes.service';
-import { DadosBancarios, Categoria, Cidade, Servico, StatusServico } from '../../core/models/usuario.model';
+import { DadosBancarios, Categoria, Cidade, Servico, StatusServico, ImagemPortfolio } from '../../core/models/usuario.model';
 
 interface TipoPix {
   valor: string;
@@ -42,7 +42,15 @@ export class MinhaAreaComponent implements OnInit {
   readonly cidades = signal<Cidade[]>([]);
 
   // Aba ativa
-  readonly abaAtiva = signal<'perfil' | 'banking' | 'servicos'>('perfil');
+  readonly abaAtiva = signal<'perfil' | 'banking' | 'servicos' | 'portfolio'>('perfil');
+
+  // ── Portfólio (upload local) ─────────────────────────────────────────────────
+  readonly imagens = signal<ImagemPortfolio[]>([]);
+  readonly carregandoImagens = signal(false);
+  readonly uploadEmAndamento = signal(false);
+  readonly erroUpload = signal<string | null>(null);
+  readonly previewUrl = signal<string | null>(null);
+  readonly arquivoSelecionado = signal<File | null>(null);
 
   // Serviços do usuário
   readonly servicos = signal<Servico[]>([]);
@@ -151,10 +159,13 @@ export class MinhaAreaComponent implements OnInit {
     });
   }
 
-  mudarAba(aba: 'perfil' | 'banking' | 'servicos'): void {
+  mudarAba(aba: 'perfil' | 'banking' | 'servicos' | 'portfolio'): void {
     this.abaAtiva.set(aba);
     if (aba === 'servicos' && this.servicos().length === 0 && !this.carregandoServicos()) {
       this.carregarServicos();
+    }
+    if (aba === 'portfolio' && this.imagens().length === 0 && !this.carregandoImagens()) {
+      this.carregarImagens();
     }
   }
 
@@ -241,6 +252,94 @@ export class MinhaAreaComponent implements OnInit {
 
   get precisaCompletarPerfil(): boolean {
     return this.usuario()?.tipoConta === 'prestador' && !this.usuario()?.slug;
+  }
+
+  // ── Métodos de portfólio ─────────────────────────────────────────────────────
+
+  carregarImagens(): void {
+    this.carregandoImagens.set(true);
+    this.perfilService.obterPerfilPublico(this.usuario()?.slug ?? '').subscribe({
+      next: (perfil) => {
+        this.imagens.set(perfil.imagensPortfolio ?? []);
+        this.carregandoImagens.set(false);
+      },
+      error: () => {
+        this.carregandoImagens.set(false);
+      },
+    });
+  }
+
+  onArquivoSelecionado(evento: Event): void {
+    const input = evento.target as HTMLInputElement;
+    const arquivo = input.files?.[0];
+    if (!arquivo) return;
+
+    const tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!tiposPermitidos.includes(arquivo.type)) {
+      this.erroUpload.set('Tipo de arquivo não permitido. Use JPG, PNG ou WebP.');
+      return;
+    }
+    if (arquivo.size > 5 * 1024 * 1024) {
+      this.erroUpload.set('Arquivo muito grande. O limite é 5 MB.');
+      return;
+    }
+
+    this.erroUpload.set(null);
+    this.arquivoSelecionado.set(arquivo);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.previewUrl.set(e.target?.result as string);
+    };
+    reader.readAsDataURL(arquivo);
+
+    // Limpa o valor do input para permitir reselecionar o mesmo arquivo
+    input.value = '';
+  }
+
+  uploadImagem(): void {
+    const arquivo = this.arquivoSelecionado();
+    if (!arquivo) return;
+
+    this.uploadEmAndamento.set(true);
+    this.erroUpload.set(null);
+
+    const ordemAtual = this.imagens().length;
+    this.perfilService.uploadImagem(arquivo, ordemAtual).subscribe({
+      next: (res) => {
+        const novaImagem: ImagemPortfolio = {
+          id: res.id,
+          url: res.url,
+          ordem: ordemAtual,
+        };
+        this.imagens.update((lista) => [...lista, novaImagem]);
+        this.previewUrl.set(null);
+        this.arquivoSelecionado.set(null);
+        this.uploadEmAndamento.set(false);
+      },
+      error: (err) => {
+        const status = err?.status;
+        if (status === 400) {
+          this.erroUpload.set('Arquivo inválido. Verifique o tipo e o tamanho (máx 5 MB).');
+        } else if (status === 413) {
+          this.erroUpload.set('Arquivo muito grande. O limite é 5 MB.');
+        } else {
+          this.erroUpload.set('Erro ao enviar imagem. Tente novamente.');
+        }
+        this.uploadEmAndamento.set(false);
+      },
+    });
+  }
+
+  removerImagem(id: string): void {
+    this.perfilService.removerImagem(id).subscribe({
+      next: () => {
+        this.imagens.update((lista) => lista.filter((img) => img.id !== id));
+      },
+      error: () => {
+        // Falha silenciosa — imagem permanece na lista
+      },
+    });
   }
 
   sair(): void {
