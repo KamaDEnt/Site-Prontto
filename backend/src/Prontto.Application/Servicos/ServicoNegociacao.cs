@@ -204,6 +204,26 @@ public class ServicoNegociacao(
         return mensagens.Select(MapearMensagemDto).ToList();
     }
 
+    public async Task<ResultadoMensagensPaginadas> ListarMensagensPaginadasAsync(
+        Guid servicoId, Guid usuarioId, Guid? afterId, int limite)
+    {
+        var servico = await repositorioServicos.ObterPorIdAsync(servicoId)
+            ?? throw new ExcecaoNaoEncontrado("Serviço não encontrado");
+
+        var eParticipante = servico.ClienteId == usuarioId || servico.PrestadorId == usuarioId;
+        if (!eParticipante)
+            throw new ExcecaoProibido("Acesso negado ao serviço");
+
+        // Busca limite + 1 para detectar se há mais páginas sem custo extra
+        var mensagens = await repositorioMensagens.ListarPorServicoAsync(servicoId, afterId, limite + 1);
+
+        var temMais = mensagens.Count > limite;
+        var pagina = mensagens.Take(limite).Select(MapearMensagemDto).ToList();
+        var ultimoId = pagina.Count > 0 ? pagina[^1].Id : (Guid?)null;
+
+        return new ResultadoMensagensPaginadas(pagina, temMais, ultimoId);
+    }
+
     // ── Helpers privados ───────────────────────────────────────────────────────
 
     private static void ValidarParticipante(

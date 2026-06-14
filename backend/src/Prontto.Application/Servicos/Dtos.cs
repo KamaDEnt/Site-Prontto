@@ -33,6 +33,12 @@ public record DtoMensagemServico(
     DateTime CriadoEm
 );
 
+public record ResultadoMensagensPaginadas(
+    List<DtoMensagemServico> Mensagens,
+    bool TemMais,
+    Guid? UltimoId
+);
+
 public record DtoDisputa(
     Guid Id,
     Guid ServicoId,

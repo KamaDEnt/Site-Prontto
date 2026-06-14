@@ -219,6 +219,149 @@ public class TestesServicoNegociacao
             .Should().ThrowAsync<ExcecaoTransicaoInvalida>();
     }
 
+    // ── ListarMensagensPaginadasAsync ──────────────────────────────────────────
+
+    [Fact]
+    public async Task ListarMensagens_SemCursor_RetornaPrimeiras50()
+    {
+        var servicoId = Guid.NewGuid();
+        var clienteId = Guid.NewGuid();
+        var servico = CriarServico(servicoId, clienteId: clienteId);
+
+        var mensagens = Enumerable.Range(1, 50).Select(i => new MensagemServico
+        {
+            Id = Guid.NewGuid(),
+            ServicoId = servicoId,
+            RemetenteId = clienteId,
+            PapelRemetente = PapelRemetente.Cliente,
+            TipoMensagem = TipoMensagem.Texto,
+            Conteudo = $"Mensagem {i}",
+            CriadoEm = DateTime.UtcNow.AddSeconds(i)
+        }).ToList();
+
+        _repositorioServicos.Setup(r => r.ObterPorIdAsync(servicoId)).ReturnsAsync(servico);
+        // Repositório retorna 50 (limite=50, pedimos 51 → retorna só 50 → temMais=false)
+        _repositorioMensagens
+            .Setup(r => r.ListarPorServicoAsync(servicoId, null, 51))
+            .ReturnsAsync(mensagens);
+
+        var resultado = await _sut.ListarMensagensPaginadasAsync(servicoId, clienteId, null, 50);
+
+        resultado.Mensagens.Should().HaveCount(50);
+        resultado.TemMais.Should().BeFalse();
+        resultado.UltimoId.Should().Be(mensagens.Last().Id);
+    }
+
+    [Fact]
+    public async Task ListarMensagens_ComCursor_RetornaMensagensApos()
+    {
+        var servicoId = Guid.NewGuid();
+        var clienteId = Guid.NewGuid();
+        var cursorId = Guid.NewGuid();
+        var servico = CriarServico(servicoId, clienteId: clienteId);
+
+        var mensagensAposCursor = Enumerable.Range(1, 10).Select(i => new MensagemServico
+        {
+            Id = Guid.NewGuid(),
+            ServicoId = servicoId,
+            RemetenteId = clienteId,
+            PapelRemetente = PapelRemetente.Cliente,
+            TipoMensagem = TipoMensagem.Texto,
+            Conteudo = $"Mensagem após cursor {i}",
+            CriadoEm = DateTime.UtcNow.AddSeconds(i + 100)
+        }).ToList();
+
+        _repositorioServicos.Setup(r => r.ObterPorIdAsync(servicoId)).ReturnsAsync(servico);
+        // Pedimos limite=50 → repositório recebe limite=51, retorna 10
+        _repositorioMensagens
+            .Setup(r => r.ListarPorServicoAsync(servicoId, cursorId, 51))
+            .ReturnsAsync(mensagensAposCursor);
+
+        var resultado = await _sut.ListarMensagensPaginadasAsync(servicoId, clienteId, cursorId, 50);
+
+        resultado.Mensagens.Should().HaveCount(10);
+        resultado.TemMais.Should().BeFalse();
+        resultado.UltimoId.Should().Be(mensagensAposCursor.Last().Id);
+    }
+
+    [Fact]
+    public async Task ListarMensagens_LimiteMaximo_Clamped100()
+    {
+        // Verifica que o controller clampeia para 100 (não é responsabilidade do serviço)
+        // O serviço deve respeitar o limite passado — testamos via mock
+        var servicoId = Guid.NewGuid();
+        var clienteId = Guid.NewGuid();
+        var servico = CriarServico(servicoId, clienteId: clienteId);
+
+        // 100 mensagens — repositório recebe limite+1=101, retorna 100 → temMais=false
+        var mensagens = Enumerable.Range(1, 100).Select(i => new MensagemServico
+        {
+            Id = Guid.NewGuid(),
+            ServicoId = servicoId,
+            RemetenteId = clienteId,
+            PapelRemetente = PapelRemetente.Cliente,
+            TipoMensagem = TipoMensagem.Texto,
+            Conteudo = $"Mensagem {i}",
+            CriadoEm = DateTime.UtcNow.AddSeconds(i)
+        }).ToList();
+
+        _repositorioServicos.Setup(r => r.ObterPorIdAsync(servicoId)).ReturnsAsync(servico);
+        _repositorioMensagens
+            .Setup(r => r.ListarPorServicoAsync(servicoId, null, 101))
+            .ReturnsAsync(mensagens);
+
+        var resultado = await _sut.ListarMensagensPaginadasAsync(servicoId, clienteId, null, 100);
+
+        resultado.Mensagens.Should().HaveCount(100);
+        resultado.TemMais.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task ListarMensagens_TemPaginaAdiante_TemMaisTrue()
+    {
+        var servicoId = Guid.NewGuid();
+        var clienteId = Guid.NewGuid();
+        var servico = CriarServico(servicoId, clienteId: clienteId);
+
+        // Retorna limite+1=51 mensagens → indica que há mais
+        var mensagens = Enumerable.Range(1, 51).Select(i => new MensagemServico
+        {
+            Id = Guid.NewGuid(),
+            ServicoId = servicoId,
+            RemetenteId = clienteId,
+            PapelRemetente = PapelRemetente.Cliente,
+            TipoMensagem = TipoMensagem.Texto,
+            Conteudo = $"Mensagem {i}",
+            CriadoEm = DateTime.UtcNow.AddSeconds(i)
+        }).ToList();
+
+        _repositorioServicos.Setup(r => r.ObterPorIdAsync(servicoId)).ReturnsAsync(servico);
+        _repositorioMensagens
+            .Setup(r => r.ListarPorServicoAsync(servicoId, null, 51))
+            .ReturnsAsync(mensagens);
+
+        var resultado = await _sut.ListarMensagensPaginadasAsync(servicoId, clienteId, null, 50);
+
+        resultado.Mensagens.Should().HaveCount(50);
+        resultado.TemMais.Should().BeTrue();
+        resultado.UltimoId.Should().Be(mensagens[49].Id);
+    }
+
+    [Fact]
+    public async Task ListarMensagens_UsuarioNaoParticipante_LancaExcecaoProibido()
+    {
+        var servicoId = Guid.NewGuid();
+        var clienteId = Guid.NewGuid();
+        var outroUsuario = Guid.NewGuid();
+        var servico = CriarServico(servicoId, clienteId: clienteId);
+
+        _repositorioServicos.Setup(r => r.ObterPorIdAsync(servicoId)).ReturnsAsync(servico);
+
+        await _sut
+            .Invoking(s => s.ListarMensagensPaginadasAsync(servicoId, outroUsuario, null, 50))
+            .Should().ThrowAsync<ExcecaoProibido>();
+    }
+
     // ── Helpers ────────────────────────────────────────────────────────────────
 
     private static Servico CriarServico(

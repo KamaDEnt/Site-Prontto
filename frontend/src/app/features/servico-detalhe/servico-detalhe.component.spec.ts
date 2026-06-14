@@ -56,6 +56,11 @@ describe('ServicoDetalheComponent', () => {
     expect(component.cobranca()).toBeNull();
   });
 
+  it('deve iniciar signals de cursor no estado neutro (RF-06)', () => {
+    expect(component.ultimoId()).toBeNull();
+    expect(component.temMaisAnteriores()).toBeFalse();
+  });
+
   it('deve iniciar com formulários de ação fechados', () => {
     expect(component.mostrarFormProposta()).toBeFalse();
     expect(component.mostrarFormDisputa()).toBeFalse();

@@ -194,6 +194,12 @@
       <h3>Mensagens e Negociação</h3>
 
       <div class="chat-mensagens" *ngIf="mensagens().length > 0; else semMensagens">
+
+        <!-- Aviso de histórico truncado -->
+        <div *ngIf="temMaisAnteriores()" class="aviso-historico">
+          <span>Mostrando as últimas 50 mensagens</span>
+        </div>
+
         <div
           *ngFor="let msg of mensagens()"
           class="mensagem"

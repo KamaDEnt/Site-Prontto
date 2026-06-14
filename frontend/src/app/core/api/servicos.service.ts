@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Servico, MensagemServico, Disputa } from '../models/usuario.model';
+import { Servico, MensagemServico, Disputa, ResultadoMensagens } from '../models/usuario.model';
 
 export interface ComandoCriarServico {
   titulo: string;
@@ -34,8 +34,10 @@ export class ServicosService {
     return this.http.get<{ servico: Servico }>(`${this.baseUrl}/${id}`);
   }
 
-  listarMensagens(id: string): Observable<{ mensagens: MensagemServico[] }> {
-    return this.http.get<{ mensagens: MensagemServico[] }>(`${this.baseUrl}/${id}/mensagens`);
+  listarMensagens(id: string, afterId?: string, limite = 50): Observable<ResultadoMensagens> {
+    let params = `limite=${limite}`;
+    if (afterId) params += `&afterId=${afterId}`;
+    return this.http.get<ResultadoMensagens>(`${this.baseUrl}/${id}/mensagens?${params}`);
   }
 
   vincularPrestador(id: string): Observable<{ servico: Servico }> {

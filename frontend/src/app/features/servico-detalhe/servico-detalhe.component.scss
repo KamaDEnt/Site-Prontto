@@ -364,6 +364,21 @@
   padding: 2rem;
 }
 
+.aviso-historico {
+  text-align: center;
+  padding: 0.4rem 0.75rem;
+  background: var(--cor-fundo);
+  border: 1px solid var(--cor-borda);
+  border-radius: 9999px;
+  align-self: center;
+  margin-bottom: 0.5rem;
+
+  span {
+    font-size: 0.75rem;
+    color: var(--cor-texto-suave);
+  }
+}
+
 // ── Buttons ───────────────────────────────────────────────────────────────────
 
 .btn-primario {

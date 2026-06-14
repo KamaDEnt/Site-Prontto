@@ -216,3 +216,11 @@ export interface ResultadoListaAvaliacoes {
   pagina: number;
   totalPaginas: number;
 }
+
+// ── Chat com cursor (RF-06) ───────────────────────────────────────────────────
+
+export interface ResultadoMensagens {
+  mensagens: MensagemServico[];
+  temMais: boolean;
+  ultimoId: string | null;
+}

@@ -39,6 +39,10 @@ export class ServicoDetalheComponent implements OnInit, OnDestroy {
   readonly enviando = signal(false);
   readonly mensagemFeedback = signal<string | null>(null);
 
+  // Cursor-based pagination (RF-06)
+  readonly ultimoId = signal<string | null>(null);
+  readonly temMaisAnteriores = signal(false);
+
   // Formulários
   conteudoMensagem = '';
   valorProposta: number | null = null;
@@ -180,8 +184,20 @@ export class ServicoDetalheComponent implements OnInit, OnDestroy {
 
   private carregarMensagens(): void {
     this.servicosService.listarMensagens(this.servicoId).subscribe({
-      next: (res) => this.mensagens.set(res.mensagens),
+      next: (res) => {
+        this.mensagens.set(res.mensagens);
+        this.ultimoId.set(res.ultimoId);
+        this.temMaisAnteriores.set(res.temMais);
+        this.rolarParaFinalChat();
+      },
     });
+  }
+
+  private rolarParaFinalChat(): void {
+    setTimeout(() => {
+      const chatEl = document.querySelector('.chat-mensagens');
+      if (chatEl) chatEl.scrollTop = chatEl.scrollHeight;
+    }, 50);
   }
 
   private carregarCobranca(): void {
@@ -204,11 +220,24 @@ export class ServicoDetalheComponent implements OnInit, OnDestroy {
   }
 
   private iniciarPolling(): void {
-    // Polling a cada 10 segundos (ADR §11.4)
+    // Polling incremental a cada 10 segundos — só busca mensagens novas após o cursor (ADR §11.4)
     this.pollingSubscription = interval(10_000)
-      .pipe(switchMap(() => this.servicosService.listarMensagens(this.servicoId)))
+      .pipe(
+        switchMap(() =>
+          this.servicosService.listarMensagens(
+            this.servicoId,
+            this.ultimoId() ?? undefined
+          )
+        )
+      )
       .subscribe({
-        next: (res) => this.mensagens.set(res.mensagens),
+        next: (res) => {
+          if (res.mensagens.length > 0) {
+            this.mensagens.update((atual) => [...atual, ...res.mensagens]);
+            this.ultimoId.set(res.ultimoId);
+            this.rolarParaFinalChat();
+          }
+        },
       });
   }
 

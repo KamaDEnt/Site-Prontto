@@ -15,6 +15,32 @@ public class RepositorioMensagem(ContextoBancoDados db) : IRepositorioMensagem
             .OrderBy(m => m.CriadoEm)
             .ToListAsync();
 
+    public async Task<IReadOnlyList<MensagemServico>> ListarPorServicoAsync(Guid servicoId, Guid? afterId, int limite)
+    {
+        var query = db.MensagensServico
+            .Include(m => m.Remetente)
+            .Where(m => m.ServicoId == servicoId)
+            .OrderBy(m => m.CriadoEm)
+            .ThenBy(m => m.Id);
+
+        if (afterId.HasValue)
+        {
+            var cursor = await db.MensagensServico
+                .Where(m => m.Id == afterId.Value)
+                .Select(m => new { m.CriadoEm, m.Id })
+                .FirstOrDefaultAsync();
+
+            if (cursor != null)
+            {
+                query = (IOrderedQueryable<MensagemServico>)query
+                    .Where(m => m.CriadoEm > cursor.CriadoEm
+                             || (m.CriadoEm == cursor.CriadoEm && m.Id.CompareTo(cursor.Id) > 0));
+            }
+        }
+
+        return await query.Take(limite).ToListAsync();
+    }
+
     public Task<MensagemServico?> ObterPropostaPendenteAsync(Guid servicoId)
         => db.MensagensServico
             .Where(m =>

@@ -76,11 +76,17 @@ public class ControladorServicos(
     // ── Mensagens e propostas ──────────────────────────────────────────────────
 
     [HttpGet("{id:guid}/mensagens")]
-    public async Task<IActionResult> ListarMensagens(Guid id)
+    public async Task<IActionResult> ListarMensagens(
+        Guid id,
+        [FromQuery] Guid? afterId = null,
+        [FromQuery] int limite = 50)
     {
+        if (limite < 1) limite = 1;
+        if (limite > 100) limite = 100;
+
         var userId = ObterUsuarioId();
-        var mensagens = await servicoNegociacao.ListarMensagensAsync(id, userId);
-        return Ok(new { mensagens });
+        var resultado = await servicoNegociacao.ListarMensagensPaginadasAsync(id, userId, afterId, limite);
+        return Ok(resultado);
     }
 
     [HttpPost("{id:guid}/mensagem")]
