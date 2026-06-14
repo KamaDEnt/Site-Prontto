@@ -44,6 +44,9 @@ public static class InjecaoDependencias
         servicos.AddScoped<IRepositorioAvaliacao, RepositorioAvaliacao>();
         servicos.AddScoped<IRepositorioImagemPortfolio, RepositorioImagemPortfolio>();
 
+        // ── Armazenamento de arquivos ─────────────────────────────────────────
+        servicos.AddScoped<IArmazenamentoArquivo, ArmazenamentoArquivoLocal>();
+
         // ── Serviços de Aplicação ─────────────────────────────────────────────
         servicos.AddScoped<IHashSenha, HashSenhaBcrypt>();
         servicos.AddScoped<IServicoJwt, ServicoJwt>();

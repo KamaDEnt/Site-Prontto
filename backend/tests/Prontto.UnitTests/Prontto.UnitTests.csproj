@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Prontto.Application\Prontto.Application.csproj" />
     <ProjectReference Include="..\..\src\Prontto.Domain\Prontto.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Prontto.Infrastructure\Prontto.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

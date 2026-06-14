@@ -21,6 +21,7 @@ public class ControladorAuth(
     IRepositorioPerfilPrestador repositorioPerfil,
     IProcessadorPagamento processadorPagamento,
     IRepositorioUsuario repositorioUsuario,
+    IArmazenamentoArquivo armazenamentoArquivo,
     ILogger<ControladorAuth> logger) : ControllerBase
 {
     private const string NomeCookieRefreshToken = "prontto_refresh_token";
@@ -196,11 +197,62 @@ public class ControladorAuth(
         return Ok(new { perfil });
     }
 
-    // ── Portfólio (stub — Cloudinary não integrado ainda) ─────────────────────
+    // ── Portfólio ──────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Faz upload de uma imagem de portfólio diretamente para o servidor (armazenamento local).
+    /// Aceita arquivos jpg, jpeg, png e webp até 5 MB.
+    /// </summary>
+    [HttpPost("portfolio/upload")]
+    [Authorize]
+    [RequestSizeLimit(5_242_880)] // 5 MB
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UploadImagem([FromForm] IFormFile? arquivo)
+    {
+        if (arquivo is null || arquivo.Length == 0)
+            return BadRequest(new { error = "Nenhum arquivo enviado" });
+
+        if (arquivo.Length > 5_242_880)
+            return BadRequest(new { error = "Arquivo maior que 5 MB" });
+
+        var extensoesPermitidas = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            { ".jpg", ".jpeg", ".png", ".webp" };
+        var extensao = Path.GetExtension(arquivo.FileName);
+        if (string.IsNullOrWhiteSpace(extensao) || !extensoesPermitidas.Contains(extensao))
+            return BadRequest(new { error = "Tipo não permitido. Use jpg, png ou webp" });
+
+        var tipoConta = User.FindFirstValue("accountType");
+        if (tipoConta != "prestador")
+            return StatusCode(403, new { error = "Apenas prestadores podem adicionar imagens ao portfólio" });
+
+        var idUsuario = Guid.Parse(User.FindFirstValue("userId")!);
+
+        var urlRelativa = await armazenamentoArquivo.SalvarAsync(
+            arquivo.OpenReadStream(),
+            arquivo.FileName,
+            arquivo.ContentType);
+
+        var imagem = new ImagemPortfolio
+        {
+            UsuarioId = idUsuario,
+            Url = urlRelativa,
+            CloudinaryPublicId = string.Empty, // Não usamos Cloudinary nesta implementação
+            Moderada = true,  // Armazenamento local: sem moderação externa
+            Aprovada = true,  // Aprovada imediatamente (sem pipeline de moderação)
+        };
+
+        await repositorioPerfil.AdicionarImagemAsync(imagem);
+
+        logger.LogInformation(
+            "Imagem de portfólio salva para usuario {UsuarioId}: {Url}",
+            idUsuario, urlRelativa);
+
+        return StatusCode(201, new { id = imagem.Id, url = imagem.Url });
+    }
 
     /// <summary>
     /// Registra uma imagem de portfólio pelo URL (após upload direto ao Cloudinary pelo frontend).
-    /// Stub: moderação automática não está integrada nesta versão.
+    /// Mantido para compatibilidade com integrações anteriores.
     /// </summary>
     [HttpPost("portfolio")]
     [Authorize]
@@ -254,6 +306,11 @@ public class ControladorAuth(
             return StatusCode(403, new { error = "Acesso negado" });
 
         await repositorioPerfil.RemoverImagemAsync(imagem);
+
+        // Remover arquivo físico se for armazenamento local (URL começa com /uploads/)
+        if (!string.IsNullOrWhiteSpace(imagem.Url) && imagem.Url.StartsWith("/uploads/"))
+            await armazenamentoArquivo.RemoverAsync(imagem.Url);
+
         return NoContent();
     }
 
