@@ -48,7 +48,15 @@ builder.Services.AddSwaggerGen(opt =>
 });
 
 // ── JWT ────────────────────────────────────────────────────────────────────────
-var segredoJwt = builder.Configuration["SESSION_SECRET"] ?? "prontto-secret-dev";
+var segredoJwt = builder.Configuration["SESSION_SECRET"];
+if (string.IsNullOrWhiteSpace(segredoJwt))
+{
+    if (builder.Environment.IsProduction())
+        throw new InvalidOperationException(
+            "SESSION_SECRET é obrigatória em produção. Configure a variável de ambiente antes de iniciar a aplicação.");
+
+    segredoJwt = "prontto-secret-dev-local-32chars!!";
+}
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
@@ -93,6 +101,15 @@ builder.Services.AddRateLimiter(opcoes =>
                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                 QueueLimit = 0,
             }));
+
+    // POST /api/servicos/{id}/mensagem — 30 req/min por usuário autenticado
+    opcoes.AddFixedWindowLimiter("chat", opt =>
+    {
+        opt.PermitLimit = 30;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
 });
 
 // ── CORS ───────────────────────────────────────────────────────────────────────

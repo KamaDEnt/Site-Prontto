@@ -145,6 +145,22 @@ public class ControladorAdmin(
         });
     }
 
+    // ── Imagens de portfólio ──────────────────────────────────────────────────
+
+    [HttpGet("imagens/pendentes")]
+    public async Task<IActionResult> ImagensPendentes()
+    {
+        var imagens = await admin.ListarImagensPendentesAsync();
+        return Ok(new { imagens });
+    }
+
+    [HttpPatch("imagens/{id:guid}/moderar")]
+    public async Task<IActionResult> ModerarImagem(Guid id, [FromBody] RequisicaoModeracao req)
+    {
+        await admin.ModerarImagemAsync(id, req.Aprovada, IdAdmin);
+        return Ok(new { message = req.Aprovada ? "Imagem aprovada com sucesso" : "Imagem rejeitada com sucesso" });
+    }
+
     // ── Disputas ──────────────────────────────────────────────────────────────
 
     [HttpGet("disputas")]
@@ -168,3 +184,4 @@ public class ControladorAdmin(
 public record RequisicaoStatus(string Status);
 public record RequisicaoMensagem(string Conteudo);
 public record RequisicaoResolverDisputa(bool FavorPrestador, string DecisaoAdmin);
+public record RequisicaoModeracao(bool Aprovada);

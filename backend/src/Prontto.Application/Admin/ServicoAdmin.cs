@@ -12,6 +12,8 @@ public class ServicoAdmin(
     IRepositorioCobranca repositorioCobrancas,
     IRepositorioMensagem repositorioMensagens,
     IRepositorioAuditLog repositorioAuditLog,
+    IRepositorioImagemPortfolio repositorioImagens,
+    IRepositorioNotificacao repositorioNotificacoes,
     IMemoryCache cache) : IServicoAdmin
 {
     private const string ChaveCacheEstatisticas = "admin:stats";
@@ -198,5 +200,53 @@ public class ServicoAdmin(
         var ultimasCobrancas = await repositorioCobrancas.ListarUltimasComDetalhesAsync(20);
 
         return new ExtratoFinanceiro(totalArrecadado, totalPendente, totalRetido, ultimasCobrancas);
+    }
+
+    // ── Moderação de imagens ──────────────────────────────────────────────────
+
+    public async Task<IReadOnlyList<DtoImagemPendente>> ListarImagensPendentesAsync()
+    {
+        var imagens = await repositorioImagens.ListarPendentesModeracaoAsync();
+        return imagens
+            .Select(i => new DtoImagemPendente(
+                Id: i.Id,
+                Url: i.Url,
+                PrestadorId: i.UsuarioId,
+                NomePrestador: i.Usuario?.Nome ?? string.Empty,
+                CriadoEm: i.CriadoEm))
+            .ToList();
+    }
+
+    public async Task ModerarImagemAsync(Guid imagemId, bool aprovada, Guid adminId)
+    {
+        var imagem = await repositorioImagens.ObterPorIdAsync(imagemId)
+            ?? throw new ExcecaoNaoEncontrado("Imagem não encontrada");
+
+        imagem.Aprovada = aprovada;
+        imagem.Moderada = true;
+        await repositorioImagens.AtualizarAsync(imagem);
+
+        var titulo = aprovada ? "Imagem aprovada" : "Imagem rejeitada";
+        var mensagem = aprovada
+            ? "Sua imagem de portfólio foi aprovada e já está visível no seu perfil."
+            : "Sua imagem de portfólio foi rejeitada pela moderação e não será exibida no seu perfil.";
+
+        await repositorioNotificacoes.AdicionarAsync(new Notificacao
+        {
+            UsuarioId = imagem.UsuarioId,
+            Titulo = titulo,
+            Mensagem = mensagem,
+            Tipo = "moderacao_imagem",
+            ReferenciaId = imagemId.ToString(),
+        });
+
+        await repositorioAuditLog.RegistrarAsync(new AuditLog
+        {
+            UsuarioId = adminId,
+            Acao = aprovada ? "admin.imagem.aprovada" : "admin.imagem.rejeitada",
+            Entidade = "ImagemPortfolio",
+            EntidadeId = imagemId.ToString(),
+            Detalhes = $"Imagem {imagemId} do prestador {imagem.UsuarioId} {(aprovada ? "aprovada" : "rejeitada")} pelo admin {adminId}",
+        });
     }
 }

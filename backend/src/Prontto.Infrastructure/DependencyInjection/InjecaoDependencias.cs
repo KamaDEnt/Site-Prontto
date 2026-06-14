@@ -42,6 +42,7 @@ public static class InjecaoDependencias
         servicos.AddScoped<IRepositorioNotificacao, RepositorioNotificacao>();
         servicos.AddScoped<IRepositorioAuditLog, RepositorioAuditLog>();
         servicos.AddScoped<IRepositorioAvaliacao, RepositorioAvaliacao>();
+        servicos.AddScoped<IRepositorioImagemPortfolio, RepositorioImagemPortfolio>();
 
         // ── Serviços de Aplicação ─────────────────────────────────────────────
         servicos.AddScoped<IHashSenha, HashSenhaBcrypt>();

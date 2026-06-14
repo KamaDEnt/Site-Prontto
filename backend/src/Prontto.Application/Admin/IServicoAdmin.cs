@@ -18,6 +18,10 @@ public interface IServicoAdmin
     Task<IReadOnlyList<Cobranca>> ListarCobrancasAsync();
     Task<ResultadoPaginado<AuditLog>> ListarLogsAsync(int pagina, int tamanhoPagina, Guid? usuarioId, string? entidade);
     Task<ExtratoFinanceiro> ObterExtratoFinanceiroAsync();
+
+    // ── Moderação de imagens ──────────────────────────────────────────────────
+    Task<IReadOnlyList<DtoImagemPendente>> ListarImagensPendentesAsync();
+    Task ModerarImagemAsync(Guid imagemId, bool aprovada, Guid adminId);
 }
 
 public record ResultadoPaginado<T>(IReadOnlyList<T> Itens, int Total, int Pagina, int TamanhoPagina);
@@ -27,3 +31,10 @@ public record ExtratoFinanceiro(
     decimal TotalPendente,
     decimal TotalRetido,
     IReadOnlyList<Cobranca> UltimasCobrancas);
+
+public record DtoImagemPendente(
+    Guid Id,
+    string Url,
+    Guid PrestadorId,
+    string NomePrestador,
+    DateTime CriadoEm);

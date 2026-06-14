@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Prontto.Application.Financeiro;
 using Prontto.Application.Servicos;
 using Prontto.Domain.Enums;
@@ -83,6 +84,7 @@ public class ControladorServicos(
     }
 
     [HttpPost("{id:guid}/mensagem")]
+    [EnableRateLimiting("chat")]
     public async Task<IActionResult> EnviarMensagem(Guid id, [FromBody] RequisicaoMensagemTexto req)
     {
         var userId = ObterUsuarioId();

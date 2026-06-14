@@ -16,6 +16,8 @@ public class TestesServicoAdmin
     private readonly Mock<IRepositorioCobranca> _repositorioCobrancas = new();
     private readonly Mock<IRepositorioMensagem> _repositorioMensagens = new();
     private readonly Mock<IRepositorioAuditLog> _repositorioAuditLog = new();
+    private readonly Mock<IRepositorioImagemPortfolio> _repositorioImagens = new();
+    private readonly Mock<IRepositorioNotificacao> _repositorioNotificacoes = new();
     private readonly IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
     private readonly ServicoAdmin _sut;
 
@@ -29,6 +31,8 @@ public class TestesServicoAdmin
             _repositorioCobrancas.Object,
             _repositorioMensagens.Object,
             _repositorioAuditLog.Object,
+            _repositorioImagens.Object,
+            _repositorioNotificacoes.Object,
             _cache);
     }
 

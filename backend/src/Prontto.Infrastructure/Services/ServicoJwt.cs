@@ -3,18 +3,34 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Prontto.Application.Auth;
 using Prontto.Domain.Entities;
 
 namespace Prontto.Infrastructure.Services;
 
-public class ServicoJwt(IConfiguration configuracao) : IServicoJwt
+public class ServicoJwt(IConfiguration configuracao, IHostEnvironment ambiente) : IServicoJwt
 {
+    private readonly string _segredo = ResolverSegredo(configuracao, ambiente);
+
+    private static string ResolverSegredo(IConfiguration configuracao, IHostEnvironment ambiente)
+    {
+        var segredo = configuracao["SESSION_SECRET"];
+        if (string.IsNullOrWhiteSpace(segredo))
+        {
+            if (ambiente.IsProduction())
+                throw new InvalidOperationException(
+                    "SESSION_SECRET é obrigatória em produção. Configure a variável de ambiente antes de iniciar a aplicação.");
+
+            segredo = "prontto-secret-dev-local-32chars!!";
+        }
+        return segredo;
+    }
+
     public string GerarToken(Usuario usuario)
     {
-        var segredo = configuracao["SESSION_SECRET"] ?? "prontto-secret-dev";
-        var chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(segredo));
+        var chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_segredo));
         var credenciais = new SigningCredentials(chave, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
