@@ -54,6 +54,23 @@ export const routes: Routes = [
       import('./features/admin/admin.component').then(m => m.AdminComponent),
   },
   {
+    path: 'servicos/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/servico-detalhe/servico-detalhe.component').then(
+        m => m.ServicoDetalheComponent,
+      ),
+  },
+  // Rota canônica SEO: /:cidadeSlug/:categoriaSlug/:slug
+  {
+    path: ':cidadeSlug/:categoriaSlug/:slug',
+    loadComponent: () =>
+      import('./features/perfil-prestador/perfil-prestador.component').then(
+        m => m.PerfilPrestadorComponent,
+      ),
+  },
+  // Alias mantido para compatibilidade
+  {
     path: 'prestador/:slug',
     loadComponent: () =>
       import('./features/perfil-prestador/perfil-prestador.component').then(
