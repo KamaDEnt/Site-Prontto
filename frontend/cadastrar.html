@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prontto — Criar conta</title>
+<link rel="stylesheet" href="css/redesign.css">
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────── -->
+<header class="hdr">
+  <div class="wrap hdr__in">
+    <a href="Home.html" class="logo"><b>PRONT</b><i>TO</i></a>
+    <nav class="hdr__menu" aria-label="Menu principal">
+      <a href="seja-profissional.html">Seja um profissional</a>
+      <a href="Home.html#categorias">Como funciona?</a>
+      <a href="seguranca.html">Segurança</a>
+      <a href="entrar.html" class="hdr__entrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Entrar</a>
+      <button class="hdr__burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+</header>
+
+<!-- ── Cadastro (wizard) ──────────────────────────── -->
+<main class="cad-wrap">
+  <div class="cad">
+    <div class="cad__head">
+      <h1>Criar conta no Prontto</h1>
+      <p>É grátis e leva poucos minutos. Comece escolhendo o tipo de conta.</p>
+    </div>
+
+    <div class="cad-steps" id="cadSteps"></div>
+
+    <form id="cadForm" onsubmit="return false">
+      <!-- os passos são injetados aqui pelo JS -->
+      <div id="cadBody"></div>
+    </form>
+
+    <p style="text-align:center;margin-top:22px;color:var(--texto-suave);font-size:.96rem" id="cadFootLogin">Já tem conta? <a href="entrar.html" style="color:var(--laranja);font-weight:700">Entrar</a></p>
+  </div>
+</main>
+
+<script src="js/categorias.js"></script>
+<script src="js/cadastro.js"></script>
+<script src="js/popup.js"></script>
+</body>
+</html>

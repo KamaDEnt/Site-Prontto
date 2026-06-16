@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prontto — Entrar</title>
+<link rel="stylesheet" href="css/redesign.css">
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────── -->
+<header class="hdr">
+  <div class="wrap hdr__in">
+    <a href="Home.html" class="logo"><b>PRONT</b><i>TO</i></a>
+    <nav class="hdr__menu" aria-label="Menu principal">
+      <a href="seja-profissional.html">Seja um profissional</a>
+      <a href="Home.html#categorias">Como funciona?</a>
+      <a href="seguranca.html">Segurança</a>
+      <a href="entrar.html" class="hdr__entrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Entrar</a>
+      <button class="hdr__burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+</header>
+
+<!-- ── Entrar ─────────────────────────────────────── -->
+<main class="auth-wrap">
+  <div class="auth-box">
+    <div class="auth-ic" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+    </div>
+    <h1>Entre para continuar</h1>
+    <p class="auth-box__sub">Para acessar sua conta, digite abaixo o seu e-mail e enviaremos um link para efetuar o login.</p>
+
+    <form onsubmit="return false">
+      <div class="auth-field">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <button type="submit" class="btn btn-laranja">Entrar</button>
+      <a href="cadastrar.html" class="btn btn-out">Não tenho cadastro</a>
+    </form>
+
+    <p class="auth-box__pro">É prestador de serviços? <a href="seja-profissional.html">Confira nossa página</a> dedicada aos profissionais.</p>
+  </div>
+</main>
+
+<script src="js/categorias.js"></script>
+<script src="js/popup.js"></script>
+</body>
+</html>
