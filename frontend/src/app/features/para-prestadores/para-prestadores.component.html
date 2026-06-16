@@ -1,0 +1,184 @@
+<div class="sp">
+
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <section class="sp-hero" id="sp-form">
+    <div class="container sp-hero__in">
+
+      <!-- Formulário de cadastro -->
+      <div class="sp-card">
+        <h1>Tem clientes te esperando!</h1>
+        <p class="sp-card__sub">Cadastre-se como profissional e comece a receber pedidos.</p>
+        <p class="sp-card__hl">São <b>+200 mil</b> pedidos solicitados por mês.</p>
+
+        <form (submit)="$event.preventDefault()">
+          <div class="sp-field">
+            <label for="sp-email">E-mail</label>
+            <input id="sp-email" type="email" placeholder="Digite seu e-mail">
+          </div>
+          <div class="sp-field">
+            <label for="sp-tel">Celular</label>
+            <input id="sp-tel" type="tel" placeholder="Ex.: 11 99999-9999">
+          </div>
+          <label class="sp-terms">
+            <input type="checkbox">
+            <span>Li e concordo com a <a routerLink="/privacidade">Política de Privacidade</a> e os <a routerLink="/termos">Termos de Uso</a></span>
+          </label>
+          <button type="submit" class="btn btn-laranja btn-lg">Quero me cadastrar</button>
+          <a routerLink="/" class="sp-card__alt">Ou encontre um profissional</a>
+        </form>
+      </div>
+
+      <!-- Mosaico visual -->
+      <div class="sp-mosaic" aria-hidden="true">
+        <div class="ph ph--solid"></div>
+        <div class="ph">🌿 jardinagem</div>
+        <div class="ph">💼 serviços</div>
+        <div class="ph">📚 aulas</div>
+        <div class="ph">🔧 reparos</div>
+        <div class="ph">🧹 limpeza</div>
+        <div class="ph">❄️ ar-cond.</div>
+        <div class="ph">🏗️ obra</div>
+        <div class="ph">🎨 pintura</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Como funciona ──────────────────────────────────────── -->
+  <section class="sp-how">
+    <div class="container sp-how__in">
+
+      <div class="sp-how__left">
+        <div class="sp-how__bigic" aria-hidden="true">ℹ️</div>
+        <div>
+          <span class="kick">COMO FUNCIONA</span>
+          <h2>Como funciona?</h2>
+          <ul class="sp-how__steps">
+            <li>
+              <span class="sp-how__n">1</span>
+              O cliente faz um pedido de serviço na plataforma.
+            </li>
+            <li>
+              <span class="sp-how__n">2</span>
+              Profissionais próximos recebem a solicitação em tempo real.
+            </li>
+            <li>
+              <span class="sp-how__n">3</span>
+              O profissional libera o contato do cliente e fecha o serviço.
+            </li>
+          </ul>
+          <p class="sp-how__note">Ficou com alguma dúvida? Assista ao vídeo ao lado.</p>
+          <a routerLink="/cadastrar" class="btn btn-laranja">Quero ser um profissional</a>
+        </div>
+      </div>
+
+      <div class="sp-video" aria-label="Espaço para vídeo explicativo">
+        <div class="sp-video__play" aria-hidden="true">▶</div>
+        <p class="sp-video__cap">Como ser um profissional no Prontto</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Benefícios ─────────────────────────────────────────── -->
+  <section class="sp-benef">
+    <div class="container">
+      <div class="sec__head">
+        <span class="kick">BENEFÍCIOS</span>
+        <h2>Benefícios para você</h2>
+        <p>Tudo que você precisa para crescer profissionalmente</p>
+      </div>
+
+      <div class="sp-benef__grid">
+        @for (b of beneficios; track b.titulo) {
+          <div class="sp-benef__item">
+            <div class="sp-benef__ic" aria-hidden="true">{{ b.icone }}</div>
+            <h3>{{ b.titulo }}</h3>
+            <p>{{ b.descricao }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Quanto custa ───────────────────────────────────────── -->
+  <section class="sp-cost">
+    <div class="container sp-cost__in">
+      <div>
+        <span class="kick">TRANSPARÊNCIA</span>
+        <h2>Quanto custa?</h2>
+        <p>No Prontto não tem mensalidade nem custo para se cadastrar.</p>
+        <p>Você investe em um <b>pacote de moedas</b> dentro da plataforma para liberar o acesso ao contato do cliente e fica com <b>100% do valor negociado!</b></p>
+        <a routerLink="/cadastrar" class="btn btn-laranja" style="margin-top: 24px;">Cadastrar grátis</a>
+      </div>
+      <div class="sp-cost__art" aria-hidden="true">
+        <span>💰</span>
+        <span class="sp-cost__eq">=</span>
+        <span>🤝</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Depoimentos de profissionais ──────────────────────── -->
+  <section class="sec sec--tint">
+    <div class="container">
+      <div class="sec__head">
+        <span class="kick">DEPOIMENTOS</span>
+        <h2>O que os profissionais dizem</h2>
+        <p>Histórias reais de quem já transforma expertise em renda com o Prontto</p>
+      </div>
+
+      <div class="sp-testi__grid">
+        <div class="sp-testi-card">
+          <div class="quote__mark">"</div>
+          <p class="sp-testi-card__txt">O Prontto trouxe inovação para o mercado e para o meu negócio.</p>
+          <p class="sp-testi-card__by"><b>Alexandre de Lucca</b><span>Mecânico de Autos</span></p>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="sp-testi-card">
+          <div class="quote__mark">"</div>
+          <p class="sp-testi-card__txt">O Prontto representa acessibilidade para mim.</p>
+          <p class="sp-testi-card__by"><b>Marcela Mahayana</b><span>Aulas de Canto</span></p>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="sp-testi-card">
+          <div class="quote__mark">"</div>
+          <p class="sp-testi-card__txt">Me aposentei, mas com o Prontto voltei à ativa.</p>
+          <p class="sp-testi-card__by"><b>Levi da Hora</b><span>Marido de Aluguel</span></p>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="sp-testi-card">
+          <div class="quote__mark">"</div>
+          <p class="sp-testi-card__txt">O Prontto foi importante pois possibilitou a criação da nossa marca.</p>
+          <p class="sp-testi-card__by"><b>Henrique e Samara</b><span>Adestradores</span></p>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="sp-testi-card">
+          <div class="quote__mark">"</div>
+          <p class="sp-testi-card__txt">Consegui realizar meu sonho de virar empresária através do Prontto.</p>
+          <p class="sp-testi-card__by"><b>Keila</b><span>Personal Chef</span></p>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="sp-testi-card">
+          <div class="quote__mark">"</div>
+          <p class="sp-testi-card__txt">O Prontto me ajuda a gerir o meu negócio e aumentar minha equipe!</p>
+          <p class="sp-testi-card__by"><b>Ricardo</b><span>Pintor</span></p>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA Final ──────────────────────────────────────────── -->
+  <section class="sp-cta">
+    <div class="container sp-cta__in">
+      <h2>Pronto para crescer?</h2>
+      <p>Junte-se a centenas de profissionais que já usam o Prontto para crescer.</p>
+      <div class="sp-cta__acts">
+        <a routerLink="/cadastrar" class="btn btn-laranja btn-lg">Quero me cadastrar grátis</a>
+        <a href="#sp-form" class="btn btn-out btn-lg">Ver formulário</a>
+      </div>
+    </div>
+  </section>
+
+</div>

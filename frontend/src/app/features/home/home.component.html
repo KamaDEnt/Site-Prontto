@@ -1,0 +1,371 @@
+<!-- ── Header sticky ──────────────────────────────────────── -->
+<header class="hdr">
+  <div class="container hdr__in">
+    <a routerLink="/" class="logo">
+      <span class="logo-pront">PRONT</span><span class="logo-to">TO</span>
+    </a>
+    <nav class="hdr__menu" aria-label="Menu principal">
+      <a routerLink="/para-prestadores">Seja um profissional</a>
+      <a routerLink="/" fragment="como-funciona">Como funciona?</a>
+      <a routerLink="/entrar" class="hdr__entrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="18" height="18"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Entrar
+      </a>
+    </nav>
+    <div class="hdr__acts">
+      <a routerLink="/entrar" class="lk-ghost">Entrar</a>
+      <a routerLink="/cadastrar" class="btn btn-laranja">Publicar pedido</a>
+    </div>
+  </div>
+</header>
+
+<!-- ── Hero ───────────────────────────────────────────────── -->
+<section class="hero">
+  <video
+    #videoFundo
+    class="hero__video"
+    src="video_fundo.mp4"
+    autoplay muted loop playsinline
+    aria-hidden="true"
+  ></video>
+  <div class="hero__veil" aria-hidden="true"></div>
+
+  <div class="container hero__in">
+    <div class="hero__txt">
+      <h1>Para tudo que sua casa precisa, tem um profissional <em>prontto</em>.</h1>
+      <p class="hero__sub">Descreva o serviço, receba orçamentos de profissionais verificados e contrate com segurança. Tudo em poucos minutos.</p>
+
+      <form class="search" (submit)="$event.preventDefault()">
+        <label class="search__field">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.7" y2="16.7"/></svg>
+          <input type="text" placeholder="Do que você precisa? Ex: eletricista">
+        </label>
+        <div class="search__sep" aria-hidden="true"></div>
+        <label class="search__field">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <input type="text" placeholder="Sua cidade" value="São Paulo, SP">
+        </label>
+        <a routerLink="/servicos" class="btn btn-laranja">Buscar profissionais</a>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── Trust band ─────────────────────────────────────────── -->
+<section class="trust" aria-label="Números do Prontto">
+  <div class="container trust__in">
+    <div class="trust__item"><b>500+</b><span>Profissionais ativos</span></div>
+    <div class="trust__item"><b>15+</b><span>Categorias de serviço</span></div>
+    <div class="trust__item"><b>4.8★</b><span>Avaliação média</span></div>
+    <div class="trust__item"><b>98%</b><span>Clientes satisfeitos</span></div>
+  </div>
+</section>
+
+<!-- ── Principais serviços ────────────────────────────────── -->
+<section class="sec" id="como-funciona">
+  <div class="container">
+    <div class="sec__head">
+      <span class="kick">Mais procurados</span>
+      <h2>Principais serviços pedidos</h2>
+      <p>Os serviços mais realizados de cada categoria — peça seu orçamento agora.</p>
+    </div>
+
+    <div class="svc__wrap">
+      <div class="svc__track">
+        <article class="svc-card">
+          <div class="svc-card__img"><span class="svc-card__emoji">🪑</span><span class="svc-card__cap">montagem de móveis</span></div>
+          <div class="svc-card__body"><div class="svc-card__title">Montagem de móveis</div><a class="svc-card__cta" routerLink="/cadastrar">Solicitar orçamento →</a></div>
+        </article>
+        <article class="svc-card">
+          <div class="svc-card__img"><span class="svc-card__emoji">📦</span><span class="svc-card__cap">mudanças e carretos</span></div>
+          <div class="svc-card__body"><div class="svc-card__title">Mudanças e Carretos</div><a class="svc-card__cta" routerLink="/cadastrar">Solicitar orçamento →</a></div>
+        </article>
+        <article class="svc-card">
+          <div class="svc-card__img"><span class="svc-card__emoji">🧱</span><span class="svc-card__cap">serviço de pedreiro</span></div>
+          <div class="svc-card__body"><div class="svc-card__title">Serviço de Pedreiro</div><a class="svc-card__cta" routerLink="/cadastrar">Solicitar orçamento →</a></div>
+        </article>
+        <article class="svc-card">
+          <div class="svc-card__img"><span class="svc-card__emoji">⚡</span><span class="svc-card__cap">instalação elétrica</span></div>
+          <div class="svc-card__body"><div class="svc-card__title">Instalação elétrica</div><a class="svc-card__cta" routerLink="/cadastrar">Solicitar orçamento →</a></div>
+        </article>
+        <article class="svc-card">
+          <div class="svc-card__img"><span class="svc-card__emoji">🎨</span><span class="svc-card__cap">pintura residencial</span></div>
+          <div class="svc-card__body"><div class="svc-card__title">Pintura residencial</div><a class="svc-card__cta" routerLink="/cadastrar">Solicitar orçamento →</a></div>
+        </article>
+        <article class="svc-card">
+          <div class="svc-card__img"><span class="svc-card__emoji">🧹</span><span class="svc-card__cap">limpeza pós-obra</span></div>
+          <div class="svc-card__body"><div class="svc-card__title">Limpeza pós-obra</div><a class="svc-card__cta" routerLink="/cadastrar">Solicitar orçamento →</a></div>
+        </article>
+        <article class="svc-card">
+          <div class="svc-card__img"><span class="svc-card__emoji">🔧</span><span class="svc-card__cap">conserto hidráulico</span></div>
+          <div class="svc-card__body"><div class="svc-card__title">Conserto hidráulico</div><a class="svc-card__cta" routerLink="/cadastrar">Solicitar orçamento →</a></div>
+        </article>
+        <article class="svc-card">
+          <div class="svc-card__img"><span class="svc-card__emoji">❄️</span><span class="svc-card__cap">ar-condicionado</span></div>
+          <div class="svc-card__body"><div class="svc-card__title">Instalação de ar-condicionado</div><a class="svc-card__cta" routerLink="/cadastrar">Solicitar orçamento →</a></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="cats__more">
+      <a routerLink="/servicos" class="btn btn-out">Ver todas as categorias</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Faixa de confiança (laranja) ───────────────────────── -->
+<section class="assurance">
+  <div class="container assurance__in">
+    <span class="assurance__kick">Confiança em primeiro lugar</span>
+    <h2>Profissionais verificados, atendimento humano e a sua segurança do início ao fim</h2>
+    <p>Cada profissional do Prontto passa por verificação de cadastro antes de aparecer para você. Combine tudo pela plataforma, acompanhe o serviço e conte com nosso suporte sempre que precisar.</p>
+    <ul class="assurance__row">
+      <li><span class="ck">✓</span> Cadastro verificado</li>
+      <li><span class="ck">✓</span> Avaliações reais de clientes</li>
+      <li><span class="ck">✓</span> Suporte humano de verdade</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ── Depoimentos ────────────────────────────────────────── -->
+<section class="sec">
+  <div class="container">
+    <div class="sec__head">
+      <span class="kick">Depoimentos</span>
+      <h2>Quem contratou, recomenda</h2>
+      <p>Mais de 12 mil serviços concluídos, com nota média 4.8★.</p>
+    </div>
+    <div class="quotes">
+      <div class="quote">
+        <span class="quote__mark">&#8220;</span>
+        <p class="quote__text">Fui muito bem atendida, o profissional foi educado e fez um trabalho de qualidade. Valeu a pena, orçamento grátis e preço justo.</p>
+        <p class="quote__by"><b>Serviço de Pedreiro</b> · Ana Paula<span>Contratou um Pedreiro em São Paulo, SP</span></p>
+      </div>
+      <div class="quote">
+        <span class="quote__mark">&#8220;</span>
+        <p class="quote__text">Os profissionais são pessoas dedicadas com seus serviços. Tudo o que foi pedido foi feito exatamente como combinado. Aprovado!</p>
+        <p class="quote__by"><b>Assistência Técnica</b> · Bruno Freitas<span>Contratou uma Assistência em Curitiba, PR</span></p>
+      </div>
+      <div class="quote">
+        <span class="quote__mark">&#8220;</span>
+        <p class="quote__text">Uma excelente profissional, pontual e acima de tudo confiável. Foi bastante educada e atenciosa com o trabalho. Recomendo!</p>
+        <p class="quote__by"><b>Serviço de Diarista</b> · Renata Figueiredo<span>Contratou uma Diarista no Rio de Janeiro, RJ</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Profissional em destaque ───────────────────────────── -->
+<section class="sec sec--tint">
+  <div class="container">
+    <div class="sec__head">
+      <span class="kick">Categoria em destaque</span>
+      <h2>Reformas e Reparos</h2>
+    </div>
+    <div class="feat">
+      <div class="feat__media">
+        <span class="feat__emoji">🛠️</span>
+        <div class="feat__person">
+          <b>Edimar Ferreira</b>
+          <small>Profissional <i style="color:var(--cor-primaria);font-style:normal;font-weight:700">Prontto</i></small>
+          <small>desde 2018</small>
+          <div class="feat__rate"><b>4.8</b><span class="stars">★★★★★</span></div>
+        </div>
+      </div>
+      <div class="feat__body">
+        <div class="feat__ic">🔨</div>
+        <h3>Reformas e Reparos</h3>
+        <p>Serviços de reformas e reparos para a sua casa ou empresa, com os melhores profissionais verificados da sua região.</p>
+        <a routerLink="/servicos" class="btn btn-laranja btn-lg">Ver serviços de reformas</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── O que é o Prontto ──────────────────────────────────── -->
+<section class="sec">
+  <div class="container">
+    <div class="sec__head" style="margin-bottom:8px">
+      <h2>O que é o Prontto?</h2>
+    </div>
+    <p class="about__intro">O Prontto conecta você aos melhores profissionais de serviços do Brasil. Pessoas que precisam resolver algo encontram profissionais verificados que atendem com qualidade, facilidade e rapidez — para todo tipo de necessidade.</p>
+    <div class="how">
+      <div class="how__item">
+        <div class="how__ic">📝</div>
+        <h3>Faça o seu pedido</h3>
+        <p>Conte o que você precisa. É rápido e de graça!</p>
+      </div>
+      <div class="how__item">
+        <div class="how__ic">💬</div>
+        <h3>Receba orçamentos</h3>
+        <p>Profissionais avaliados entram em contato com você em instantes.</p>
+      </div>
+      <div class="how__item">
+        <div class="how__ic">👍</div>
+        <h3>Escolha o melhor</h3>
+        <p>Negocie direto com eles. Fácil como nunca foi antes!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pedidos mais frequentes ────────────────────────────── -->
+<section class="sec sec--tint">
+  <div class="container">
+    <div class="sec__head">
+      <h2>Pedidos mais frequentes</h2>
+      <p>Mais de 10 mil pedidos realizados por dia</p>
+    </div>
+    <div class="freq__track">
+      <article class="freq-card">
+        <div class="freq-card__ic">⚡</div>
+        <div class="freq-card__cat">Reformas e Reparos</div>
+        <div class="freq-card__title">Instalação elétrica</div>
+        <div class="freq-card__lbl">Avaliação do cliente</div>
+        <div class="freq-card__rate"><b>4.8</b><span class="stars">★★★★★</span></div>
+        <div class="freq-card__date">12 de maio de 2026</div>
+      </article>
+      <article class="freq-card">
+        <div class="freq-card__ic">🧹</div>
+        <div class="freq-card__cat">Serviços Domésticos</div>
+        <div class="freq-card__title">Diarista</div>
+        <div class="freq-card__lbl">Avaliação do cliente</div>
+        <div class="freq-card__rate"><b>4.9</b><span class="stars">★★★★★</span></div>
+        <div class="freq-card__date">3 de maio de 2026</div>
+      </article>
+      <article class="freq-card">
+        <div class="freq-card__ic">🔧</div>
+        <div class="freq-card__cat">Reformas e Reparos</div>
+        <div class="freq-card__title">Conserto hidráulico</div>
+        <div class="freq-card__lbl">Avaliação do cliente</div>
+        <div class="freq-card__rate"><b>4.7</b><span class="stars">★★★★★</span></div>
+        <div class="freq-card__date">28 de abril de 2026</div>
+      </article>
+      <article class="freq-card">
+        <div class="freq-card__ic">🎨</div>
+        <div class="freq-card__cat">Pintura</div>
+        <div class="freq-card__title">Pintura residencial</div>
+        <div class="freq-card__lbl">Avaliação do cliente</div>
+        <div class="freq-card__rate"><b>4.8</b><span class="stars">★★★★★</span></div>
+        <div class="freq-card__date">19 de abril de 2026</div>
+      </article>
+      <article class="freq-card">
+        <div class="freq-card__ic">❄️</div>
+        <div class="freq-card__cat">Climatização</div>
+        <div class="freq-card__title">Ar-condicionado</div>
+        <div class="freq-card__lbl">Avaliação do cliente</div>
+        <div class="freq-card__rate"><b>4.9</b><span class="stars">★★★★★</span></div>
+        <div class="freq-card__date">7 de abril de 2026</div>
+      </article>
+      <article class="freq-card">
+        <div class="freq-card__ic">📦</div>
+        <div class="freq-card__cat">Mudança</div>
+        <div class="freq-card__title">Mudanças e Carretos</div>
+        <div class="freq-card__lbl">Avaliação do cliente</div>
+        <div class="freq-card__rate"><b>4.7</b><span class="stars">★★★★★</span></div>
+        <div class="freq-card__date">31 de março de 2026</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── Números + cadastro de profissional ─────────────────── -->
+<section class="sec">
+  <div class="container">
+    <div class="bignums">
+      <div class="bignum"><b>4.000.000</b><p>De serviços solicitados por ano na plataforma do Prontto.</p></div>
+      <div class="bignum"><b>165.000</b><p>Clientes felizes por mês, com serviços contratados pelo Prontto.</p></div>
+      <div class="bignum"><b>R$ 1.000.000.000</b><p>Em serviços realizados por ano, no bolso dos nossos profissionais.</p></div>
+    </div>
+    <div class="projoin">
+      <h3 class="projoin__h">Cadastre-se como Profissional Prontto</h3>
+      <p class="projoin__sub">Preencha os campos abaixo:</p>
+      <form class="projoin__form" (submit)="$event.preventDefault()">
+        <div class="projoin__field">
+          <label for="pj-email">E-mail</label>
+          <input id="pj-email" type="email" placeholder="Ex.: email@email.com.br">
+        </div>
+        <div class="projoin__field">
+          <label for="pj-tel">Celular</label>
+          <input id="pj-tel" type="tel" placeholder="Ex.: 11 99999-9999">
+        </div>
+        <a routerLink="/cadastrar" class="btn btn-navy">Cadastre-se</a>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── Como funciona para o profissional ──────────────────── -->
+<section class="sec sec--tint">
+  <div class="container">
+    <div class="sec__head" style="margin-bottom:8px">
+      <h2>Como o Prontto funciona para o Profissional?</h2>
+    </div>
+    <div class="pro4">
+      <div class="pro4__item">
+        <div class="pro4__ic">📱</div>
+        <p>Pedidos de serviços chegando toda hora no seu celular.</p>
+      </div>
+      <div class="pro4__item">
+        <div class="pro4__ic">👀</div>
+        <p>Veja todos os pedidos de graça e invista apenas nos que gostar.</p>
+      </div>
+      <div class="pro4__item">
+        <div class="pro4__ic">🔓</div>
+        <p>Compre moedas na plataforma para desbloquear os contatos dos clientes.</p>
+      </div>
+      <div class="pro4__item">
+        <div class="pro4__ic">💰</div>
+        <p>100% do valor do serviço é seu. E sem mensalidade!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer (claro) ─────────────────────────────────────── -->
+<footer class="ft">
+  <div class="container">
+    <div class="ft__grid">
+      <div class="ft__col ft__col--serv">
+        <h4>Serviços</h4>
+        <div class="ft__cols2">
+          <a routerLink="/servicos">Assistência Técnica</a>
+          <a routerLink="/servicos">Eventos</a>
+          <a routerLink="/servicos">Aulas</a>
+          <a routerLink="/servicos">Moda e Beleza</a>
+          <a routerLink="/servicos">Autos</a>
+          <a routerLink="/servicos">Reformas</a>
+          <a routerLink="/servicos">Consultoria</a>
+          <a routerLink="/servicos">Saúde</a>
+          <a routerLink="/servicos">Design e Tecnologia</a>
+          <a routerLink="/servicos">Serviços Domésticos</a>
+        </div>
+      </div>
+      <div class="ft__col">
+        <h4>Institucional</h4>
+        <a href="#">Quem Somos</a>
+        <a href="#">Prontto | Preço Fechado</a>
+        <a href="#">Trabalhe Conosco</a>
+        <a href="#">Blog do Prontto</a>
+        <a routerLink="/para-prestadores">Segurança</a>
+        <a href="#">Ajuda</a>
+      </div>
+      <div class="ft__col">
+        <h4>Redes sociais</h4>
+        <div class="ft__social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.3 2.1 1.5 3.6 3.5 3.9V9.5c-1.3.1-2.5-.2-3.5-.8v6.1c0 3-2.1 5.2-5 5.2a5 5 0 0 1-5-5c0-2.9 2.4-5.2 5.4-5v2.7c-.3-.1-.6-.1-.9-.1A2.3 2.3 0 1 0 13.8 15V3h2.7z"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.2-.4-4.7a2.5 2.5 0 0 0-1.7-1.7C19.3 5.2 12 5.2 12 5.2s-7.3 0-8.9.4A2.5 2.5 0 0 0 1.4 7.3C1 8.8 1 12 1 12s0 3.2.4 4.7a2.5 2.5 0 0 0 1.7 1.7c1.6.4 8.9.4 8.9.4s7.3 0 8.9-.4a2.5 2.5 0 0 0 1.7-1.7C23 15.2 23 12 23 12zM9.8 15.3V8.7l5.7 3.3-5.7 3.3z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="ft__bot">
+      <a routerLink="/" class="logo"><span class="logo-pront">PRONT</span><span class="logo-to">TO</span></a>
+      <nav class="ft__legal" aria-label="Links legais">
+        <a href="#">Imprensa</a>
+        <a href="#">Termos de Uso</a>
+        <a href="#">Política de Privacidade</a>
+      </nav>
+    </div>
+  </div>
+</footer>

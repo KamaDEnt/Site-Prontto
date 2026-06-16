@@ -1,0 +1,85 @@
+<nav class="navbar" [class.scrollada]="scrollado()" [class.menu-aberto]="menuAberto()">
+  <div class="navbar__inner">
+    <!-- Logo -->
+    <a routerLink="/" class="navbar__logo" (click)="fecharMenu()">
+      <span class="logo-pront">PRONT</span><span class="logo-to">TO</span>
+    </a>
+
+    <!-- Links centrais (desktop) -->
+    <div class="navbar__links">
+      <a routerLink="/servicos" class="navbar__link" routerLinkActive="ativo">Serviços</a>
+      <a routerLink="/como-funciona" class="navbar__link" routerLinkActive="ativo">Como Funciona</a>
+      <a routerLink="/para-prestadores" class="navbar__link" routerLinkActive="ativo">Para Prestadores</a>
+    </div>
+
+    <!-- Ações (desktop) -->
+    <div class="navbar__acoes">
+      @if (auth.estaAutenticado()) {
+        <a routerLink="/minha-area" class="navbar__link" routerLinkActive="ativo">Minha Área</a>
+        @if (auth.ehAdmin()) {
+          <a routerLink="/admin" class="navbar__link navbar__link--admin" routerLinkActive="ativo">Admin</a>
+        }
+        <button class="navbar__btn-sair" (click)="auth.sair()" aria-label="Sair da conta">Sair</button>
+      } @else {
+        <a routerLink="/entrar" class="navbar__btn-entrar">Entrar</a>
+        <a routerLink="/cadastrar" class="navbar__btn-cadastrar">Cadastre-se</a>
+      }
+    </div>
+
+    <!-- Hamburger (mobile) -->
+    <button
+      class="navbar__hamburger"
+      [class.ativo]="menuAberto()"
+      (click)="alternarMenu()"
+      aria-label="Abrir menu de navegação"
+      [attr.aria-expanded]="menuAberto()"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Menu mobile -->
+  @if (menuAberto()) {
+    <div class="navbar__menu-mobile" role="navigation" aria-label="Menu mobile">
+      <a routerLink="/servicos" class="navbar__menu-link" (click)="fecharMenu()">
+        <span class="navbar__menu-icon" aria-hidden="true">🔧</span>
+        Serviços
+      </a>
+      <a routerLink="/como-funciona" class="navbar__menu-link" (click)="fecharMenu()">
+        <span class="navbar__menu-icon" aria-hidden="true">💡</span>
+        Como Funciona
+      </a>
+      <a routerLink="/para-prestadores" class="navbar__menu-link" (click)="fecharMenu()">
+        <span class="navbar__menu-icon" aria-hidden="true">👷</span>
+        Para Prestadores
+      </a>
+
+      <div class="navbar__menu-divider"></div>
+
+      @if (auth.estaAutenticado()) {
+        <a routerLink="/minha-area" class="navbar__menu-link" (click)="fecharMenu()">
+          <span class="navbar__menu-icon" aria-hidden="true">👤</span>
+          Minha Área
+        </a>
+        @if (auth.ehAdmin()) {
+          <a routerLink="/admin" class="navbar__menu-link" (click)="fecharMenu()">
+            <span class="navbar__menu-icon" aria-hidden="true">⚙️</span>
+            Admin
+          </a>
+        }
+        <button class="navbar__menu-sair" (click)="auth.sair(); fecharMenu()">Sair da conta</button>
+      } @else {
+        <div class="navbar__menu-acoes">
+          <a routerLink="/entrar" class="navbar__menu-btn-entrar" (click)="fecharMenu()">Entrar</a>
+          <a routerLink="/cadastrar" class="navbar__menu-btn-cadastrar" (click)="fecharMenu()">Cadastre-se grátis</a>
+        </div>
+      }
+    </div>
+  }
+</nav>
+
+<main class="conteudo-principal">
+  <router-outlet />
+</main>

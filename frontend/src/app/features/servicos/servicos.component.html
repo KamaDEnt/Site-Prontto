@@ -1,0 +1,190 @@
+<div class="servicos">
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <div class="servicos__header">
+    <span class="secao-label">SERVIÇOS</span>
+
+    @if (categoriaSelecionada()) {
+      <h1 class="servicos__titulo">
+        {{ nomeCategoriaAtual() ?? 'Resultados' }}
+      </h1>
+      <button class="btn-voltar" (click)="limparFiltros()">
+        ← Ver todas as categorias
+      </button>
+    } @else {
+      <h1 class="servicos__titulo">Nossos Serviços</h1>
+      <p class="servicos__subtitulo">
+        Encontre o profissional ideal para cada necessidade do seu lar
+      </p>
+    }
+  </div>
+
+  <!-- ── Grade de Categorias ─────────────────────────────────────────────── -->
+  @if (!categoriaSelecionada()) {
+    @if (carregandoCategorias()) {
+      <div class="skeleton-grade">
+        @for (item of [1,2,3,4,5,6]; track item) {
+          <div class="skeleton-card"></div>
+        }
+      </div>
+    } @else {
+      <div class="servicos__grade">
+        @for (categoria of categorias(); track trackById($index, categoria)) {
+          <button
+            class="card-categoria"
+            (click)="selecionarCategoria(categoria.slug)"
+            [attr.aria-label]="'Ver prestadores de ' + categoria.nome"
+          >
+            <span class="card-categoria__icone" aria-hidden="true">
+              {{ iconeCategoria(categoria.slug) }}
+            </span>
+            <h3 class="card-categoria__titulo">{{ categoria.nome }}</h3>
+          </button>
+        }
+      </div>
+
+      @if (categorias().length === 0) {
+        <p class="aviso-vazio">Nenhuma categoria disponível no momento.</p>
+      }
+    }
+  }
+
+  <!-- ── Resultados de Busca ─────────────────────────────────────────────── -->
+  @if (categoriaSelecionada()) {
+
+    <!-- Filtro de cidade -->
+    <div class="filtros">
+      <label for="filtro-cidade" class="filtros__label">Filtrar por cidade:</label>
+      <select
+        id="filtro-cidade"
+        class="filtros__select"
+        [ngModel]="cidadeSelecionada()"
+        (ngModelChange)="filtrarPorCidade($event)"
+      >
+        <option value="">Todas as cidades</option>
+        @for (cidade of cidades(); track trackById($index, cidade)) {
+          <option [value]="cidade.slug">{{ cidade.nome }} — {{ cidade.estado }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Estado: carregando -->
+    @if (carregandoResultados()) {
+      <div class="skeleton-grade">
+        @for (item of [1,2,3,4]; track item) {
+          <div class="skeleton-card skeleton-card--prestador"></div>
+        }
+      </div>
+    }
+
+    <!-- Estado: erro 404 (categoria/cidade inválida) -->
+    @if (!carregandoResultados() && erroCategoria()) {
+      <div class="aviso-erro">
+        <span class="aviso-erro__icone" aria-hidden="true">⚠️</span>
+        <p>Categoria ou cidade não encontrada. <button class="link-btn" (click)="limparFiltros()">Ver todas as categorias</button></p>
+      </div>
+    }
+
+    <!-- Estado: sem resultados -->
+    @if (!carregandoResultados() && !erroCategoria() && prestadores().length === 0) {
+      <div class="aviso-vazio">
+        <span class="aviso-vazio__icone" aria-hidden="true">🔍</span>
+        <p>Nenhum prestador encontrado para esta categoria e cidade.</p>
+        <button class="btn-outline" (click)="filtrarPorCidade('')">Ver todas as cidades</button>
+      </div>
+    }
+
+    <!-- Grade de prestadores -->
+    @if (!carregandoResultados() && !erroCategoria() && prestadores().length > 0) {
+      <p class="resultado-contagem">
+        {{ totalCount() }} prestador{{ totalCount() !== 1 ? 'es' : '' }} encontrado{{ totalCount() !== 1 ? 's' : '' }}
+      </p>
+
+      <div class="prestadores__grade">
+        @for (prestador of prestadores(); track trackById($index, prestador)) {
+          <article class="card-prestador" (click)="verPerfil(prestador.slug)" role="button" tabindex="0"
+            (keydown.enter)="verPerfil(prestador.slug)"
+            [attr.aria-label]="'Ver perfil de ' + prestador.nome">
+
+            <!-- Foto ou placeholder -->
+            <div class="card-prestador__foto">
+              @if (prestador.fotoPerfilUrl) {
+                <img
+                  [src]="prestador.fotoPerfilUrl"
+                  [alt]="'Foto de ' + prestador.nome"
+                  class="card-prestador__img"
+                  loading="lazy"
+                />
+              } @else {
+                <div class="card-prestador__placeholder" aria-hidden="true">
+                  {{ prestador.nome.charAt(0).toUpperCase() }}
+                </div>
+              }
+            </div>
+
+            <!-- Informações -->
+            <div class="card-prestador__info">
+              <h3 class="card-prestador__nome">{{ prestador.nome }}</h3>
+
+              <!-- Avaliações -->
+              <div class="card-prestador__avaliacao">
+                <span class="estrelas" [attr.aria-label]="prestador.mediaAvaliacoes + ' estrelas'">
+                  {{ formatarEstrelas(prestador.mediaAvaliacoes) }}
+                </span>
+                <span class="avaliacao-numero">
+                  {{ prestador.mediaAvaliacoes | number:'1.1-1' }}
+                  ({{ prestador.totalAvaliacoes }})
+                </span>
+              </div>
+
+              <!-- Categorias -->
+              <div class="card-prestador__tags">
+                @for (cat of prestador.categorias; track cat.id) {
+                  <span class="tag tag--categoria">{{ cat.nome }}</span>
+                }
+              </div>
+
+              <!-- Cidades -->
+              <p class="card-prestador__cidades">
+                <span class="card-prestador__cidades-label" aria-hidden="true">📍</span>
+                {{ nomeCidades(prestador) }}
+              </p>
+            </div>
+
+            <div class="card-prestador__acao">
+              <span class="btn-ver-perfil">Ver perfil →</span>
+            </div>
+          </article>
+        }
+      </div>
+
+      <!-- Paginação -->
+      @if (totalPaginas() > 1) {
+        <nav class="paginacao" aria-label="Paginação dos resultados">
+          <button
+            class="paginacao__btn"
+            (click)="paginaAnterior()"
+            [disabled]="!temPaginaAnterior()"
+            [attr.aria-disabled]="!temPaginaAnterior()"
+          >
+            ← Anterior
+          </button>
+
+          <span class="paginacao__info">
+            Página {{ paginaAtual() }} de {{ totalPaginas() }}
+          </span>
+
+          <button
+            class="paginacao__btn"
+            (click)="proximaPagina()"
+            [disabled]="!temProximaPagina()"
+            [attr.aria-disabled]="!temProximaPagina()"
+          >
+            Próxima →
+          </button>
+        </nav>
+      }
+    }
+  }
+
+</div>

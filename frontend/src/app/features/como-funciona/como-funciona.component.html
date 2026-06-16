@@ -1,0 +1,68 @@
+<div class="como-funciona">
+
+  <!-- Hero mini -->
+  <section class="cf-hero">
+    <div class="cf-hero__inner container">
+      <span class="secao-label">COMO FUNCIONA</span>
+      <h1 class="cf-hero__titulo">Simples do início ao fim</h1>
+      <p class="cf-hero__subtitulo">
+        Do problema ao serviço concluído em 4 passos fáceis, com segurança e transparência.
+      </p>
+    </div>
+  </section>
+
+  <!-- Steps alternados -->
+  <section class="cf-steps">
+    <div class="cf-steps__inner container">
+
+      @for (passo of passos; track passo.numero; let i = $index) {
+        <div class="cf-step" [class.cf-step--invertido]="i % 2 !== 0">
+          <div class="cf-step__numero-wrap" aria-hidden="true">
+            <div class="cf-step__numero">{{ passo.numero }}</div>
+            @if (i < passos.length - 1) {
+              <div class="cf-step__conector" aria-hidden="true"></div>
+            }
+          </div>
+
+          <div class="cf-step__icone-wrap" aria-hidden="true">
+            <div class="cf-step__icone">
+              @switch (passo.numero) {
+                @case (1) {
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                }
+                @case (2) {
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                }
+                @case (3) {
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                }
+                @case (4) {
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+                }
+              }
+            </div>
+          </div>
+
+          <div class="cf-step__texto">
+            <h2 class="cf-step__titulo">{{ passo.titulo }}</h2>
+            <p class="cf-step__descricao">{{ passo.descricao }}</p>
+          </div>
+        </div>
+      }
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cf-cta">
+    <div class="cf-cta__inner container">
+      <h2 class="cf-cta__titulo">Pronto para começar?</h2>
+      <p class="cf-cta__subtitulo">Crie sua conta grátis e encontre o profissional ideal em minutos.</p>
+      <div class="cf-cta__botoes">
+        <a routerLink="/cadastrar" class="btn-cta-primario">Criar conta grátis</a>
+        <a routerLink="/servicos" class="btn-cta-secundario">Ver serviços</a>
+      </div>
+    </div>
+  </section>
+
+</div>
