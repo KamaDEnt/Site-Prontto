@@ -21,7 +21,7 @@ export class AuthService {
 
   entrar(email: string, senha: string) {
     return this.http
-      .post<RespostaAuth>(`${environment.apiUrl}/api/auth/login`, { email, senha })
+      .post<RespostaAuth>(`${environment.apiUrl}/api/auth/login`, { email, senha }, { withCredentials: true })
       .pipe(tap(resposta => this.salvarSessao(resposta)));
   }
 
@@ -30,19 +30,28 @@ export class AuthService {
     tipoConta: string; telefone?: string; especialidade?: string; cidadeId?: string;
   }) {
     return this.http
-      .post<RespostaAuth>(`${environment.apiUrl}/api/auth/register`, {
-        nome: dados.nome,
-        email: dados.email,
-        senha: dados.senha,
-        tipoConta: dados.tipoConta,
-        telefone: dados.telefone,
-        especialidade: dados.especialidade,
-        cidadeId: dados.cidadeId,
-      })
+      .post<RespostaAuth>(
+        `${environment.apiUrl}/api/auth/register`,
+        {
+          nome: dados.nome,
+          email: dados.email,
+          senha: dados.senha,
+          tipoConta: dados.tipoConta,
+          telefone: dados.telefone,
+          especialidade: dados.especialidade,
+          cidadeId: dados.cidadeId,
+        },
+        { withCredentials: true },
+      )
       .pipe(tap(resposta => this.salvarSessao(resposta)));
   }
 
   sair(): void {
+    // Invalida o refresh token no servidor antes de limpar o estado local.
+    // Ignora falhas de rede — o estado local é limpo independentemente.
+    this.http
+      .post(`${environment.apiUrl}/api/auth/logout`, {}, { withCredentials: true })
+      .subscribe({ error: () => {} });
     localStorage.removeItem('prontto_token');
     localStorage.removeItem('prontto_usuario');
     this._token.set(null);

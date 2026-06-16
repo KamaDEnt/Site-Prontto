@@ -29,7 +29,7 @@ export class AdminService {
   }
 
   enviarMensagem(servicoId: string, conteudo: string) {
-    return this.http.post<{ message: MensagemServico }>(`${this.base}/services/${servicoId}/messages`, { content: conteudo });
+    return this.http.post<{ message: MensagemServico }>(`${this.base}/services/${servicoId}/messages`, { conteudo });
   }
 
   listarCobranças() {

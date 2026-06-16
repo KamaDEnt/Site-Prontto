@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { Servico, MensagemServico, Disputa, ResultadoMensagens } from '../models/usuario.model';
 
 export interface ComandoCriarServico {
@@ -16,7 +17,7 @@ export interface ComandoCriarServico {
 @Injectable({ providedIn: 'root' })
 export class ServicosService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = '/api/servicos';
+  private readonly baseUrl = `${environment.apiUrl}/api/servicos`;
 
   criarSolicitacao(dados: ComandoCriarServico): Observable<{ servico: Servico }> {
     return this.http.post<{ servico: Servico }>(this.baseUrl, dados);
