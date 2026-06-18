@@ -26,4 +26,7 @@ public interface IServicoPerfilPrestador
         string? cidadeSlug,
         int page,
         int pageSize);
+
+    /// <summary>Retorna dados agregados para a página inicial: categorias, destaques e avaliações recentes.</summary>
+    Task<DtoDadosHome> ObterDadosHomeAsync();
 }

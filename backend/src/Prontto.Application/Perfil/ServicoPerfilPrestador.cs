@@ -13,6 +13,7 @@ public class ServicoPerfilPrestador(
     IRepositorioPerfilPrestador repositorioPerfil,
     IRepositorioCategoria repositorioCategorias,
     IRepositorioCidade repositorioCidades,
+    IRepositorioAvaliacao repositorioAvaliacoes,
     IMemoryCache cache) : IServicoPerfilPrestador
 {
     private const int MaxTentativasSlug = 5;
@@ -141,6 +142,38 @@ public class ServicoPerfilPrestador(
         )).ToList();
 
         return new ResultadoPaginado<DtoPrestadorBusca>(dtos, total, page, pageSize);
+    }
+
+    public async Task<DtoDadosHome> ObterDadosHomeAsync()
+    {
+        var categorias = await ListarCategoriasAsync();
+
+        var prestadores = await repositorioPerfil.ListarDestaqueAsync(6);
+        var prestadoresDto = prestadores.Select(u => new DtoPrestadorBusca(
+            Id: u.Id,
+            Nome: u.Nome,
+            FotoPerfilUrl: u.FotoPerfilUrl,
+            Slug: u.Slug!,
+            MediaAvaliacoes: u.MediaAvaliacoes,
+            TotalAvaliacoes: u.TotalAvaliacoes,
+            Categorias: u.Categorias
+                .Select(cu => new DtoCategoriaPublica(cu.Categoria.Id, cu.Categoria.Nome, cu.Categoria.Slug))
+                .ToList(),
+            Cidades: u.Cidades
+                .Select(cu => new DtoCidadePublica(cu.Cidade.Id, cu.Cidade.Nome, cu.Cidade.Estado, cu.Cidade.Slug))
+                .ToList()
+        )).ToList();
+
+        var avaliacoes = await repositorioAvaliacoes.ListarRecentesGlobaisAsync(6);
+        var avaliacoesDto = avaliacoes.Select(a => new DtoAvaliacaoHome(
+            NomeAvaliador: a.Avaliador.Nome,
+            Nota: a.Nota,
+            Comentario: a.Comentario!,
+            ServicoTitulo: a.Servico.Titulo,
+            Cidade: a.Avaliador.Especialidade ?? "Brasil"
+        )).ToList();
+
+        return new DtoDadosHome(categorias, prestadoresDto, avaliacoesDto);
     }
 
     // ── Slug generation (ADR-08) ───────────────────────────────────────────────

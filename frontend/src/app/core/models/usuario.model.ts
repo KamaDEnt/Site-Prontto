@@ -217,6 +217,22 @@ export interface ResultadoListaAvaliacoes {
   totalPaginas: number;
 }
 
+// ── Home (RF-01) ─────────────────────────────────────────────────────────
+
+export interface AvaliacaoHome {
+  nomeAvaliador: string;
+  nota: number;
+  comentario: string;
+  servicoTitulo: string;
+  cidade: string;
+}
+
+export interface DadosHome {
+  categorias: Categoria[];
+  prestadoresDestaque: PrestadorBusca[];
+  avaliacoesRecentes: AvaliacaoHome[];
+}
+
 // ── Chat com cursor (RF-06) ───────────────────────────────────────────────────
 
 export interface ResultadoMensagens {

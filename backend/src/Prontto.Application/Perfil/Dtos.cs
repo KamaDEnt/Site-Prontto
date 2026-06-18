@@ -47,6 +47,22 @@ public record DtoCidadePublica(Guid Id, string Nome, string Estado, string Slug)
 
 public record DtoImagemPortfolio(Guid Id, string Url, int Ordem);
 
+/// <summary>Dados agregados para a página inicial (RF-01).</summary>
+public record DtoDadosHome(
+    List<DtoCategoriaPublica> Categorias,
+    List<DtoPrestadorBusca> PrestadoresDestaque,
+    List<DtoAvaliacaoHome> AvaliacoesRecentes
+);
+
+/// <summary>Avaliação simplificada para exibição na home.</summary>
+public record DtoAvaliacaoHome(
+    string NomeAvaliador,
+    int Nota,
+    string Comentario,
+    string ServicoTitulo,
+    string Cidade
+);
+
 /// <summary>Payload para criação/edição de perfil do prestador.</summary>
 public record ComandoAtualizarPerfil(
     string? Nome,

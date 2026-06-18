@@ -56,4 +56,14 @@ public class RepositorioAvaliacao(ContextoBancoDados contexto) : IRepositorioAva
         var media = (decimal)avaliacoes.Average(a => a.Nota);
         return (Math.Round(media, 2), avaliacoes.Count);
     }
+
+    public async Task<List<Avaliacao>> ListarRecentesGlobaisAsync(int limite)
+        => await contexto.Avaliacoes
+            .Include(a => a.Avaliador)
+            .Include(a => a.Servico)
+            .Where(a => !string.IsNullOrEmpty(a.Comentario) && a.Nota >= 4)
+            .OrderByDescending(a => a.CriadoEm)
+            .Take(limite)
+            .AsNoTracking()
+            .ToListAsync();
 }

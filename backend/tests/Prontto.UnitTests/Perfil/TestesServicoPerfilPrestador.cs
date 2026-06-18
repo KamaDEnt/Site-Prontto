@@ -15,6 +15,7 @@ public class TestesServicoPerfilPrestador
     private readonly Mock<IRepositorioPerfilPrestador> _repositorioPerfil = new();
     private readonly Mock<IRepositorioCategoria> _repositorioCategorias = new();
     private readonly Mock<IRepositorioCidade> _repositorioCidades = new();
+    private readonly Mock<IRepositorioAvaliacao> _repositorioAvaliacoes = new();
     private readonly IMemoryCache _cache;
     private readonly ServicoPerfilPrestador _sut;
 
@@ -27,6 +28,7 @@ public class TestesServicoPerfilPrestador
             _repositorioPerfil.Object,
             _repositorioCategorias.Object,
             _repositorioCidades.Object,
+            _repositorioAvaliacoes.Object,
             _cache);
     }
 

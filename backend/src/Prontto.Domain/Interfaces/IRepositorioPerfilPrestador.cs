@@ -30,4 +30,7 @@ public interface IRepositorioPerfilPrestador
         Guid? cidadeId,
         int skip,
         int take);
+
+    /// <summary>Retorna os prestadores mais bem avaliados (para destaque na home).</summary>
+    Task<List<Usuario>> ListarDestaqueAsync(int limite);
 }

@@ -78,6 +78,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'seguranca',
+    loadComponent: () =>
+      import('./features/seguranca/seguranca.component').then(m => m.SegurancaComponent),
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./features/not-found/not-found.component').then(m => m.NotFoundComponent),

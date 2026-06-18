@@ -1,118 +1,89 @@
-import { Component, signal, computed, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
 import { SeoService } from '../../core/seo/seo.service';
+import { HomeService } from '../../core/api/home.service';
+import { Categoria, PrestadorBusca, AvaliacaoHome } from '../../core/models/usuario.model';
 
-interface Categoria {
-  titulo: string;
-  icone: string;
-  descricao: string;
-}
-
-interface Passo {
-  label: string;
-  titulo: string;
-  descricao: string;
-  icone: string;
-}
+const ICONES_CATEGORIA: Record<string, string> = {
+  'assistencia-tecnica': '🔧',
+  'reformas-reparos': '🧱',
+  'servicos-domesticos': '🏠',
+  'eletrica': '⚡',
+  'pintura': '🎨',
+  'limpeza': '🧹',
+  'mudancas': '📦',
+  'jardinagem': '🌱',
+  'aulas': '📚',
+  'eventos': '🎉',
+  'informatica': '💻',
+  'saude-bem-estar': '❤️',
+  'autos': '🚗',
+  'consultoria': '💼',
+  'design-tecnologia': '🖥️',
+  'moda-beleza': '💅',
+};
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, DecimalPipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('videoFundo') videoFundo!: ElementRef<HTMLVideoElement>;
-
+export class HomeComponent implements OnInit {
   private readonly seoService = inject(SeoService);
+  private readonly homeService = inject(HomeService);
 
-  readonly passoAtivo = signal(0);
-  private intervalo: ReturnType<typeof setInterval> | null = null;
+  readonly carregando = signal(true);
+  readonly erro = signal<string | null>(null);
 
-  readonly passos: Passo[] = [
-    {
-      label: 'O PROBLEMA',
-      titulo: 'Algo quebrou em casa?',
-      descricao:
-        'Vazamentos, elétrica, limpeza ou montagem — imprevistos acontecem. A pergunta é: quem você vai chamar?',
-      icone: '🏠',
-    },
-    {
-      label: 'A SOLUÇÃO',
-      titulo: 'Encontre o profissional certo',
-      descricao:
-        'No Prontto, você acessa centenas de profissionais verificados prontos para te atender.',
-      icone: '🔍',
-    },
-    {
-      label: 'A CHEGADA',
-      titulo: 'Agendado em minutos',
-      descricao:
-        'Compare perfis, leia avaliações reais e agende com quem você confia.',
-      icone: '📅',
-    },
-    {
-      label: 'O RESULTADO',
-      titulo: 'Problema resolvido',
-      descricao:
-        'Serviço feito, avaliação enviada. Tudo simples, tudo no Prontto.',
-      icone: '✅',
-    },
-  ];
+  readonly categorias = signal<Categoria[]>([]);
+  readonly prestadoresDestaque = signal<PrestadorBusca[]>([]);
+  readonly avaliacoes = signal<AvaliacaoHome[]>([]);
 
-  readonly categorias: Categoria[] = [
-    { titulo: 'Limpeza', icone: '🧹', descricao: 'Limpeza residencial e comercial' },
-    { titulo: 'Encanamento', icone: '🔧', descricao: 'Reparos e instalações hidráulicas' },
-    { titulo: 'Elétrica', icone: '⚡', descricao: 'Instalações e reparos elétricos' },
-    { titulo: 'Pintura', icone: '🎨', descricao: 'Pintura interna e externa' },
-    { titulo: 'Jardinagem', icone: '🌱', descricao: 'Cuidados com jardim e áreas externas' },
-    { titulo: 'Mudança', icone: '📦', descricao: 'Transporte e mudanças residenciais' },
-  ];
+  readonly prestadorHero = computed(() => this.prestadoresDestaque()[0] ?? null);
 
-  readonly passoAtualDados = computed(() => this.passos[this.passoAtivo()]);
+  readonly estrelas = [1, 2, 3, 4, 5];
 
   ngOnInit(): void {
     this.seoService.atualizarSeo({
-      titulo: 'Encontre Prestadores de Serviços',
-      descricao: 'Prontto conecta você com prestadores de serviços domésticos de confiança. Limpeza, encanamento, elétrica e muito mais.',
+      titulo: 'Encontre Prestadores de Serviços — Prontto',
+      descricao: 'Mais de 500 tipos de serviços em um só lugar. Encontre profissionais verificados e contrate com segurança.',
       url: 'https://prontto.org/',
     });
-    this.iniciarAvanco();
+
+    this.homeService.obterDadosHome().subscribe({
+      next: dados => {
+        this.categorias.set(dados.categorias);
+        this.prestadoresDestaque.set(dados.prestadoresDestaque);
+        this.avaliacoes.set(dados.avaliacoesRecentes);
+        this.carregando.set(false);
+      },
+      error: () => {
+        this.erro.set('Não foi possível carregar os dados.');
+        this.carregando.set(false);
+      },
+    });
   }
 
-  ngAfterViewInit(): void {
-    const video = this.videoFundo?.nativeElement;
-    if (video) {
-      video.muted = true;
-      video.play().catch(() => {});
-    }
+  iconeCategoria(slug?: string): string {
+    if (!slug) return '🔨';
+    return ICONES_CATEGORIA[slug] ?? '🔨';
   }
 
-  ngOnDestroy(): void {
-    this.pararAvanco();
+  cidadePrestador(prestador: PrestadorBusca): string {
+    const cidade = prestador.cidades[0];
+    return cidade ? `${cidade.nome}, ${cidade.estado}` : 'Brasil';
   }
 
-  selecionarPasso(index: number): void {
-    this.passoAtivo.set(index);
-    this.reiniciarAvanco();
+  especialidadePrestador(prestador: PrestadorBusca): string {
+    return prestador.categorias[0]?.nome ?? 'Prestador de Serviços';
   }
 
-  private iniciarAvanco(): void {
-    this.intervalo = setInterval(() => {
-      this.passoAtivo.update(atual => (atual + 1) % this.passos.length);
-    }, 10000);
-  }
-
-  private pararAvanco(): void {
-    if (this.intervalo !== null) {
-      clearInterval(this.intervalo);
-      this.intervalo = null;
-    }
-  }
-
-  private reiniciarAvanco(): void {
-    this.pararAvanco();
-    this.iniciarAvanco();
+  rotaPerfil(prestador: PrestadorBusca): string[] {
+    const cidadeSlug = prestador.cidades[0]?.slug ?? 'br';
+    const catSlug = prestador.categorias[0]?.slug ?? 'servicos';
+    return [cidadeSlug, catSlug, prestador.slug];
   }
 }

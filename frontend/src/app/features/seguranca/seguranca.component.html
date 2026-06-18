@@ -1,0 +1,182 @@
+<div class="seguranca">
+
+  <!-- ── Hero ───────────────────────────────────────────────── -->
+  <section class="sg-hero">
+    <div class="sg-hero__inner container">
+      <div class="sg-hero__texto">
+        <span class="secao-label">SEGURANÇA</span>
+        <h1 class="sg-hero__titulo">
+          Contrate com
+          <span class="sg-hero__destaque">segurança</span>
+        </h1>
+        <p class="sg-hero__subtitulo">
+          Sua segurança é essencial para nós. Saiba como proteger seus dados no dia a dia,
+          manter sua segurança e evitar golpes ao contratar profissionais.
+        </p>
+        <div class="sg-hero__ctas">
+          <a href="#sg-dicas" class="btn-sg-primario">Ver dicas de segurança</a>
+          <a href="#sg-duvidas" class="btn-sg-outline">Caiu em um golpe?</a>
+        </div>
+      </div>
+      <div class="sg-hero__escudo" aria-hidden="true">
+        <div class="sg-escudo">
+          <span class="sg-escudo__icone">🛡️</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 4 dicas de contratação ─────────────────────────────── -->
+  <section class="sg-dicas" id="sg-dicas">
+    <div class="sg-dicas__inner container">
+      <h2 class="sg-dicas__titulo">Como garantir a segurança na hora da contratação?</h2>
+      <div class="sg-dicas__grade">
+        <div class="sg-dica">
+          <div class="sg-dica__icone" aria-hidden="true">💳</div>
+          <p><strong>Cuidado ao pagar em maquininhas:</strong> prefira sempre pagar por aproximação ou via Pix.</p>
+        </div>
+        <div class="sg-dica">
+          <div class="sg-dica__icone" aria-hidden="true">⏳</div>
+          <p><strong>Evite pagamentos adiantados.</strong> Se for necessário um adiantamento parcial, tome todos os cuidados.</p>
+        </div>
+        <div class="sg-dica">
+          <div class="sg-dica__icone" aria-hidden="true">🔎</div>
+          <p><strong>Verifique os dados</strong> (telefone, e-mail e nome) do perfil e confira se são os mesmos de quem entrou em contato.</p>
+        </div>
+        <div class="sg-dica">
+          <div class="sg-dica__icone" aria-hidden="true">📋</div>
+          <p><strong>Solicite os documentos</strong> de identificação do profissional antes de qualquer visita.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Pagamento seguro ────────────────────────────────────── -->
+  <section class="sg-pagamento">
+    <div class="sg-pagamento__inner container">
+      <h2 class="sg-pagamento__titulo">Como fazer um pagamento seguro?</h2>
+      <div class="sg-pagamento__colunas">
+        <div class="sg-pagamento__painel">
+          <h3 class="sg-pagamento__painel-titulo">
+            <span class="sg-pagamento__badge" aria-hidden="true">⚡</span>
+            Compras por Pix
+          </h3>
+          <div class="sg-pagamento__item">
+            <span class="sg-pagamento__ok" aria-hidden="true">✓</span>
+            <p>Verifique se os dados da conta de destino estão corretos e pertencem ao profissional contratado.</p>
+          </div>
+          <div class="sg-pagamento__item">
+            <span class="sg-pagamento__ok" aria-hidden="true">✓</span>
+            <p>Confira se o valor está de acordo com o que foi combinado para o serviço.</p>
+          </div>
+        </div>
+        <div class="sg-pagamento__painel">
+          <h3 class="sg-pagamento__painel-titulo">
+            <span class="sg-pagamento__badge" aria-hidden="true">💳</span>
+            Compras por cartão
+          </h3>
+          <div class="sg-pagamento__item">
+            <span class="sg-pagamento__ok" aria-hidden="true">✓</span>
+            <p>Verifique se o visor está funcionando; se identificar defeito na maquininha, recuse o pagamento.</p>
+          </div>
+          <div class="sg-pagamento__item">
+            <span class="sg-pagamento__ok" aria-hidden="true">✓</span>
+            <p>Antes de confirmar, confira se o valor que consta no visor está correto.</p>
+          </div>
+          <div class="sg-pagamento__item">
+            <span class="sg-pagamento__ok" aria-hidden="true">✓</span>
+            <p>Não entregue seu cartão na mão de outra pessoa.</p>
+          </div>
+          <div class="sg-pagamento__item">
+            <span class="sg-pagamento__ok" aria-hidden="true">✓</span>
+            <p>Prefira a modalidade de aproximação do cartão.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Alerta ──────────────────────────────────────────────── -->
+  <section class="sg-alerta">
+    <div class="sg-alerta__inner container">
+      <div class="sg-alerta__emoji" aria-hidden="true">⚠️</div>
+      <h2 class="sg-alerta__titulo">Atenção redobrada</h2>
+      <p class="sg-alerta__texto">
+        Tenha muita atenção ao combinar a compra e entrega de peças para consertos antes da visita
+        do profissional. Desconfie da exigência de pagamento via maquininha de cartão;
+        na dúvida, recuse realizar o pagamento e entre em contato conosco.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── FAQ ────────────────────────────────────────────────── -->
+  <section class="sg-faq" id="sg-duvidas">
+    <div class="sg-faq__inner container">
+      <div class="sg-faq__cabecalho">
+        <h2 class="sg-faq__titulo">Ficou com alguma dúvida?</h2>
+        <p class="sg-faq__subtitulo">Separamos abaixo alguns pontos importantes que podem te ajudar.</p>
+      </div>
+      <div class="sg-faq__lista">
+        @for (item of faqItems(); track item.pergunta; let i = $index) {
+          <div class="sg-faq__item" [class.aberta]="item.aberta">
+            <button
+              class="sg-faq__pergunta"
+              (click)="alternarFaq(i)"
+              [attr.aria-expanded]="item.aberta"
+            >
+              {{ item.pergunta }}
+              <span class="sg-faq__icone" aria-hidden="true">{{ item.aberta ? '−' : '+' }}</span>
+            </button>
+            @if (item.aberta) {
+              <div class="sg-faq__resposta">
+                <p>{{ item.resposta }}</p>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Mais dicas ──────────────────────────────────────────── -->
+  <section class="sg-mais">
+    <div class="sg-mais__inner container">
+      <div class="sg-mais__cabecalho">
+        <span class="secao-label">MAIS DICAS</span>
+        <h2 class="sg-mais__titulo">Confira outras dicas de segurança</h2>
+        <p class="sg-mais__subtitulo">Saiba identificar os diversos tipos de fraudes para não cair em golpes!</p>
+      </div>
+      <div class="sg-mais__grade">
+        <article class="sg-card">
+          <div class="sg-card__imagem" aria-hidden="true">🔐</div>
+          <div class="sg-card__corpo">
+            <h3 class="sg-card__titulo">Descubra como contratar um profissional com segurança</h3>
+          </div>
+        </article>
+        <article class="sg-card">
+          <div class="sg-card__imagem" aria-hidden="true">🚨</div>
+          <div class="sg-card__corpo">
+            <h3 class="sg-card__titulo">Saiba como se proteger de golpes e fraudes</h3>
+          </div>
+        </article>
+        <article class="sg-card">
+          <div class="sg-card__imagem" aria-hidden="true">💰</div>
+          <div class="sg-card__corpo">
+            <h3 class="sg-card__titulo">Como fazer pagamentos seguros e fugir de golpes financeiros</h3>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA Final ──────────────────────────────────────────── -->
+  <section class="sg-cta">
+    <div class="sg-cta__inner container">
+      <div class="sg-cta__emoji" aria-hidden="true">🤝</div>
+      <h2 class="sg-cta__titulo">Estamos em constante evolução para te ajudar!</h2>
+      <p class="sg-cta__subtitulo">Para mais informações, acesse nossa Central de Ajuda ou converse pelo chat.</p>
+      <a routerLink="/" class="btn-sg-cta">Ir para a Central de Ajuda</a>
+    </div>
+  </section>
+
+</div>

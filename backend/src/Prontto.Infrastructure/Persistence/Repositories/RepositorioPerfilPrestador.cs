@@ -65,6 +65,20 @@ public class RepositorioPerfilPrestador(ContextoBancoDados db) : IRepositorioPer
         await db.SaveChangesAsync();
     }
 
+    public async Task<List<Usuario>> ListarDestaqueAsync(int limite)
+        => await db.Usuarios
+            .Where(u =>
+                u.TipoConta == TipoConta.Prestador &&
+                u.Slug != null &&
+                u.TotalAvaliacoes > 0)
+            .OrderByDescending(u => u.MediaAvaliacoes)
+            .ThenByDescending(u => u.TotalAvaliacoes)
+            .Take(limite)
+            .Include(u => u.Categorias).ThenInclude(cu => cu.Categoria)
+            .Include(u => u.Cidades).ThenInclude(cu => cu.Cidade)
+            .AsNoTracking()
+            .ToListAsync();
+
     public async Task<(List<Usuario> Items, int Total)> BuscarAsync(
         Guid categoriaId,
         Guid? cidadeId,

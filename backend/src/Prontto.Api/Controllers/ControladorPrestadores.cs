@@ -27,6 +27,17 @@ public class ControladorPrestadores(IServicoPerfilPrestador servicoPerfil) : Con
         return Ok(perfil);
     }
 
+    /// <summary>
+    /// Dados agregados para a página inicial: categorias, prestadores em destaque e avaliações recentes.
+    /// GET /api/home [público]
+    /// </summary>
+    [HttpGet("api/home")]
+    public async Task<IActionResult> ObterDadosHome()
+    {
+        var dados = await servicoPerfil.ObterDadosHomeAsync();
+        return Ok(dados);
+    }
+
     /// <summary>Lista todas as categorias ativas (para dropdowns no frontend).</summary>
     [HttpGet("api/categorias")]
     public async Task<IActionResult> ListarCategorias()
