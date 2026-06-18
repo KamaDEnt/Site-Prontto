@@ -304,7 +304,7 @@
         @for (av of avaliacoes(); track av.nomeAvaliador + av.servicoTitulo) {
           <article class="dep-card">
             <div class="dep-card__estrelas" [attr.aria-label]="'Avaliação ' + av.nota + ' de 5 estrelas'">
-              @for (s of estrelas(av.nota); track s) {
+              @for (s of estrelas; track s) {
                 <span [class.preenchida]="s <= av.nota">★</span>
               }
             </div>
