@@ -4,17 +4,17 @@
    ============================================================ */
 (function(){
   const ICON = {
-    reformas:"<path d='M14.6 6.4a3.8 3.8 0 0 1-5 5L4 17l3 3 5.6-5.6a3.8 3.8 0 0 1 5-5l-2.7 2.7-2.3-2.3 2.7-2.7z'/>",
-    pintura:"<path d='M3 21c2.5 0 4-1.6 4-4l8.5-8.5-3-3L4 14c-2 0-4 1.5-4 4z' transform='translate(1 0)'/><path d='M14 6l3-3 4 4-3 3'/>",
-    limpeza:"<path d='M12 3s6 6.5 6 10.5a6 6 0 0 1-12 0C6 9.5 12 3 12 3z'/>",
-    clima:"<path d='M12 2v20M3 7l18 10M21 7L3 17'/>",
-    jardim:"<path d='M20 4s-7 .5-11 4.5S5 19 5 19s6.5 1 10.5-4S20 4 20 4z'/><path d='M5 19 13 11'/>",
-    montagem:"<path d='M15 7 8 14l2 2 7-7zM14 6l3-3 4 4-3 3'/><path d='M8 14l-5 5 2 2 5-5'/>",
-    mudanca:"<rect x='1' y='6' width='13' height='10' rx='1'/><path d='M14 9h4l3 3v4h-7z'/><circle cx='6' cy='18' r='1.7'/><circle cx='18' cy='18' r='1.7'/>",
-    assistencia:"<rect x='6' y='6' width='12' height='12' rx='1.5'/><path d='M9 1.5v3M15 1.5v3M9 19.5v3M15 19.5v3M1.5 9h3M1.5 15h3M19.5 9h3M19.5 15h3'/>",
-    seguranca:"<path d='M12 2 20 5v6c0 5-3.4 8-8 11-4.6-3-8-6-8-11V5l8-3z'/>",
-    serralheria:"<path d='M13 2 4 14h7l-1 8 9-12h-7l1-8z'/>",
-    autos:"<path d='M3 13l2-5a2 2 0 0 1 2-1.3h10A2 2 0 0 1 19 8l2 5v5h-3v-2H6v2H3z'/><circle cx='7' cy='15.5' r='1.3'/><circle cx='17' cy='15.5' r='1.3'/>"
+    reformas:"ri-hammer-line",
+    pintura:"ri-brush-line",
+    limpeza:"ri-home-heart-line",
+    clima:"ri-temp-cold-line",
+    jardim:"ri-plant-line",
+    montagem:"ri-tools-line",
+    mudanca:"ri-truck-line",
+    assistencia:"ri-computer-line",
+    seguranca:"ri-shield-check-line",
+    serralheria:"ri-door-lock-line",
+    autos:"ri-car-line"
   };
 
   const CATS = [
@@ -76,6 +76,37 @@
   }
   function catLink(key){ return 'categoria.html?cat='+key; }
   function subLink(key,item){ return 'categoria.html?cat='+key+'&sub='+slugify(item); }
+
+  /* Imagens das subcategorias (slug -> extensão). Sem entrada = sem imagem. */
+  const SUBIMG = {
+    'instalacao-eletrica':'jpg','tomadas-e-interruptores':'jpg','quadro-de-distribuicao':'jpg','chuveiro-eletrico':'jpg','iluminacao':'jpg',
+    'vazamentos':'jpg','instalacao-de-torneira':'jpg','caixa-d-agua':'jpg','aquecedor':'jpg',
+    'pedreiro':'jpg','reboco-e-massa':'jpg','assentamento-de-piso':'jpg','pequenos-reparos':'jpg','muros':'jpg',
+    'forro-de-gesso':'jpg','sancas':'jpg','paredes-de-drywall':'jpg','molduras':'jpg',
+    'pintura-interna':'jpg','pintura-externa':'jpg','textura':'jpg','grafiato':'jpg',
+    'verniz-e-laca':'jpg','pintura-de-portoes':'jpg','efeitos-decorativos':'jpg','massa-corrida':'jpg',
+    'lojas-e-escritorios':'jpg','fachadas':'jpg','galpoes':'jpg','sinalizacao':'jpg',
+    'diarista':'jpg','faxina':'jpg','limpeza-pos-obra':'jpg','passar-roupa':'jpg',
+    'limpeza-de-vidros':'jpg','estofados-e-sofas':'jpg','carpetes-e-tapetes':'jpg',
+    'escritorios':'jpg','condominios':'jpg','lojas':'jpg','pos-evento':'jpg',
+    'instalacao':'jpg','higienizacao':'jpg','manutencao':'jpg','recarga-de-gas':'jpg',
+    'geladeira':'jpg','freezer':'jpg','camara-fria':'jpg','bebedouro':'jpg',
+    'exaustores':'jpg','coifas':'png','cortinas-de-ar':'png',
+    'corte-de-grama':'jpg','poda-de-arvores':'jpg','paisagismo':'jpg','plantio':'jpg',
+    'limpeza-de-quintal':'jpg','piscina':'jpg','dedetizacao':'jpg','jardim-vertical':'jpg',
+    'moveis-em-geral':'jpg','moveis-planejados':'jpg','guarda-roupa':'png','estantes':'jpg',
+    'moveis-sob-medida':'jpg','restauracao':'jpg',
+    'residencial':'png','comercial':'png','guarda-moveis':'png','frete':'png','carreto':'png','entregas':'png','motorista':'png',
+    'maquina-de-lavar':'jpg','microondas':'jpg','fogao-e-cooktop':'jpg',
+    'tv':'png','computador-e-notebook':'png','celular':'png','som-e-home-theater':'png',
+    'cameras-cftv':'png','cerca-eletrica':'png','interfone':'png','portao-eletronico':'png','fechaduras-digitais':'png','controle-de-acesso':'png',
+    'portoes':'png','grades-e-corrimaos':'png','estruturas-metalicas':'png','solda':'png'
+  };
+  function subImg(slug){ return SUBIMG[slug] ? 'img/sub/'+slug+'.'+SUBIMG[slug] : null; }
+  function subImgFor(item){ return subImg(slugify(item)); }
+  /* Imagem de capa por categoria (usada no hero quando não há subcategoria) */
+  const CATIMG = { 'autos':'jpg', 'serralheria':'jpg', 'limpeza':'jpg', 'assistencia':'jpg' };
+  function catImg(key){ return CATIMG[key] ? 'img/cat/'+key+'.'+CATIMG[key] : null; }
   function findCat(key){ return CATS.find(c=>c.key===key); }
   function findSub(cat,subSlug){
     if(!subSlug)return null;
@@ -99,7 +130,7 @@
       a.className='catbar__item';
       a.href=catLink(c.key);
       a.dataset.idx=idx;
-      a.innerHTML="<svg viewBox='0 0 24 24'>"+ICON[c.key]+"</svg><span>"+c.label+"</span>";
+      a.innerHTML="<i class='"+ICON[c.key]+"'></i><span>"+c.label+"</span>";
       a.addEventListener('mouseenter',()=>openMega(idx,a));
       a.addEventListener('focus',()=>openMega(idx,a));
       row.appendChild(a);
@@ -131,5 +162,17 @@
   }
 
   // expõe globalmente
-  window.ProntoCats = { ICON, CATS, slugify, catLink, subLink, findCat, findSub, initCatbar };
+  window.ProntoCats = { ICON, CATS, slugify, catLink, subLink, subImg, subImgFor, catImg, findCat, findSub, initCatbar };
+
+  // ── Menu mobile (hambúrguer) ────────────────────
+  function initBurger(){
+    const burger=document.querySelector('.hdr__burger');
+    const menu=document.querySelector('.hdr__menu');
+    if(!burger||!menu)return;
+    burger.addEventListener('click',e=>{ e.stopPropagation(); menu.classList.toggle('open'); });
+    document.addEventListener('click',e=>{ if(!menu.contains(e.target)&&!burger.contains(e.target)) menu.classList.remove('open'); });
+    menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>menu.classList.remove('open')));
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initBurger);
+  else initBurger();
 })();

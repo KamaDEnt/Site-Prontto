@@ -30,24 +30,29 @@
 
   // ---- Breadcrumb ----
   const crumb = '<div class="wrap"><nav class="crumb" aria-label="Você está em">'
-    + '<a href="Home.html">Prontto</a><span>›</span>'
+    + '<a href="index.html">Prontto</a><span>›</span>'
     + '<a href="'+PC.catLink(cat.key)+'">'+cat.label+'</a>'
     + (sub ? '<span>›</span><b>'+sub+'</b>' : '')
     + '</nav></div>';
 
   // ---- Hero ----
+  let heroImg = sub ? PC.subImgFor(sub) : PC.catImg(cat.key);
+  if(!heroImg){ for(const it of flat){ const im=PC.subImgFor(it); if(im){ heroImg=im; break; } } }
+  const heroArt = heroImg
+    ? '<div class="cat-hero__art"><img src="'+heroImg+'" alt="Profissional de '+foco+'"></div>'
+    : '<div class="cat-hero__art"><span class="ph-tag">foto · profissional de '+cat.label+'</span></div>';
   const hero = ''
     + '<section class="cat-hero"><div class="wrap"><div class="cat-hero__in">'
     +   '<div class="cat-hero__txt">'
     +     '<h1>Precisando de '+(sub?'serviços de '+sub:cat.label)+'?</h1>'
     +     '<p class="cat-hero__sub">Milhares de profissionais avaliados por clientes, permitindo você negociar apenas com os melhores.</p>'
     +     '<ul class="cat-hero__pts">'
-    +       '<li><span class="ic ic--shield">🛡️</span> Até 4 orçamentos grátis e seguros</li>'
-    +       '<li><span class="ic ic--star">⭐</span> Profissionais avaliados</li>'
-    +       '<li><span class="ic ic--play">▶</span> Veja como funciona o Prontto</li>'
+    +       '<li><span class="ic ic--shield"><i class="ri-shield-check-line"></i></span> Até 4 orçamentos grátis e seguros</li>'
+    +       '<li><span class="ic ic--star"><i class="ri-user-star-line"></i></span> Profissionais avaliados</li>'
+    +       '<li><span class="ic ic--play"><i class="ri-play-circle-line"></i></span> Veja como funciona o Prontto</li>'
     +     '</ul>'
     +   '</div>'
-    +   '<div class="cat-hero__art"><span class="ph-tag">foto · profissional de '+cat.label+'</span></div>'
+    +   heroArt
     + '</div></div></section>';
 
   // ---- Bloco laranja: lista de serviços + sidebar ----
@@ -122,7 +127,7 @@
     '<div class="req-card">'
     + '<div class="req-card__h"><b>'+nome+'</b> contratou especialista em '+focoBaixo+'</div>'
     + '<div class="req-card__txt">'+pedidoTxts[k%pedidoTxts.length]+'</div>'
-    + '<div class="req-card__done"><span class="ck">✓</span> Pedido atendido</div>'
+    + '<div class="req-card__done"><span class="ck"><i class="ri-checkbox-circle-line"></i></span> Pedido atendido</div>'
     + '</div>'
   )).join('');
   const reqs = ''

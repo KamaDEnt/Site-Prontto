@@ -67,7 +67,7 @@
     +   typeCard('contratante','🏠','Quero contratar','Encontre profissionais e receba orçamentos para o que você precisa.')
     +   typeCard('prestador','🧰','Quero trabalhar','Ofereça seus serviços, receba pedidos e aumente sua renda.')
     + '</div>'
-    + '<div class="cad-nav"><a href="Home.html" class="btn btn-out">Cancelar</a><div class="cad-nav__spacer"></div>'
+    + '<div class="cad-nav"><a href="index.html" class="btn btn-out">Cancelar</a><div class="cad-nav__spacer"></div>'
     +   '<button type="button" class="btn btn-laranja" id="btnNext" '+(state.tipo?'':'disabled style="opacity:.5;cursor:not-allowed"')+'>Continuar</button></div>'
     + '</div>';
   }
@@ -175,7 +175,7 @@
       + '<p>'+(pres
           ? 'Recebemos seus dados e documentos. Nossa equipe vai validar seu perfil e avisaremos por e-mail assim que ele estiver aprovado.'
           : 'Tudo pronto! Agora você já pode encontrar profissionais e solicitar orçamentos.')+'</p>'
-      + '<a href="'+(pres?'seja-profissional.html':'Home.html')+'" class="btn btn-laranja btn-lg">'+(pres?'Voltar ao início':'Encontrar profissionais')+'</a>'
+      + '<a href="'+(pres?'seja-profissional.html':'index.html')+'" class="btn btn-laranja btn-lg">'+(pres?'Voltar ao início':'Encontrar profissionais')+'</a>'
       + '</div></div>';
   }
 

@@ -44,12 +44,12 @@
     ov.innerHTML =
       '<div class="pop">'
       + '<button class="pop__close" aria-label="Fechar">&times;</button>'
-      + '<div class="pop__emoji">🤝</div>'
+      + '<div class="pop__emoji"><i class="ri-customer-service-2-line"></i></div>'
       + '<h2 class="pop__h">Precisando de ajuda?</h2>'
       + '<p class="pop__sub">Conecte-se aos melhores profissionais e receba até <b>4 orçamentos</b>.</p>'
       + '<div class="pop__actions">'
       +   '<a href="cadastrar.html" class="btn btn-laranja">Solicitar um orçamento</a>'
-      +   '<a href="Home.html#categorias" class="btn btn-out">Ver outros serviços</a>'
+      +   '<a href="index.html#categorias" class="btn btn-out">Ver outros serviços</a>'
       +   '<button class="pop__ghost" type="button" data-pro>Sou um profissional</button>'
       + '</div>'
       + '</div>';
